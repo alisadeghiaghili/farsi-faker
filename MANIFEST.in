@@ -1,0 +1,36 @@
+# Include important documentation files
+include README.md
+include LICENSE
+include CHANGELOG.md
+include CONTRIBUTING.md
+include API_REFERENCE.md
+
+# Include package configuration
+include setup.py
+include pyproject.toml
+
+# Include data files
+recursive-include farsi_faker/data *.pkl
+
+# Exclude unnecessary files
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+recursive-exclude * *.so
+recursive-exclude * .DS_Store
+exclude .gitignore
+exclude .gitattributes
+
+# Exclude development files
+exclude .coverage
+exclude .pytest_cache
+exclude htmlcov
+prune docs/_build
+prune .tox
+prune venv
+prune env
+
+# Exclude data sources (not needed in distribution)
+prune data_sources
+
+# Exclude scripts (development only)
+prune scripts
