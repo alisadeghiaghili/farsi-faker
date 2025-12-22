@@ -30,12 +30,24 @@
 
 <div align="center">
 
-[🌐 Website](https://alisadeghiaghili.github.io/farsi-faker/) • 
-[📦 Installation](#-installation) • 
-[🚀 Quick Start](#-quick-start) • 
-[📖 Documentation](#-documentation) • 
-[🎨 Examples](#-examples) • 
-[🤝 Contributing](#-contributing)
+<a href="https://alisadeghiaghili.github.io/farsi-faker">
+🌐 Website
+</a> • 
+<a href="#-installation">
+📦 Installation
+</a> • 
+<a href="#-quick-start">
+🚀 Quick Start
+</a> • 
+<a href="#-documentation">
+📖 Documentation
+</a> • 
+<a href="#-examples">
+🎨 Examples
+</a> • 
+<a href="#-contributing">
+🤝 Contributing
+</a>
 
 </div>
 
