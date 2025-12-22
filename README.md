@@ -22,7 +22,7 @@
 
 <div align="center">
 
-**Generate realistic fake Persian/Farsi names for testing and development**
+<b>Generate realistic fake Persian/Farsi names for testing and development</b>
 
 تولید اسم‌های فارسی فیک واقع‌گرایانه برای تست و توسعه
 
