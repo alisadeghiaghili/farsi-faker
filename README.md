@@ -5,18 +5,19 @@
 [![PyPI version](https://badge.fury.io/py/farsi-faker.svg)](https://pypi.org/project/farsi-faker/)
 [![Python Support](https://img.shields.io/pypi/pyversions/farsi-faker.svg)](https://pypi.org/project/farsi-faker/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PyPI Downloads](https://static.pepy.tech/personalized-badge/farsi-faker?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/farsi-faker)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/farsi-faker?period=total&units=international_system&left_color=black&right_color=green&left_text=downloads)](https://pepy.tech/projects/farsi-faker)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 **Generate realistic fake Persian/Farsi names for testing and development**
 
 تولید اسم‌های فارسی فیک واقع‌گرایانه برای تست و توسعه
 
-[Installation](#-installation) • 
-[Quick Start](#-quick-start) • 
-[Documentation](#-documentation) • 
-[Examples](#-examples) • 
-[Contributing](#-contributing)
+[🌐 Website](https://alisadeghiaghili.github.io/farsi-faker/) • 
+[📦 Installation](#-installation) • 
+[🚀 Quick Start](#-quick-start) • 
+[📖 Documentation](#-documentation) • 
+[🎨 Examples](#-examples) • 
+[🤝 Contributing](#-contributing)
 
 </div>
 
@@ -639,6 +640,7 @@ SOFTWARE.
 
 - **Author:** Ali Sadeghi Aghili
 - **Email:** alisadeghiaghili@gmail.com
+- **Website:** [https://alisadeghiaghili.github.io/farsi-faker/](https://alisadeghiaghili.github.io/farsi-faker/)
 - **GitHub:** [https://github.com/alisadeghiaghili/farsi-faker](https://github.com/alisadeghiaghili/farsi-faker)
 - **PyPI:** [https://pypi.org/project/farsi-faker/](https://pypi.org/project/farsi-faker/)
 - **Issues:** [https://github.com/alisadeghiaghili/farsi-faker/issues](https://github.com/alisadeghiaghili/farsi-faker/issues)
