@@ -2,21 +2,40 @@
 
 <div align="center">
 
-[![PyPI version](https://badge.fury.io/py/farsi-faker.svg)](https://pypi.org/project/farsi-faker/)
-[![Python Support](https://img.shields.io/pypi/pyversions/farsi-faker.svg)](https://pypi.org/project/farsi-faker/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PyPI Downloads](https://static.pepy.tech/personalized-badge/farsi-faker?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/farsi-faker)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+<a href="https://pypi.org/project/farsi-faker/">
+    <img src="https://badge.fury.io/py/farsi-faker.svg" alt="PyPI version">
+</a>
+<a href="https://pypi.org/project/farsi-faker/">
+    <img src="https://img.shields.io/pypi/pyversions/farsi-faker.svg" alt="Python Support">
+</a>
+<a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
+</a>
+<a href="https://pepy.tech/project/farsi-faker">
+    <img src="https://static.pepy.tech/personalized-badge/farsi-faker?period=total&units=international_system&left_color=black&right_color=green&left_text=downloads" alt="Downloads">
+</a>
+<a href="https://github.com/psf/black">
+    <img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black">
+</a>
+
+</div>
+
+<div align="center">
 
 **Generate realistic fake Persian/Farsi names for testing and development**
 
 تولید اسم‌های فارسی فیک واقع‌گرایانه برای تست و توسعه
 
-[Installation](#-installation) • 
-[Quick Start](#-quick-start) • 
-[Documentation](#-documentation) • 
-[Examples](#-examples) • 
-[Contributing](#-contributing)
+</div>
+
+<div align="center">
+
+[🌐 Website](https://alisadeghiaghili.github.io/farsi-faker/) • 
+[📦 Installation](#-installation) • 
+[🚀 Quick Start](#-quick-start) • 
+[📖 Documentation](#-documentation) • 
+[🎨 Examples](#-examples) • 
+[🤝 Contributing](#-contributing)
 
 </div>
 
@@ -73,15 +92,15 @@ faker = FarsiFaker()
 # Generate a random person
 person = faker.full_name()
 print(person)
-# {'name': 'علی احمدی', 'first_name': 'علی', 'last_name': 'احمدی', 'gender': 'male'}
+# {'name': 'علی صادقی عقیلی', 'first_name': 'علی', 'last_name': 'صادقی عقیلی', 'gender': 'male'}
 
 # Generate male name
 male = faker.full_name('male')
-print(male['name'])  # محمد رضایی
+print(male['name'])  # علی صادقی عقیلی
 
 # Generate female name
 female = faker.full_name('female')
-print(female['name'])  # فاطمه محمدی
+print(female['name'])  # سپیده جلیلی
 ```
 
 ### Generate Multiple Names
@@ -129,7 +148,7 @@ from farsi_faker import generate_fake_name
 
 # Quick generation without creating instance
 person = generate_fake_name('male')
-print(person['name'])  # علی احمدی
+print(person['name'])  # علی صادقی عقیلی
 ```
 
 ---
@@ -238,9 +257,9 @@ Generate a complete person with full name and metadata.
 ```python
 person = faker.full_name('female')
 # {
-#     'name': 'فاطمه محمدی',
-#     'first_name': 'فاطمه',
-#     'last_name': 'محمدی',
+#     'name': 'سپیده جلیلی',
+#     'first_name': 'سپیده',
+#     'last_name': 'جلیلی',
 #     'gender': 'female'
 # }
 ```
@@ -263,8 +282,8 @@ Generate multiple full names.
 ```python
 people = faker.generate_names(5, 'male')
 # [
-#     {'name': 'علی احمدی', 'first_name': 'علی', ...},
-#     {'name': 'محمد رضایی', 'first_name': 'محمد', ...},
+#     {'name': 'علی صادقی عقیلی', 'first_name': 'علی', ...},
+#     {'name': 'محمدرضا قهطرانی', 'first_name': 'محمدرضا', ...},
 #     ...
 # ]
 ```
@@ -558,26 +577,26 @@ twine upload dist/*
 ```
 farsi-faker/
 ├── farsi_faker/              # Main package
-│   ├── __init__.py          # Package initialization
-│   ├── faker.py             # Core FarsiFaker class
-│   ├── _version.py          # Version information
-│   └── data/                # Data directory
+│   ├── __init__.py           # Package initialization
+│   ├── faker.py              # Core FarsiFaker class
+│   ├── _version.py           # Version information
+│   └── data/                 # Data directory
 │       ├── __init__.py
-│       └── names.pkl        # Pickle database (embedded)
+│       └── names.pkl         # Pickle database (embedded)
 ├── tests/                    # Test suite
 │   ├── __init__.py
 │   └── test_faker.py
 ├── scripts/                  # Development scripts
-│   └── create_pickle.py     # Build pickle from CSV
+│   └── create_pickle.py      # Build pickle from CSV
 ├── data_sources/             # Original CSV files
 │   ├── iranianNamesDataset.csv
 │   └── iranian-surname-frequencies.csv
 ├── setup.py                  # Setup configuration
-├── pyproject.toml           # Project metadata
-├── MANIFEST.in              # Distribution files
+├── pyproject.toml            # Project metadata
+├── MANIFEST.in               # Distribution files
 ├── LICENSE                   # MIT License
 ├── README.md                 # This file
-└── CHANGELOG.md             # Version history
+└── CHANGELOG.md              # Version history
 ```
 
 ---
