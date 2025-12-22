@@ -5,7 +5,7 @@
 [![PyPI version](https://badge.fury.io/py/farsi-faker.svg)](https://pypi.org/project/farsi-faker/)
 [![Python Support](https://img.shields.io/pypi/pyversions/farsi-faker.svg)](https://pypi.org/project/farsi-faker/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Downloads](https://pepy.tech/badge/farsi-faker)](https://pepy.tech/project/farsi-faker)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/farsi-faker?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/farsi-faker)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 **Generate realistic fake Persian/Farsi names for testing and development**
