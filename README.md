@@ -588,9 +588,6 @@ farsi-faker/
 │   └── test_faker.py
 ├── scripts/                  # Development scripts
 │   └── create_pickle.py      # Build pickle from CSV
-├── data_sources/             # Original CSV files
-│   ├── iranianNamesDataset.csv
-│   └── iranian-surname-frequencies.csv
 ├── setup.py                  # Setup configuration
 ├── pyproject.toml            # Project metadata
 ├── MANIFEST.in               # Distribution files
