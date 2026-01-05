@@ -1,0 +1,2480 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Generate realistic fake Persian/Farsi names for testing and development">
+      
+      
+        <meta name="author" content="Ali Sadeghi Aghili">
+      
+      
+        <link rel="canonical" href="https://alisadeghiaghili.github.io/farsi-faker/api/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../examples/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>API Reference - Farsi Faker</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Farsi Faker" class="md-header__button md-logo" aria-label="Farsi Faker" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Farsi Faker
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/alisadeghiaghili/farsi-faker" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    alisadeghiaghili/farsi-faker
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../examples/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Examples
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Farsi Faker" class="md-nav__button md-logo" aria-label="Farsi Faker" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Farsi Faker
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/alisadeghiaghili/farsi-faker" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    alisadeghiaghili/farsi-faker
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents | فهرست مطالب
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#farsifaker-class-farsifaker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FarsiFaker Class | کلاس FarsiFaker
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FarsiFaker Class | کلاس FarsiFaker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor | سازنده
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instance-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instance Methods | متدهای نمونه
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Instance Methods | متدهای نمونه">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#male_first_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        male_first_name() | اسم کوچک مردانه
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#female_first_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        female_first_name() | اسم کوچک زنانه
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        first_name() | اسم کوچک
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#last_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        last_name() | نام خانوادگی
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        full_name() | نام کامل
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_names() | تولید چند اسم
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_dataset() | تولید مجموعه داده
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_stats() | گرفتن آمار
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Functions | توابع ماژول
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module Functions | توابع ماژول">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate_fake_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_fake_name() | تولید اسم فیک
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Definitions | تعریف انواع
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Type Definitions | تعریف انواع">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gendertype" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GenderType | نوع جنسیت
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genderinput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GenderInput | ورودی جنسیت
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exceptions | استثناها
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exceptions | استثناها">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#valueerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ValueError | خطای مقدار
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ValueError | خطای مقدار">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-invalid-gender" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Invalid Gender | جنسیت نامعتبر
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-invalid-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Invalid Count | تعداد نامعتبر
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-invalid-ratio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Invalid Ratio | نسبت نامعتبر
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filenotfounderror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FileNotFoundError | خطای فایل پیدا نشد
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pickleunpicklingerror-pickle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pickle.UnpicklingError | خطای باز کردن pickle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Information | اطلاعات نسخه
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Characteristics | مشخصات کارایی
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Characteristics | مشخصات کارایی">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#time-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Complexity | پیچیدگی زمانی
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#space-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Space Complexity | پیچیدگی فضایی
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initialization | راه‌اندازی اولیه
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thread-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thread Safety | امنیت چندنخی
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices | بهترین روش‌ها
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices | بهترین روش‌ها">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-reuse-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Reuse Instances | استفاده مجدد از نمونه‌ها
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-use-seeds-for-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Use Seeds for Testing | استفاده از بذر برای تست
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-use-generate_dataset-for-balanced-data-generate_dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Use generate_dataset() for Balanced Data | استفاده از generate_dataset() برای داده متعادل
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-handle-exceptions-properly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Handle Exceptions Properly | مدیریت صحیح استثناها
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples | مثال‌های کاربردی
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage Examples | مثال‌های کاربردی">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-csv-export-csv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: CSV Export | مثال ۱: خروجی CSV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-django-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Django Models | مثال ۲: مدل‌های جنگو
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-pandas-dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 3: pandas DataFrame | مثال ۳: دیتافریم پانداس
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference | مرجع سریع
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Reference | مرجع سریع">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#most-common-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Most Common Operations | رایج‌ترین عملیات
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-contact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support &amp; Contact | پشتیبانی و تماس
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents | فهرست مطالب
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#farsifaker-class-farsifaker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FarsiFaker Class | کلاس FarsiFaker
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FarsiFaker Class | کلاس FarsiFaker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor | سازنده
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instance-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instance Methods | متدهای نمونه
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Instance Methods | متدهای نمونه">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#male_first_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        male_first_name() | اسم کوچک مردانه
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#female_first_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        female_first_name() | اسم کوچک زنانه
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        first_name() | اسم کوچک
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#last_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        last_name() | نام خانوادگی
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        full_name() | نام کامل
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_names() | تولید چند اسم
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_dataset() | تولید مجموعه داده
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_stats() | گرفتن آمار
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Functions | توابع ماژول
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module Functions | توابع ماژول">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate_fake_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_fake_name() | تولید اسم فیک
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Definitions | تعریف انواع
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Type Definitions | تعریف انواع">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gendertype" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GenderType | نوع جنسیت
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genderinput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GenderInput | ورودی جنسیت
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exceptions | استثناها
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exceptions | استثناها">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#valueerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ValueError | خطای مقدار
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ValueError | خطای مقدار">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-invalid-gender" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Invalid Gender | جنسیت نامعتبر
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-invalid-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Invalid Count | تعداد نامعتبر
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-invalid-ratio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Invalid Ratio | نسبت نامعتبر
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filenotfounderror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FileNotFoundError | خطای فایل پیدا نشد
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pickleunpicklingerror-pickle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pickle.UnpicklingError | خطای باز کردن pickle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Information | اطلاعات نسخه
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Characteristics | مشخصات کارایی
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Characteristics | مشخصات کارایی">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#time-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Complexity | پیچیدگی زمانی
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#space-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Space Complexity | پیچیدگی فضایی
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initialization | راه‌اندازی اولیه
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thread-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thread Safety | امنیت چندنخی
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices | بهترین روش‌ها
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices | بهترین روش‌ها">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-reuse-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Reuse Instances | استفاده مجدد از نمونه‌ها
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-use-seeds-for-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Use Seeds for Testing | استفاده از بذر برای تست
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-use-generate_dataset-for-balanced-data-generate_dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Use generate_dataset() for Balanced Data | استفاده از generate_dataset() برای داده متعادل
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-handle-exceptions-properly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Handle Exceptions Properly | مدیریت صحیح استثناها
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples | مثال‌های کاربردی
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage Examples | مثال‌های کاربردی">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-csv-export-csv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: CSV Export | مثال ۱: خروجی CSV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-django-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Django Models | مثال ۲: مدل‌های جنگو
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-pandas-dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 3: pandas DataFrame | مثال ۳: دیتافریم پانداس
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference | مرجع سریع
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Reference | مرجع سریع">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#most-common-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Most Common Operations | رایج‌ترین عملیات
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-contact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support &amp; Contact | پشتیبانی و تماس
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="api-reference-api">API Reference | مرجع API<a class="headerlink" href="#api-reference-api" title="Permanent link">&para;</a></h1>
+<p>Complete API documentation for Farsi-Faker package.</p>
+<p>مستندات کامل API برای پکیج فارسی-فیکر</p>
+<p>Version: 1.0.0 | نسخه: ۱.۰.۰</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents | فهرست مطالب<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#farsifaker-class--کلاس-farsifaker">FarsiFaker Class | کلاس FarsiFaker</a></li>
+<li><a href="#module-functions--توابع-ماژول">Module Functions | توابع ماژول</a></li>
+<li><a href="#type-definitions--تعریف-انواع">Type Definitions | تعریف انواع</a></li>
+<li><a href="#exceptions--استثناها">Exceptions | استثناها</a></li>
+</ul>
+<hr />
+<h2 id="farsifaker-class-farsifaker">FarsiFaker Class | کلاس FarsiFaker<a class="headerlink" href="#farsifaker-class-farsifaker" title="Permanent link">&para;</a></h2>
+<p><strong>English:</strong> Main class for generating Persian/Farsi names.</p>
+<p><strong>فارسی:</strong> کلاس اصلی برای تولید اسم‌های فارسی/پارسی.</p>
+<h3 id="constructor">Constructor | سازنده<a class="headerlink" href="#constructor" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">FarsiFaker</span><span class="p">(</span><span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>English:</strong> Creates a new instance of the FarsiFaker class.</p>
+<p><strong>فارسی:</strong> یک نمونه جدید از کلاس FarsiFaker ایجاد می‌کند.</p>
+<p><strong>Parameters | پارامترها:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name<br>نام</th>
+<th>Type<br>نوع</th>
+<th>Default<br>پیش‌فرض</th>
+<th>Description (English)<br>توضیحات (فارسی)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>seed</td>
+<td><code>Optional[int]</code></td>
+<td><code>None</code></td>
+<td>Random seed for reproducible results. If None, uses system randomness.<br>بذر تصادفی برای نتایج قابل تکرار. اگر None باشد، از تصادفی‌سازی سیستم استفاده می‌کند.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example | مثال:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">farsi_faker</span><span class="w"> </span><span class="kn">import</span> <span class="n">FarsiFaker</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Random generation | تولید تصادفی</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">faker</span> <span class="o">=</span> <span class="n">FarsiFaker</span><span class="p">()</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Reproducible generation | تولید قابل تکرار</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">faker</span> <span class="o">=</span> <span class="n">FarsiFaker</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="instance-methods">Instance Methods | متدهای نمونه<a class="headerlink" href="#instance-methods" title="Permanent link">&para;</a></h3>
+<h4 id="male_first_name"><code>male_first_name()</code> | اسم کوچک مردانه<a class="headerlink" href="#male_first_name" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">male_first_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+<p><strong>English:</strong> Generate a random male first name.</p>
+<p><strong>فارسی:</strong> یک اسم کوچک مردانه تصادفی تولید می‌کند.</p>
+<p><strong>Returns | برگشتی:</strong>
+- <code>str</code>: A randomly selected authentic male Persian name
+- <code>str</code>: یک اسم مردانه اصیل فارسی به صورت تصادفی</p>
+<p><strong>Example | مثال:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">name</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">male_first_name</span><span class="p">()</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Returns | برمی‌گرداند: &#39;محمد&#39;</span>
+</code></pre></div>
+<hr />
+<h4 id="female_first_name"><code>female_first_name()</code> | اسم کوچک زنانه<a class="headerlink" href="#female_first_name" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">female_first_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+<p><strong>English:</strong> Generate a random female first name.</p>
+<p><strong>فارسی:</strong> یک اسم کوچک زنانه تصادفی تولید می‌کند.</p>
+<p><strong>Returns | برگشتی:</strong>
+- <code>str</code>: A randomly selected authentic female Persian name
+- <code>str</code>: یک اسم زنانه اصیل فارسی به صورت تصادفی</p>
+<p><strong>Example | مثال:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">name</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">female_first_name</span><span class="p">()</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Returns | برمی‌گرداند: &#39;فاطمه&#39;</span>
+</code></pre></div>
+<hr />
+<h4 id="first_name"><code>first_name()</code> | اسم کوچک<a class="headerlink" href="#first_name" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">first_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gender</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>English:</strong> Generate a first name with optional gender specification.</p>
+<p><strong>فارسی:</strong> یک اسم کوچک با مشخص کردن جنسیت (اختیاری) تولید می‌کند.</p>
+<p><strong>Parameters | پارامترها:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name<br>نام</th>
+<th>Type<br>نوع</th>
+<th>Default<br>پیش‌فرض</th>
+<th>Description (English)<br>توضیحات (فارسی)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gender</td>
+<td><code>Optional[str]</code></td>
+<td><code>None</code></td>
+<td>Gender specification. Accepts: 'male', 'female', 'm', 'f', 'مرد', 'زن', 'پسر', 'دختر', 'مذکر', 'مونث'<br>مشخص کردن جنسیت. قبول می‌کند: 'male', 'female', 'm', 'f', 'مرد', 'زن', 'پسر', 'دختر', 'مذکر', 'مونث'</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns | برگشتی:</strong>
+- <code>Tuple[str, str]</code>: (name, normalized_gender) where gender is 'male' or 'female'
+- <code>Tuple[str, str]</code>: (اسم، جنسیت نرمال‌شده) که جنسیت 'male' یا 'female' است</p>
+<p><strong>Raises | خطاها:</strong>
+- <code>ValueError</code>: If gender value is not recognized
+- <code>ValueError</code>: اگر مقدار جنسیت شناخته نشود</p>
+<p><strong>Example | مثال:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Specific gender | جنسیت مشخص</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">name</span><span class="p">,</span> <span class="n">gender</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">first_name</span><span class="p">(</span><span class="s1">&#39;male&#39;</span><span class="p">)</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Returns | برمی‌گرداند: (&#39;علی&#39;, &#39;male&#39;)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Random gender | جنسیت تصادفی</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">name</span><span class="p">,</span> <span class="n">gender</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">first_name</span><span class="p">()</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Returns | برمی‌گرداند: (&#39;مریم&#39;, &#39;female&#39;)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Persian input | ورودی فارسی</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">name</span><span class="p">,</span> <span class="n">gender</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">first_name</span><span class="p">(</span><span class="s1">&#39;زن&#39;</span><span class="p">)</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Returns | برمی‌گرداند: (&#39;فاطمه&#39;, &#39;female&#39;)</span>
+</code></pre></div>
+<hr />
+<h4 id="last_name"><code>last_name()</code> | نام خانوادگی<a class="headerlink" href="#last_name" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">last_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+<p><strong>English:</strong> Generate a random family name.</p>
+<p><strong>فارسی:</strong> یک نام خانوادگی تصادفی تولید می‌کند.</p>
+<p><strong>Returns | برگشتی:</strong>
+- <code>str</code>: A randomly selected authentic Persian family name
+- <code>str</code>: یک نام خانوادگی اصیل فارسی به صورت تصادفی</p>
+<p><strong>Example | مثال:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">name</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">last_name</span><span class="p">()</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Returns | برمی‌گرداند: &#39;احمدی&#39;</span>
+</code></pre></div>
+<hr />
+<h4 id="full_name"><code>full_name()</code> | نام کامل<a class="headerlink" href="#full_name" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gender</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>English:</strong> Generate a complete person with full name and metadata.</p>
+<p><strong>فارسی:</strong> یک شخص کامل با نام کامل و اطلاعات جانبی تولید می‌کند.</p>
+<p><strong>Parameters | پارامترها:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name<br>نام</th>
+<th>Type<br>نوع</th>
+<th>Default<br>پیش‌فرض</th>
+<th>Description (English)<br>توضیحات (فارسی)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gender</td>
+<td><code>Optional[str]</code></td>
+<td><code>None</code></td>
+<td>Desired gender. Accepts same formats as first_name()<br>جنسیت مورد نظر. همان فرمت‌های first_name() را قبول می‌کند</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns | برگشتی:</strong>
+- <code>Dict[str, str]</code>: Dictionary with keys: <code>name</code>, <code>first_name</code>, <code>last_name</code>, <code>gender</code>
+- <code>Dict[str, str]</code>: دیکشنری با کلیدهای: <code>name</code> (نام کامل)، <code>first_name</code> (نام)، <code>last_name</code> (نام خانوادگی)، <code>gender</code> (جنسیت)</p>
+<p><strong>Dictionary Keys | کلیدهای دیکشنری:</strong>
+- <code>name</code>: Full name (first + last) | نام کامل (نام + نام خانوادگی)
+- <code>first_name</code>: First name only | فقط نام کوچک
+- <code>last_name</code>: Family name only | فقط نام خانوادگی
+- <code>gender</code>: Normalized gender ('male' or 'female') | جنسیت نرمال‌شده ('male' یا 'female')</p>
+<p><strong>Raises | خطاها:</strong>
+- <code>ValueError</code>: If gender is invalid | اگر جنسیت نامعتبر باشد</p>
+<p><strong>Example | مثال:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">person</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">full_name</span><span class="p">(</span><span class="s1">&#39;female&#39;</span><span class="p">)</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Returns | برمی‌گرداند:</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># {</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">#     &#39;name&#39;: &#39;فاطمه محمدی&#39;,</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1">#     &#39;first_name&#39;: &#39;فاطمه&#39;,</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1">#     &#39;last_name&#39;: &#39;محمدی&#39;,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1">#     &#39;gender&#39;: &#39;female&#39;</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># }</span>
+</code></pre></div>
+<hr />
+<h4 id="generate_names"><code>generate_names()</code> | تولید چند اسم<a class="headerlink" href="#generate_names" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">generate_names</span><span class="p">(</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">gender</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
+</code></pre></div>
+<p><strong>English:</strong> Generate multiple full names.</p>
+<p><strong>فارسی:</strong> چندین نام کامل تولید می‌کند.</p>
+<p><strong>Parameters | پارامترها:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name<br>نام</th>
+<th>Type<br>نوع</th>
+<th>Default<br>پیش‌فرض</th>
+<th>Description (English)<br>توضیحات (فارسی)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>count</td>
+<td><code>int</code></td>
+<td><code>10</code></td>
+<td>Number of names to generate (must be positive)<br>تعداد اسم‌هایی که باید تولید شوند (باید مثبت باشد)</td>
+</tr>
+<tr>
+<td>gender</td>
+<td><code>Optional[str]</code></td>
+<td><code>None</code></td>
+<td>Gender for all names. If None, randomly mixes genders<br>جنسیت برای همه اسم‌ها. اگر None باشد، جنسیت‌ها تصادفی ترکیب می‌شوند</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns | برگشتی:</strong>
+- <code>List[Dict[str, str]]</code>: List of person dictionaries (see full_name() for structure)
+- <code>List[Dict[str, str]]</code>: لیست دیکشنری‌های شخص (برای ساختار به full_name() مراجعه کنید)</p>
+<p><strong>Raises | خطاها:</strong>
+- <code>ValueError</code>: If count is not positive or gender is invalid
+- <code>ValueError</code>: اگر count مثبت نباشد یا جنسیت نامعتبر باشد</p>
+<p><strong>Example | مثال:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Generate 5 male names | تولید ۵ اسم مردانه</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">men</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_names</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;male&#39;</span><span class="p">)</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Generate 10 random gender names | تولید ۱۰ اسم با جنسیت تصادفی</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="n">people</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_names</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># All with Persian gender input | همه با ورودی جنسیت فارسی</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="n">women</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_names</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;زن&#39;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h4 id="generate_dataset"><code>generate_dataset()</code> | تولید مجموعه داده<a class="headerlink" href="#generate_dataset" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">generate_dataset</span><span class="p">(</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="n">male_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
+</code></pre></div>
+<p><strong>English:</strong> Generate a balanced dataset with specified gender ratio.</p>
+<p><strong>فارسی:</strong> یک مجموعه داده متعادل با نسبت جنسیتی مشخص تولید می‌کند.</p>
+<p><strong>Parameters | پارامترها:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name<br>نام</th>
+<th>Type<br>نوع</th>
+<th>Default<br>پیش‌فرض</th>
+<th>Description (English)<br>توضیحات (فارسی)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>count</td>
+<td><code>int</code></td>
+<td><code>100</code></td>
+<td>Total number of names to generate (must be positive)<br>تعداد کل اسم‌ها (باید مثبت باشد)</td>
+</tr>
+<tr>
+<td>male_ratio</td>
+<td><code>float</code></td>
+<td><code>0.5</code></td>
+<td>Ratio of male names (0.0 to 1.0). Examples: 0.5=balanced, 0.7=70% male, 1.0=all male<br>نسبت اسم‌های مردانه (۰.۰ تا ۱.۰). مثال: ۰.۵=متعادل، ۰.۷=۷۰٪ مرد، ۱.۰=همه مرد</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns | برگشتی:</strong>
+- <code>List[Dict[str, str]]</code>: List of person dictionaries in random order (shuffled)
+- <code>List[Dict[str, str]]</code>: لیست دیکشنری‌های شخص به ترتیب تصادفی (مخلوط‌شده)</p>
+<p><strong>Raises | خطاها:</strong>
+- <code>ValueError</code>: If count is not positive or male_ratio is out of range
+- <code>ValueError</code>: اگر count مثبت نباشد یا male_ratio خارج از محدوده باشد</p>
+<p><strong>Example | مثال:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># 60% male, 40% female | ۶۰٪ مرد، ۴۰٪ زن</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">dataset</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_dataset</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">male_ratio</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># All female | همه زن</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">all_women</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_dataset</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">male_ratio</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Balanced (default) | متعادل (پیش‌فرض)</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="n">balanced</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_dataset</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># All male | همه مرد</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="n">all_men</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_dataset</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">male_ratio</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h4 id="get_stats"><code>get_stats()</code> | گرفتن آمار<a class="headerlink" href="#get_stats" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>English:</strong> Get statistics about the names database.</p>
+<p><strong>فارسی:</strong> آمار پایگاه داده اسم‌ها را برمی‌گرداند.</p>
+<p><strong>Returns | برگشتی:</strong>
+- <code>Dict[str, int]</code>: Dictionary with database statistics
+- <code>Dict[str, int]</code>: دیکشنری حاوی آمار پایگاه داده</p>
+<p><strong>Dictionary Keys | کلیدهای دیکشنری:</strong>
+- <code>male_names_count</code>: Number of unique male first names | تعداد اسم‌های کوچک مردانه یکتا
+- <code>female_names_count</code>: Number of unique female first names | تعداد اسم‌های کوچک زنانه یکتا
+- <code>last_names_count</code>: Number of unique family names | تعداد نام‌های خانوادگی یکتا
+- <code>total_names</code>: Sum of all unique names | مجموع همه اسم‌های یکتا
+- <code>possible_combinations</code>: Total possible full name combinations | کل ترکیبات ممکن نام کامل</p>
+<p><strong>Example | مثال:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">stats</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Male names: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;male_names_count&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Female names: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;female_names_count&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Possible combinations: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;possible_combinations&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># Returns | برمی‌گرداند:</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># {</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c1">#     &#39;male_names_count&#39;: 3500,         # اسم‌های مردانه: ۳۵۰۰</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="c1">#     &#39;female_names_count&#39;: 3800,       # اسم‌های زنانه: ۳۸۰۰</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1">#     &#39;last_names_count&#39;: 2700,         # نام خانوادگی: ۲۷۰۰</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="c1">#     &#39;total_names&#39;: 10000,             # کل اسم‌ها: ۱۰۰۰۰</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="c1">#     &#39;possible_combinations&#39;: 19710000 # ترکیبات ممکن: ۱۹،۷۱۰،۰۰۰</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="c1"># }</span>
+</code></pre></div>
+<hr />
+<h2 id="module-functions">Module Functions | توابع ماژول<a class="headerlink" href="#module-functions" title="Permanent link">&para;</a></h2>
+<h3 id="generate_fake_name"><code>generate_fake_name()</code> | تولید اسم فیک<a class="headerlink" href="#generate_fake_name" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">generate_fake_name</span><span class="p">(</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="n">gender</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>English:</strong> Quick function to generate a single fake Persian name. Convenience function that creates a FarsiFaker instance and generates one name. For generating multiple names, create a FarsiFaker instance directly for better performance.</p>
+<p><strong>فارسی:</strong> تابع سریع برای تولید یک اسم فیک فارسی. تابع راحتی که یک نمونه FarsiFaker ایجاد و یک اسم تولید می‌کند. برای تولید چند اسم، مستقیماً یک نمونه FarsiFaker ایجاد کنید (کارایی بهتر).</p>
+<p><strong>Parameters | پارامترها:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name<br>نام</th>
+<th>Type<br>نوع</th>
+<th>Default<br>پیش‌فرض</th>
+<th>Description (English)<br>توضیحات (فارسی)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gender</td>
+<td><code>Optional[str]</code></td>
+<td><code>None</code></td>
+<td>Desired gender (same formats as FarsiFaker)<br>جنسیت مورد نظر (همان فرمت‌های FarsiFaker)</td>
+</tr>
+<tr>
+<td>seed</td>
+<td><code>Optional[int]</code></td>
+<td><code>None</code></td>
+<td>Random seed for reproducibility<br>بذر تصادفی برای قابلیت تکرار</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns | برگشتی:</strong>
+- <code>Dict[str, str]</code>: Person dictionary with full name and metadata
+- <code>Dict[str, str]</code>: دیکشنری شخص با نام کامل و اطلاعات جانبی</p>
+<p><strong>Example | مثال:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">farsi_faker</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_fake_name</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1"># Quick male name | اسم مردانه سریع</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="n">person</span> <span class="o">=</span> <span class="n">generate_fake_name</span><span class="p">(</span><span class="s1">&#39;male&#39;</span><span class="p">)</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1"># Quick female name | اسم زنانه سریع</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="n">person</span> <span class="o">=</span> <span class="n">generate_fake_name</span><span class="p">(</span><span class="s1">&#39;زن&#39;</span><span class="p">)</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="c1"># Reproducible | قابل تکرار</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="n">person1</span> <span class="o">=</span> <span class="n">generate_fake_name</span><span class="p">(</span><span class="s1">&#39;female&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="n">person2</span> <span class="o">=</span> <span class="n">generate_fake_name</span><span class="p">(</span><span class="s1">&#39;female&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="k">assert</span> <span class="n">person1</span> <span class="o">==</span> <span class="n">person2</span>  <span class="c1"># True | درست</span>
+</code></pre></div>
+<hr />
+<h2 id="type-definitions">Type Definitions | تعریف انواع<a class="headerlink" href="#type-definitions" title="Permanent link">&para;</a></h2>
+<h3 id="gendertype">GenderType | نوع جنسیت<a class="headerlink" href="#gendertype" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">GenderType</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;male&#39;</span><span class="p">,</span> <span class="s1">&#39;female&#39;</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>English:</strong> Normalized gender type (internal use).</p>
+<p><strong>فارسی:</strong> نوع جنسیت نرمال‌شده (استفاده داخلی).</p>
+<hr />
+<h3 id="genderinput">GenderInput | ورودی جنسیت<a class="headerlink" href="#genderinput" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">GenderInput</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>English:</strong> Flexible gender input type that accepts various formats.</p>
+<p><strong>فارسی:</strong> نوع ورودی انعطاف‌پذیر جنسیت که فرمت‌های مختلف را قبول می‌کند.</p>
+<p><strong>Valid Values | مقادیر معتبر:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Format<br>فرمت</th>
+<th>Values<br>مقادیر</th>
+<th>Meaning<br>معنی</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>English</td>
+<td><code>'male'</code>, <code>'m'</code></td>
+<td>Male / مرد</td>
+</tr>
+<tr>
+<td>English</td>
+<td><code>'female'</code>, <code>'f'</code></td>
+<td>Female / زن</td>
+</tr>
+<tr>
+<td>Persian</td>
+<td><code>'مرد'</code>, <code>'پسر'</code>, <code>'مذکر'</code></td>
+<td>Male / مرد</td>
+</tr>
+<tr>
+<td>Persian</td>
+<td><code>'زن'</code>, <code>'دختر'</code>, <code>'مونث'</code></td>
+<td>Female / زن</td>
+</tr>
+<tr>
+<td>Special</td>
+<td><code>None</code></td>
+<td>Random selection / انتخاب تصادفی</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Notes | نکات:</strong>
+- Case-insensitive | بدون حساسیت به بزرگ/کوچک بودن حروف
+- Strips whitespace | فاصله‌های اضافی حذف می‌شوند</p>
+<hr />
+<h2 id="exceptions">Exceptions | استثناها<a class="headerlink" href="#exceptions" title="Permanent link">&para;</a></h2>
+<h3 id="valueerror">ValueError | خطای مقدار<a class="headerlink" href="#valueerror" title="Permanent link">&para;</a></h3>
+<p><strong>English:</strong> Raised when invalid parameters are provided to methods.</p>
+<p><strong>فارسی:</strong> وقتی پارامترهای نامعتبر به متدها داده می‌شود، رخ می‌دهد.</p>
+<p><strong>Common Cases | موارد رایج:</strong></p>
+<h4 id="1-invalid-gender">1. Invalid Gender | جنسیت نامعتبر<a class="headerlink" href="#1-invalid-gender" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">faker</span><span class="o">.</span><span class="n">full_name</span><span class="p">(</span><span class="s1">&#39;invalid&#39;</span><span class="p">)</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># ValueError: Invalid gender: &#39;invalid&#39;</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1"># Valid values: &#39;male&#39;, &#39;female&#39;, &#39;m&#39;, &#39;f&#39;, &#39;مرد&#39;, &#39;زن&#39;, ...</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># فارسی: خطای مقدار: جنسیت نامعتبر: &#39;invalid&#39;</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1"># مقادیر معتبر: &#39;male&#39;, &#39;female&#39;, &#39;m&#39;, &#39;f&#39;, &#39;مرد&#39;, &#39;زن&#39;, ...</span>
+</code></pre></div>
+<h4 id="2-invalid-count">2. Invalid Count | تعداد نامعتبر<a class="headerlink" href="#2-invalid-count" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="n">faker</span><span class="o">.</span><span class="n">generate_names</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># ValueError: Count must be positive, got: 0</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="c1"># فارسی: خطای مقدار: تعداد باید مثبت باشد، دریافت شد: ۰</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="n">faker</span><span class="o">.</span><span class="n">generate_names</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="c1"># ValueError: Count must be positive, got: -5</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># فارسی: خطای مقدار: تعداد باید مثبت باشد، دریافت شد: ‎-۵</span>
+</code></pre></div>
+<h4 id="3-invalid-ratio">3. Invalid Ratio | نسبت نامعتبر<a class="headerlink" href="#3-invalid-ratio" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="n">faker</span><span class="o">.</span><span class="n">generate_dataset</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">male_ratio</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1"># ValueError: male_ratio must be between 0 and 1, got: 1.5</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="c1"># Examples: 0.5 (balanced), 0.7 (70% male), 1.0 (all male)</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="c1"># فارسی: خطای مقدار: male_ratio باید بین ۰ و ۱ باشد، دریافت شد: ۱.۵</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="c1"># مثال‌ها: ۰.۵ (متعادل)، ۰.۷ (۷۰٪ مرد)، ۱.۰ (همه مرد)</span>
+</code></pre></div>
+<hr />
+<h3 id="filenotfounderror">FileNotFoundError | خطای فایل پیدا نشد<a class="headerlink" href="#filenotfounderror" title="Permanent link">&para;</a></h3>
+<p><strong>English:</strong> Raised when the names data file cannot be found.</p>
+<p><strong>فارسی:</strong> وقتی فایل داده اسم‌ها پیدا نمی‌شود، رخ می‌دهد.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Raised during FarsiFaker initialization if data file is missing</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1"># در هنگام ساخت FarsiFaker اگر فایل داده موجود نباشد رخ می‌دهد</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="n">faker</span> <span class="o">=</span> <span class="n">FarsiFaker</span><span class="p">()</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="c1"># FileNotFoundError: Names data file not found: ...</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="c1"># Please ensure the package is installed correctly.</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># Try reinstalling: pip install --force-reinstall farsi-faker</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="c1"># فارسی: خطای فایل پیدا نشد: فایل داده اسم‌ها پیدا نشد: ...</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="c1"># لطفاً مطمئن شوید پکیج به درستی نصب شده است.</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="c1"># نصب مجدد را امتحان کنید: pip install --force-reinstall farsi-faker</span>
+</code></pre></div>
+<hr />
+<h3 id="pickleunpicklingerror-pickle">pickle.UnpicklingError | خطای باز کردن pickle<a class="headerlink" href="#pickleunpicklingerror-pickle" title="Permanent link">&para;</a></h3>
+<p><strong>English:</strong> Raised when the data file is corrupted.</p>
+<p><strong>فارسی:</strong> وقتی فایل داده خراب شده باشد، رخ می‌دهد.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Raised during FarsiFaker initialization if pickle is corrupted</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1"># در هنگام ساخت FarsiFaker اگر فایل pickle خراب باشد رخ می‌دهد</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="n">faker</span> <span class="o">=</span> <span class="n">FarsiFaker</span><span class="p">()</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="c1"># pickle.UnpicklingError: Failed to load names data: ...</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="c1"># The data file may be corrupted. Try reinstalling the package:</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># pip install --force-reinstall farsi-faker</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="c1"># فارسی: خطای باز کردن pickle: بارگذاری داده اسم‌ها شکست خورد: ...</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="c1"># فایل داده ممکن است خراب شده باشد. نصب مجدد پکیج را امتحان کنید:</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="c1"># pip install --force-reinstall farsi-faker</span>
+</code></pre></div>
+<hr />
+<h2 id="version-information">Version Information | اطلاعات نسخه<a class="headerlink" href="#version-information" title="Permanent link">&para;</a></h2>
+<p><strong>English:</strong> Access version information programmatically.</p>
+<p><strong>فارسی:</strong> دسترسی برنامه‌نویسی به اطلاعات نسخه.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">farsi_faker</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span><span class="p">,</span> <span class="n">__version_info__</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">__version__</span><span class="p">)</span>       <span class="c1"># &#39;1.0.0&#39;</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">__version_info__</span><span class="p">)</span>  <span class="c1"># (1, 0, 0)</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="c1"># Get full version info | گرفتن اطلاعات کامل نسخه</span>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">farsi_faker</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_info</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a><span class="n">info</span> <span class="o">=</span> <span class="n">get_info</span><span class="p">()</span>
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">])</span>   <span class="c1"># &#39;1.0.0&#39;</span>
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;author&#39;</span><span class="p">])</span>    <span class="c1"># &#39;Ali Sadeghi Aghili&#39;</span>
+</code></pre></div>
+<hr />
+<h2 id="performance-characteristics">Performance Characteristics | مشخصات کارایی<a class="headerlink" href="#performance-characteristics" title="Permanent link">&para;</a></h2>
+<h3 id="time-complexity">Time Complexity | پیچیدگی زمانی<a class="headerlink" href="#time-complexity" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method<br>متد</th>
+<th>Complexity<br>پیچیدگی</th>
+<th>Description<br>توضیحات</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>male_first_name()</code></td>
+<td>O(1)</td>
+<td>Constant time / زمان ثابت</td>
+</tr>
+<tr>
+<td><code>female_first_name()</code></td>
+<td>O(1)</td>
+<td>Constant time / زمان ثابت</td>
+</tr>
+<tr>
+<td><code>last_name()</code></td>
+<td>O(1)</td>
+<td>Constant time / زمان ثابت</td>
+</tr>
+<tr>
+<td><code>first_name()</code></td>
+<td>O(1)</td>
+<td>Constant time / زمان ثابت</td>
+</tr>
+<tr>
+<td><code>full_name()</code></td>
+<td>O(1)</td>
+<td>Constant time / زمان ثابت</td>
+</tr>
+<tr>
+<td><code>generate_names(n)</code></td>
+<td>O(n)</td>
+<td>Linear time / زمان خطی</td>
+</tr>
+<tr>
+<td><code>generate_dataset(n)</code></td>
+<td>O(n log n)</td>
+<td>Due to shuffling / به خاطر مخلوط‌کردن</td>
+</tr>
+</tbody>
+</table>
+<h3 id="space-complexity">Space Complexity | پیچیدگی فضایی<a class="headerlink" href="#space-complexity" title="Permanent link">&para;</a></h3>
+<p><strong>English:</strong>
+- FarsiFaker instance: O(1) - uses cached data
+- Data cache: O(n) where n is total number of names (~10,000)</p>
+<p><strong>فارسی:</strong>
+- نمونه FarsiFaker: O(1) - از داده حافظه‌پنهان استفاده می‌کند
+- حافظه‌پنهان داده: O(n) که n تعداد کل اسم‌هاست (~۱۰,۰۰۰)</p>
+<h3 id="initialization">Initialization | راه‌اندازی اولیه<a class="headerlink" href="#initialization" title="Permanent link">&para;</a></h3>
+<p><strong>English:</strong>
+- First instance: ~10-50ms (loads pickle)
+- Subsequent instances: &lt;1ms (uses cache)</p>
+<p><strong>فارسی:</strong>
+- اولین نمونه: ~۱۰-۵۰ میلی‌ثانیه (بارگذاری pickle)
+- نمونه‌های بعدی: &lt;۱ میلی‌ثانیه (استفاده از حافظه‌پنهان)</p>
+<hr />
+<h2 id="thread-safety">Thread Safety | امنیت چندنخی<a class="headerlink" href="#thread-safety" title="Permanent link">&para;</a></h2>
+<p><strong>English:</strong> FarsiFaker is thread-safe:
+- Data is loaded once and shared across all instances
+- Each instance has its own random generator
+- No shared mutable state between calls</p>
+<p><strong>فارسی:</strong> FarsiFaker ایمن برای چندنخی است:
+- داده یکبار بارگذاری و بین همه نمونه‌ها مشترک می‌شود
+- هر نمونه تولیدکننده تصادفی خودش را دارد
+- هیچ حالت تغییرپذیر مشترکی بین فراخوانی‌ها نیست</p>
+<p><strong>Example | مثال:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">farsi_faker</span><span class="w"> </span><span class="kn">import</span> <span class="n">FarsiFaker</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">generate_name</span><span class="p">(</span><span class="n">seed</span><span class="p">):</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>    <span class="n">faker</span> <span class="o">=</span> <span class="n">FarsiFaker</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>    <span class="k">return</span> <span class="n">faker</span><span class="o">.</span><span class="n">full_name</span><span class="p">()</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="c1"># Safe to use in multiple threads | استفاده ایمن در چند نخ</span>
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a><span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>    <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">generate_name</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)))</span>
+</code></pre></div>
+<hr />
+<h2 id="best-practices">Best Practices | بهترین روش‌ها<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="1-reuse-instances">1. Reuse Instances | استفاده مجدد از نمونه‌ها<a class="headerlink" href="#1-reuse-instances" title="Permanent link">&para;</a></h3>
+<p><strong>English:</strong> For generating multiple names, reuse the same FarsiFaker instance.</p>
+<p><strong>فارسی:</strong> برای تولید چند اسم، از همان نمونه FarsiFaker استفاده مجدد کنید.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Good | خوب ✅</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="n">faker</span> <span class="o">=</span> <span class="n">FarsiFaker</span><span class="p">()</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">faker</span><span class="o">.</span><span class="n">full_name</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="c1"># Less efficient | کمتر کارآمد ❌</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">FarsiFaker</span><span class="p">()</span><span class="o">.</span><span class="n">full_name</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
+</code></pre></div>
+<hr />
+<h3 id="2-use-seeds-for-testing">2. Use Seeds for Testing | استفاده از بذر برای تست<a class="headerlink" href="#2-use-seeds-for-testing" title="Permanent link">&para;</a></h3>
+<p><strong>English:</strong> Use seeds in tests for reproducible results.</p>
+<p><strong>فارسی:</strong> در تست‌ها از بذر برای نتایج قابل تکرار استفاده کنید.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">farsi_faker</span><span class="w"> </span><span class="kn">import</span> <span class="n">FarsiFaker</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">faker</span><span class="p">():</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>    <span class="k">return</span> <span class="n">FarsiFaker</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_name_generation</span><span class="p">(</span><span class="n">faker</span><span class="p">):</span>
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>    <span class="n">name</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">full_name</span><span class="p">()</span>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>    <span class="c1"># Deterministic | قطعی</span>
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>    <span class="k">assert</span> <span class="n">name</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h3 id="3-use-generate_dataset-for-balanced-data-generate_dataset">3. Use generate_dataset() for Balanced Data | استفاده از generate_dataset() برای داده متعادل<a class="headerlink" href="#3-use-generate_dataset-for-balanced-data-generate_dataset" title="Permanent link">&para;</a></h3>
+<p><strong>English:</strong> For balanced datasets, use <code>generate_dataset()</code> instead of multiple calls.</p>
+<p><strong>فارسی:</strong> برای مجموعه‌داده‌های متعادل، از <code>generate_dataset()</code> به جای فراخوانی‌های متعدد استفاده کنید.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Good | خوب ✅</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="n">dataset</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_dataset</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">male_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="c1"># Less efficient | کمتر کارآمد ❌</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="n">males</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_names</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s1">&#39;male&#39;</span><span class="p">)</span>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="n">females</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_names</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s1">&#39;female&#39;</span><span class="p">)</span>
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="n">dataset</span> <span class="o">=</span> <span class="n">males</span> <span class="o">+</span> <span class="n">females</span>
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="4-handle-exceptions-properly">4. Handle Exceptions Properly | مدیریت صحیح استثناها<a class="headerlink" href="#4-handle-exceptions-properly" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">farsi_faker</span><span class="w"> </span><span class="kn">import</span> <span class="n">FarsiFaker</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>    <span class="n">faker</span> <span class="o">=</span> <span class="n">FarsiFaker</span><span class="p">()</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>    <span class="n">person</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">full_name</span><span class="p">(</span><span class="s1">&#39;male&#39;</span><span class="p">)</span>
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Package not installed correctly&quot;</span><span class="p">)</span>
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;پکیج به درستی نصب نشده است&quot;</span><span class="p">)</span>
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a><span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid input: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ورودی نامعتبر: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="usage-examples">Usage Examples | مثال‌های کاربردی<a class="headerlink" href="#usage-examples" title="Permanent link">&para;</a></h2>
+<h3 id="example-1-csv-export-csv">Example 1: CSV Export | مثال ۱: خروجی CSV<a class="headerlink" href="#example-1-csv-export-csv" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">farsi_faker</span><span class="w"> </span><span class="kn">import</span> <span class="n">FarsiFaker</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># Create faker | ایجاد faker</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="n">faker</span> <span class="o">=</span> <span class="n">FarsiFaker</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="c1"># Generate dataset | تولید مجموعه داده</span>
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="n">dataset</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_dataset</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">male_ratio</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a><span class="c1"># Export to CSV | خروجی به CSV</span>
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;people.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>    <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">])</span>
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>    <span class="n">writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a>    <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+<a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a>
+<a id="__codelineno-33-16" name="__codelineno-33-16" href="#__codelineno-33-16"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ CSV file created successfully!&quot;</span><span class="p">)</span>
+<a id="__codelineno-33-17" name="__codelineno-33-17" href="#__codelineno-33-17"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ فایل CSV با موفقیت ایجاد شد!&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="example-2-django-models">Example 2: Django Models | مثال ۲: مدل‌های جنگو<a class="headerlink" href="#example-2-django-models" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">farsi_faker</span><span class="w"> </span><span class="kn">import</span> <span class="n">FarsiFaker</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">myapp.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">User</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1"># Create faker | ایجاد faker</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a><span class="n">faker</span> <span class="o">=</span> <span class="n">FarsiFaker</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="c1"># Generate test users | تولید کاربران تست</span>
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a><span class="n">dataset</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_dataset</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">male_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>    <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>        <span class="n">name</span><span class="o">=</span><span class="n">person</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+<a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a>        <span class="n">first_name</span><span class="o">=</span><span class="n">person</span><span class="p">[</span><span class="s1">&#39;first_name&#39;</span><span class="p">],</span>
+<a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a>        <span class="n">last_name</span><span class="o">=</span><span class="n">person</span><span class="p">[</span><span class="s1">&#39;last_name&#39;</span><span class="p">],</span>
+<a id="__codelineno-34-15" name="__codelineno-34-15" href="#__codelineno-34-15"></a>        <span class="n">gender</span><span class="o">=</span><span class="n">person</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span>
+<a id="__codelineno-34-16" name="__codelineno-34-16" href="#__codelineno-34-16"></a>    <span class="p">)</span>
+<a id="__codelineno-34-17" name="__codelineno-34-17" href="#__codelineno-34-17"></a>
+<a id="__codelineno-34-18" name="__codelineno-34-18" href="#__codelineno-34-18"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ 100 test users created!&quot;</span><span class="p">)</span>
+<a id="__codelineno-34-19" name="__codelineno-34-19" href="#__codelineno-34-19"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ ۱۰۰ کاربر تست ایجاد شد!&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="example-3-pandas-dataframe">Example 3: pandas DataFrame | مثال ۳: دیتافریم پانداس<a class="headerlink" href="#example-3-pandas-dataframe" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">farsi_faker</span><span class="w"> </span><span class="kn">import</span> <span class="n">FarsiFaker</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="c1"># Create faker | ایجاد faker</span>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="n">faker</span> <span class="o">=</span> <span class="n">FarsiFaker</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="c1"># Generate dataset | تولید مجموعه داده</span>
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="n">dataset</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_dataset</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">male_ratio</span><span class="o">=</span><span class="mf">0.55</span><span class="p">)</span>
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a>
+<a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a><span class="c1"># Create DataFrame | ایجاد دیتافریم</span>
+<a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+<a id="__codelineno-35-12" name="__codelineno-35-12" href="#__codelineno-35-12"></a>
+<a id="__codelineno-35-13" name="__codelineno-35-13" href="#__codelineno-35-13"></a><span class="c1"># Statistics | آمار</span>
+<a id="__codelineno-35-14" name="__codelineno-35-14" href="#__codelineno-35-14"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First 10 rows | ۱۰ ردیف اول:&quot;</span><span class="p">)</span>
+<a id="__codelineno-35-15" name="__codelineno-35-15" href="#__codelineno-35-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<a id="__codelineno-35-16" name="__codelineno-35-16" href="#__codelineno-35-16"></a>
+<a id="__codelineno-35-17" name="__codelineno-35-17" href="#__codelineno-35-17"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span>
+<a id="__codelineno-35-18" name="__codelineno-35-18" href="#__codelineno-35-18"></a><span class="n">Gender</span> <span class="n">distribution</span> <span class="o">|</span> <span class="n">توزیع</span> <span class="n">جنسیت</span><span class="p">:</span><span class="s2">&quot;)</span>
+<a id="__codelineno-35-19" name="__codelineno-35-19" href="#__codelineno-35-19"></a><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+<a id="__codelineno-35-20" name="__codelineno-35-20" href="#__codelineno-35-20"></a>
+<a id="__codelineno-35-21" name="__codelineno-35-21" href="#__codelineno-35-21"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span>
+<a id="__codelineno-35-22" name="__codelineno-35-22" href="#__codelineno-35-22"></a><span class="n">Dataset</span> <span class="n">info</span> <span class="o">|</span> <span class="n">اطلاعات</span> <span class="n">مجموعه</span> <span class="n">داده</span><span class="p">:</span><span class="s2">&quot;)</span>
+<a id="__codelineno-35-23" name="__codelineno-35-23" href="#__codelineno-35-23"></a><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
+</code></pre></div>
+<hr />
+<h2 id="quick-reference">Quick Reference | مرجع سریع<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<h3 id="most-common-operations">Most Common Operations | رایج‌ترین عملیات<a class="headerlink" href="#most-common-operations" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">farsi_faker</span><span class="w"> </span><span class="kn">import</span> <span class="n">FarsiFaker</span><span class="p">,</span> <span class="n">generate_fake_name</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="c1"># Create instance | ایجاد نمونه</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="n">faker</span> <span class="o">=</span> <span class="n">FarsiFaker</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a><span class="c1"># Single name | یک اسم</span>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="n">person</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">full_name</span><span class="p">(</span><span class="s1">&#39;male&#39;</span><span class="p">)</span>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="c1"># {&#39;name&#39;: &#39;علی احمدی&#39;, ...}</span>
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a>
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="c1"># Multiple names | چند اسم</span>
+<a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a><span class="n">people</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_names</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;female&#39;</span><span class="p">)</span>
+<a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a>
+<a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a><span class="c1"># Balanced dataset | مجموعه داده متعادل</span>
+<a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a><span class="n">dataset</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">generate_dataset</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">male_ratio</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<a id="__codelineno-36-15" name="__codelineno-36-15" href="#__codelineno-36-15"></a>
+<a id="__codelineno-36-16" name="__codelineno-36-16" href="#__codelineno-36-16"></a><span class="c1"># Quick one-off | سریع یکبار مصرف</span>
+<a id="__codelineno-36-17" name="__codelineno-36-17" href="#__codelineno-36-17"></a><span class="n">person</span> <span class="o">=</span> <span class="n">generate_fake_name</span><span class="p">(</span><span class="s1">&#39;زن&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+<a id="__codelineno-36-18" name="__codelineno-36-18" href="#__codelineno-36-18"></a>
+<a id="__codelineno-36-19" name="__codelineno-36-19" href="#__codelineno-36-19"></a><span class="c1"># Statistics | آمار</span>
+<a id="__codelineno-36-20" name="__codelineno-36-20" href="#__codelineno-36-20"></a><span class="n">stats</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()</span>
+</code></pre></div>
+<hr />
+<h2 id="support-contact">Support &amp; Contact | پشتیبانی و تماس<a class="headerlink" href="#support-contact" title="Permanent link">&para;</a></h2>
+<p><strong>English:</strong>
+- GitHub: https://github.com/alisadeghiaghili/farsi-faker
+- Issues: https://github.com/alisadeghiaghili/farsi-faker/issues
+- Email: alisadeghiaghili@gmail.com</p>
+<p><strong>فارسی:</strong>
+- گیت‌هاب: https://github.com/alisadeghiaghili/farsi-faker
+- گزارش مشکلات: https://github.com/alisadeghiaghili/farsi-faker/issues
+- ایمیل: alisadeghiaghili@gmail.com</p>
+<hr />
+<p>For more information, see <a href="README.md">README.md</a> and <a href="examples/">examples</a>.</p>
+<p>برای اطلاعات بیشتر، <a href="README.md">README.md</a> و <a href="examples/">examples</a> را ببینید.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/alisadeghiaghili" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/farsi-faker/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/aliaghili/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
