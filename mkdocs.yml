@@ -1,0 +1,67 @@
+site_name: Farsi Faker
+site_description: Generate realistic fake Persian/Farsi names for testing and development
+site_author: Ali Sadeghi Aghili
+site_url: https://alisadeghiaghili.github.io/farsi-faker/
+repo_url: https://github.com/alisadeghiaghili/farsi-faker
+repo_name: alisadeghiaghili/farsi-faker
+
+theme:
+  name: material
+  language: en
+  palette:
+    # Light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - API Reference: api.md
+  - Examples: examples.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/alisadeghiaghili
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/farsi-faker/
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/aliaghili/

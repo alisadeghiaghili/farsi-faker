@@ -150,5 +150,11 @@ temp/
 tmp/
 scratch/
 
-# Don't ignore data files in package
-!farsi_faker/data/*.pkl
+# Data source files
+farsi_faker/data/*.csv
+farsi_faker/data/*_cleaned*.csv
+farsi_faker/data/cleaning_stats*.csv
+
+# Keep only the final pickle file
+!farsi_faker/data/names.pkl
+
