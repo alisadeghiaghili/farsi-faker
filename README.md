@@ -30,11 +30,11 @@
 
 <div align="center">
 
-[🌐 Website](https://alisadeghiaghili.github.io/farsi-faker/) • 
-[📦 Installation](#-installation) • 
-[🚀 Quick Start](#-quick-start) • 
-[📖 Documentation](#-documentation) • 
-[🎨 Examples](#-examples) • 
+[🌐 Website](https://alisadeghiaghili.github.io/farsi-faker/) •
+[📦 Installation](#-installation) •
+[🚀 Quick Start](#-quick-start) •
+[📖 Documentation](#-documentation) •
+[🎨 Examples](#-examples) •
 [🤝 Contributing](#-contributing)
 
 </div>
@@ -93,7 +93,6 @@ pip install -e .
 ```python
 from farsi_faker import FarsiFaker
 
-# Create faker instance
 faker = FarsiFaker()
 
 # Generate a random person
@@ -103,7 +102,7 @@ print(person)
 
 # Generate male name
 male = faker.full_name('male')
-print(male['name'])  # علی صادقی عقیلی
+print(male['name'])   # علی صادقی عقیلی
 
 # Generate female name
 female = faker.full_name('female')
@@ -113,16 +112,17 @@ print(female['name'])  # سپیده جلیلی
 ### Generate Multiple Names
 
 ```python
-# Generate 10 random names (as list)
+# 10 random names as a list (default)
 people = faker.generate_names(10)
 
-# Generate 50 male names
+# 50 male names as a list
 men = faker.generate_names(50, 'male')
 
-# Generate 30 female names as pandas DataFrame
-import pandas as pd
+# 30 female names as a pandas DataFrame
 women_df = faker.generate_names(30, 'female', as_dataframe=True)
-print(women_df.head())
+print(women_df.shape)          # (30, 4)
+print(list(women_df.columns))  # ['name', 'first_name', 'last_name', 'gender']
+print(women_df.head(2))
 #          name first_name last_name  gender
 # 0  فاطمه احمدی     فاطمه    احمدی  female
 # 1  زینب رضایی      زینب    رضایی  female
@@ -131,33 +131,25 @@ print(women_df.head())
 ### Generate Balanced Dataset
 
 ```python
-# Generate 100 people with 60% male ratio (as list)
+# 100 people with 60% male ratio — as a list
 dataset = faker.generate_dataset(100, male_ratio=0.6)
+print(len(dataset))   # 100
 
-# Generate as pandas DataFrame — ideal for data science workflows
+# Same, but as a pandas DataFrame
 df = faker.generate_dataset(500, male_ratio=0.5, as_dataframe=True)
-print(df.shape)                    # (500, 4)
+print(df.shape)                      # (500, 4)
 print(df['gender'].value_counts())
 # male      250
 # female    250
-print(df.dtypes)
-# name          object
-# first_name    object
-# last_name     object
-# gender        object
+# Name: gender, dtype: int64
 ```
 
 ### Reproducible Results
 
 ```python
-# Use seed for reproducible results
 faker1 = FarsiFaker(seed=42)
 faker2 = FarsiFaker(seed=42)
-
-name1 = faker1.full_name()
-name2 = faker2.full_name()
-
-assert name1 == name2  # True - same results!
+assert faker1.full_name() == faker2.full_name()  # True
 ```
 
 ### Quick One-Off Generation
@@ -165,7 +157,6 @@ assert name1 == name2  # True - same results!
 ```python
 from farsi_faker import generate_fake_name
 
-# Quick generation without creating instance
 person = generate_fake_name('male')
 print(person['name'])  # علی صادقی عقیلی
 ```
@@ -189,57 +180,46 @@ FarsiFaker(seed: Optional[int] = None)
 
 **Example:**
 ```python
-faker = FarsiFaker()  # Random generation
-faker = FarsiFaker(seed=42)  # Reproducible generation
+faker = FarsiFaker()        # random
+faker = FarsiFaker(seed=42) # reproducible
 ```
 
 ---
 
-#### Methods
-
 ### `male_first_name() -> str`
 
-Generate a random male first name.
+Return a random male first name.
 
-**Returns:** Male Persian name as string
-
-**Example:**
 ```python
-name = faker.male_first_name()
-# 'محمد'
+faker.male_first_name()  # 'محمد'
 ```
 
 ---
 
 ### `female_first_name() -> str`
 
-Generate a random female first name.
+Return a random female first name.
 
-**Returns:** Female Persian name as string
-
-**Example:**
 ```python
-name = faker.female_first_name()
-# 'فاطمه'
+faker.female_first_name()  # 'فاطمه'
 ```
 
 ---
 
 ### `first_name(gender=None) -> Tuple[str, str]`
 
-Generate a first name with optional gender specification.
+Return a first name with its normalised gender.
 
 **Parameters:**
-- `gender` (str, optional): Gender ('male', 'female', 'm', 'f', 'مرد', 'زن', etc.)
+- `gender` (str, optional): Any supported gender token (see [Gender Input Options](#-gender-input-options))
 
-**Returns:** Tuple of (name, normalized_gender)
+**Returns:** `(name, gender)` — gender is always `'male'` or `'female'`
 
-**Example:**
 ```python
-name, gender = faker.first_name('male')
+name, g = faker.first_name('male')
 # ('علی', 'male')
 
-name, gender = faker.first_name()  # Random
+name, g = faker.first_name()   # random gender
 # ('مریم', 'female')
 ```
 
@@ -247,32 +227,20 @@ name, gender = faker.first_name()  # Random
 
 ### `last_name() -> str`
 
-Generate a random family name.
+Return a random Persian family name.
 
-**Returns:** Persian family name as string
-
-**Example:**
 ```python
-name = faker.last_name()
-# 'احمدی'
+faker.last_name()  # 'احمدی'
 ```
 
 ---
 
 ### `full_name(gender=None) -> Dict[str, str]`
 
-Generate a complete person with full name and metadata.
+Return a complete person record.
 
-**Parameters:**
-- `gender` (str, optional): Desired gender
+**Returns:** dict with keys `name`, `first_name`, `last_name`, `gender`
 
-**Returns:** Dictionary with keys:
-- `name`: Full name
-- `first_name`: First name only
-- `last_name`: Family name only
-- `gender`: Normalized gender ('male' or 'female')
-
-**Example:**
 ```python
 person = faker.full_name('female')
 # {
@@ -281,122 +249,112 @@ person = faker.full_name('female')
 #     'last_name': 'جلیلی',
 #     'gender': 'female'
 # }
+assert person['name'] == person['first_name'] + ' ' + person['last_name']
 ```
 
 ---
 
-### `generate_names(count=10, gender=None, as_dataframe=False) -> List | DataFrame`
+### `generate_names(count=10, gender=None, as_dataframe=False)`
 
-Generate multiple full names.
+Generate multiple full-name records.
 
 **Parameters:**
-- `count` (int): Number of names to generate
-- `gender` (str, optional): Gender for all names
-- `as_dataframe` (bool): If `True`, returns a `pandas.DataFrame`. Default: `False`.
+- `count` (int, default `10`): Number of records to generate
+- `gender` (str, optional): Gender applied to all records; random mix when `None`
+- `as_dataframe` (bool, default `False`): Return a `pandas.DataFrame` instead of a list
 
-**Returns:** List of person dicts, or `pandas.DataFrame` when `as_dataframe=True`.
-DataFrame columns: `name`, `first_name`, `last_name`, `gender`.
+**Returns:** `List[Dict]` or `pandas.DataFrame` with columns `['name', 'first_name', 'last_name', 'gender']`
 
-**Raises:** `ImportError` if `as_dataframe=True` and pandas is not installed.
+**Raises:** `ValueError` if `count ≤ 0`; `ImportError` if `as_dataframe=True` and pandas is not installed
 
-**Example:**
 ```python
 # List (default)
 people = faker.generate_names(5, 'male')
+assert len(people) == 5
+assert all(p['gender'] == 'male' for p in people)
 
-# pandas DataFrame
+# DataFrame
 df = faker.generate_names(100, as_dataframe=True)
-print(df.shape)   # (100, 4)
-print(df.dtypes)  # all object
+assert df.shape == (100, 4)
+assert list(df.columns) == ['name', 'first_name', 'last_name', 'gender']
+assert not df.isnull().any().any()
+assert (df['name'] == df['first_name'] + ' ' + df['last_name']).all()
 ```
 
 ---
 
-### `generate_dataset(count=100, male_ratio=0.5, as_dataframe=False) -> List | DataFrame`
+### `generate_dataset(count=100, male_ratio=0.5, as_dataframe=False)`
 
-Generate a balanced dataset with specified gender ratio.
+Generate a balanced dataset with a configurable gender ratio.
 
 **Parameters:**
-- `count` (int): Total number of names
-- `male_ratio` (float): Ratio of male names (0.0 to 1.0)
-- `as_dataframe` (bool): If `True`, returns a `pandas.DataFrame`. Default: `False`.
+- `count` (int, default `100`): Total number of records
+- `male_ratio` (float, default `0.5`): Fraction of male records in `[0.0, 1.0]`
+- `as_dataframe` (bool, default `False`): Return a `pandas.DataFrame` instead of a list
 
-**Returns:** Shuffled list of person dicts, or `pandas.DataFrame` when `as_dataframe=True`.
+**Returns:** Shuffled `List[Dict]` or `pandas.DataFrame`
 
-**Raises:**
-- `ValueError` if count is not positive or male_ratio is outside [0.0, 1.0]
-- `ImportError` if `as_dataframe=True` and pandas is not installed
+**Raises:** `ValueError` if `count ≤ 0` or `male_ratio` outside `[0.0, 1.0]`; `ImportError` if pandas missing and `as_dataframe=True`
 
-**Example:**
 ```python
 # List (default)
-dataset = faker.generate_dataset(100, male_ratio=0.6)
+dataset = faker.generate_dataset(10, male_ratio=0.6)
+assert len(dataset) == 10
+assert sum(1 for p in dataset if p['gender'] == 'male') == 6
 
-# pandas DataFrame
-df = faker.generate_dataset(500, male_ratio=0.5, as_dataframe=True)
-print(df['gender'].value_counts())
-# male      250
-# female    250
+# DataFrame
+df = faker.generate_dataset(100, male_ratio=0.5, as_dataframe=True)
+assert df.shape == (100, 4)
+assert df['gender'].value_counts().to_dict() == {'male': 50, 'female': 50}
+
+# Edge cases
+assert all(p['gender'] == 'female' for p in faker.generate_dataset(5, male_ratio=0.0))
+assert all(p['gender'] == 'male'   for p in faker.generate_dataset(5, male_ratio=1.0))
 ```
 
 ---
 
 ### `get_stats() -> Dict[str, int]`
 
-Get statistics about the names database.
+Return statistics about the embedded names database.
 
-**Returns:** Dictionary with:
-- `male_names_count`: Number of male first names
-- `female_names_count`: Number of female first names
-- `last_names_count`: Number of family names
-- `total_names`: Sum of all names
-- `possible_combinations`: Total possible combinations
+**Returns:** dict with keys `male_names_count`, `female_names_count`, `last_names_count`, `total_names`, `possible_combinations`
 
-**Example:**
 ```python
 stats = faker.get_stats()
+assert stats['possible_combinations'] == \
+    (stats['male_names_count'] + stats['female_names_count']) * stats['last_names_count']
 print(f"Possible combinations: {stats['possible_combinations']:,}")
 # Possible combinations: 21,000,000
 ```
 
 ---
 
-### Function: `generate_fake_name()`
+### Function: `generate_fake_name(gender=None, seed=None) -> Dict[str, str]`
 
-```python
-generate_fake_name(gender=None, seed=None) -> Dict[str, str]
-```
+Convenience wrapper for one-off generation. For bulk generation prefer a `FarsiFaker` instance directly.
 
-Convenience function for quick one-off name generation.
-
-**Example:**
 ```python
 from farsi_faker import generate_fake_name
 
-person = generate_fake_name('male', seed=42)
-print(person['name'])
+p1 = generate_fake_name('female', seed=99)
+p2 = generate_fake_name('female', seed=99)
+assert p1 == p2  # reproducible
 ```
 
 ---
 
 ## 🎨 Examples
 
-### Example 1: Create Test Dataset for Django
+### Example 1: Django test fixtures
 
 ```python
 from farsi_faker import FarsiFaker
 from myapp.models import User
 
 faker = FarsiFaker(seed=42)
-dataset = faker.generate_dataset(100, male_ratio=0.5)
-
-for person in dataset:
-    User.objects.create(
-        name=person['name'],
-        first_name=person['first_name'],
-        last_name=person['last_name'],
-        gender=person['gender']
-    )
+for person in faker.generate_dataset(100, male_ratio=0.5):
+    User.objects.create(**person)
 ```
 
 ### Example 2: Export to CSV
@@ -406,35 +364,26 @@ import csv
 from farsi_faker import FarsiFaker
 
 faker = FarsiFaker()
-dataset = faker.generate_dataset(1000, male_ratio=0.6)
-
 with open('people.csv', 'w', encoding='utf-8', newline='') as f:
     writer = csv.DictWriter(f, fieldnames=['name', 'first_name', 'last_name', 'gender'])
     writer.writeheader()
-    writer.writerows(dataset)
+    writer.writerows(faker.generate_dataset(1000, male_ratio=0.6))
 ```
 
-### Example 3: pandas DataFrame for Data Science
+### Example 3: pandas DataFrame for data science
 
 ```python
-import pandas as pd
 from farsi_faker import FarsiFaker
 
 faker = FarsiFaker(seed=123)
-
-# Generate directly as DataFrame — no manual conversion needed
 df = faker.generate_dataset(500, male_ratio=0.55, as_dataframe=True)
 
-print(df.head())
-print(df['gender'].value_counts())
-print(df.describe(include='all'))
-
-# Works with all standard pandas operations
-grouped = df.groupby('gender')['last_name'].nunique()
-print(grouped)
+print(df.shape)                          # (500, 4)
+print(df['gender'].value_counts())       # male 275 / female 225
+print(df.groupby('gender')['last_name'].nunique())
 ```
 
-### Example 4: pytest Fixture
+### Example 4: pytest fixture
 
 ```python
 import pytest
@@ -442,15 +391,14 @@ from farsi_faker import FarsiFaker
 
 @pytest.fixture
 def fake_users():
-    faker = FarsiFaker(seed=42)
-    return faker.generate_dataset(10, male_ratio=0.5)
+    return FarsiFaker(seed=42).generate_dataset(10, male_ratio=0.5)
 
 def test_user_creation(fake_users):
     assert len(fake_users) == 10
-    assert all('name' in user for user in fake_users)
+    assert all('name' in u for u in fake_users)
 ```
 
-### Example 5: API Mock Data
+### Example 5: Flask mock API
 
 ```python
 from flask import Flask, jsonify
@@ -465,23 +413,20 @@ def random_user():
 
 @app.route('/api/users/<int:count>')
 def multiple_users(count):
-    users = faker.generate_names(min(count, 100))  # Max 100
-    return jsonify(users)
+    return jsonify(faker.generate_names(min(count, 100)))
 ```
 
 ---
 
 ## 🎯 Gender Input Options
 
-The package accepts various gender formats:
-
-### English
-- `'male'`, `'m'` → Male
-- `'female'`, `'f'` → Female
-
-### Persian (فارسی)
-- `'مرد'`, `'پسر'`, `'مذکر'` → Male  
-- `'زن'`, `'دختر'`, `'مونث'` → Female
+| Input | Resolves to |
+|---|---|
+| `'male'`, `'m'` | `'male'` |
+| `'مرد'`, `'پسر'`, `'مذکر'` | `'male'` |
+| `'female'`, `'f'` | `'female'` |
+| `'زن'`, `'دختر'`, `'مونث'` | `'female'` |
+| `None` | random |
 
 ---
 
@@ -490,23 +435,12 @@ The package accepts various gender formats:
 ```python
 from farsi_faker import FarsiFaker
 
-faker = FarsiFaker()
-stats = faker.get_stats()
-
-print(f"Male names: {stats['male_names_count']:,}")
-print(f"Female names: {stats['female_names_count']:,}")
-print(f"Last names: {stats['last_names_count']:,}")
-print(f"Total names: {stats['total_names']:,}")
+stats = FarsiFaker().get_stats()
+print(f"Male names:            {stats['male_names_count']:,}")
+print(f"Female names:          {stats['female_names_count']:,}")
+print(f"Last names:            {stats['last_names_count']:,}")
+print(f"Total names:           {stats['total_names']:,}")
 print(f"Possible combinations: {stats['possible_combinations']:,}")
-```
-
-**Example Output:**
-```
-Male names: 3,500
-Female names: 3,800
-Last names: 2,700
-Total names: 10,000
-Possible combinations: 19,710,000
 ```
 
 ---
@@ -514,63 +448,24 @@ Possible combinations: 19,710,000
 ## 🧪 Testing
 
 ```bash
-# Install development dependencies
 pip install -e ".[dev]"
-
-# Run tests
 pytest tests/ -v
-
-# Run with coverage
 pytest tests/ --cov=farsi_faker --cov-report=html
-
-# View coverage report
-open htmlcov/index.html
 ```
 
 ---
 
 ## 🛠️ Development
 
-### Setup Development Environment
-
 ```bash
-# Clone repository
 git clone https://github.com/alisadeghiaghili/farsi-faker.git
 cd farsi-faker
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install in editable mode with dev dependencies
+python -m venv venv && source venv/bin/activate
 pip install -e ".[all]"
-```
 
-### Code Quality
-
-```bash
-# Format code
-black farsi_faker/
-isort farsi_faker/
-
-# Type checking
-mypy farsi_faker/
-
-# Run tests
+# quality checks
+black farsi_faker/ && isort farsi_faker/ && mypy farsi_faker/
 pytest tests/ -v
-```
-
-### Building and Publishing
-
-```bash
-# Build distribution packages
-python -m build
-
-# Check distribution
-twine check dist/*
-
-# Upload to PyPI
-twine upload dist/*
 ```
 
 ---
@@ -579,77 +474,49 @@ twine upload dist/*
 
 ```
 farsi-faker/
-├── farsi_faker/              # Main package
-│   ├── __init__.py           # Package initialization
-│   ├── faker.py              # Core FarsiFaker class
-│   ├── _version.py           # Version information
-│   └── data/                 # Data directory
-│       ├── __init__.py
-│       └── names.pkl         # Pickle database (embedded)
-├── tests/                    # Test suite
+├── farsi_faker/
 │   ├── __init__.py
-│   └── test_faker.py
-├── scripts/                  # Development scripts
-│   └── create_pickle.py      # Build pickle from CSV
-├── setup.py                  # Setup configuration
-├── pyproject.toml            # Project metadata
-├── MANIFEST.in               # Distribution files
-├── LICENSE                   # MIT License
-├── README.md                 # This file
-└── CHANGELOG.md              # Version history
+│   ├── faker.py          ← core class
+│   ├── _version.py
+│   └── data/names.pkl
+├── tests/test_faker.py
+├── scripts/create_pickle.py
+├── setup.py
+├── pyproject.toml
+├── CHANGELOG.md
+└── README.md
 ```
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Add tests for new functionality
+4. Run tests (`pytest tests/`)
+5. Commit (`git commit -m 'Add amazing feature'`)
+6. Push and open a Pull Request
 
-1. **Fork the repository**
-2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
-3. **Make your changes**
-4. **Add tests** for new functionality
-5. **Run tests** (`pytest tests/`)
-6. **Commit changes** (`git commit -m 'Add amazing feature'`)
-7. **Push to branch** (`git push origin feature/amazing-feature`)
-8. **Open a Pull Request**
-
-### Code Style
-
-- Follow PEP 8
-- Use Black for formatting
-- Add type hints
-- Write docstrings
-- Add tests for new features
+Code style: Black + isort. Type hints required. Docstrings required.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+MIT — see [LICENSE](LICENSE).
 
 ---
 
-## 📞 Contact & Links
+## 📞 Contact
 
 - **Author:** Ali Sadeghi Aghili
-- **Email:** alisadeghiaghili@gmail.com
-- **GitHub:** [https://github.com/alisadeghiaghili/farsi-faker](https://github.com/alisadeghiaghili/farsi-faker)
-- **PyPI:** [https://pypi.org/project/farsi-faker/](https://pypi.org/project/farsi-faker/)
-- **Issues:** [https://github.com/alisadeghiaghili/farsi-faker/issues](https://github.com/alisadeghiaghili/farsi-faker/issues)
-
----
-
-## 🙏 Acknowledgments
-
-- Names dataset sourced from publicly available Iranian name databases
-- Inspired by [Faker](https://github.com/joke2k/faker) library
-- Built with ❤️ for the Persian/Farsi development community
+- **GitHub:** [alisadeghiaghili/farsi-faker](https://github.com/alisadeghiaghili/farsi-faker)
+- **PyPI:** [pypi.org/project/farsi-faker](https://pypi.org/project/farsi-faker/)
+- **Issues:** [github.com/alisadeghiaghili/farsi-faker/issues](https://github.com/alisadeghiaghili/farsi-faker/issues)
 
 ---
 
 <div align="center">
-
-Made with ❤️ by [Ali Sadeghi Aghili](https://github.com/alisadeghiaghili)
-
+Made with ❤️ by <a href="https://github.com/alisadeghiaghili">Ali Sadeghi Aghili</a>
 </div>
