@@ -171,11 +171,16 @@ class TestFarsiFaker:
     
     def test_generate_dataset_invalid_ratio(self, faker):
         """Test that invalid ratio raises ValueError."""
-        with pytest.raises(ValueError, match="male_ratio must be between 0 and 1"):
+        with pytest.raises(ValueError, match="male_ratio must be between 0.0 and 1.0"):
             faker.generate_dataset(100, male_ratio=1.5)
         
-        with pytest.raises(ValueError, match="male_ratio must be between 0 and 1"):
+        with pytest.raises(ValueError, match="male_ratio must be between 0.0 and 1.0"):
             faker.generate_dataset(100, male_ratio=-0.1)
+    
+    def test_generate_dataset_invalid_ratio_message_contains_counts(self, faker):
+        """Test that invalid ratio error message includes computed counts."""
+        with pytest.raises(ValueError, match="200 total"):
+            faker.generate_dataset(200, male_ratio=1.5)
     
     def test_generate_dataset_invalid_count(self, faker):
         """Test that invalid count raises ValueError."""
@@ -195,7 +200,6 @@ class TestFarsiFaker:
         second_half_males = sum(1 for p in dataset[50:] if p['gender'] == 'male')
         
         # If properly shuffled, both halves should have some males
-        # (not a perfect test but good enough)
         assert first_half_males > 0
         assert second_half_males > 0
     
@@ -283,6 +287,134 @@ class TestFarsiFaker:
         assert person['gender'] == 'male'
 
 
+class TestDataFrame:
+    """Tests for as_dataframe parameter in generate_names and generate_dataset."""
+
+    @pytest.fixture
+    def faker(self):
+        return FarsiFaker(seed=42)
+
+    # --- generate_names ---
+
+    def test_generate_names_returns_list_by_default(self, faker):
+        """Default behavior must remain a list for backward compatibility."""
+        result = faker.generate_names(10)
+        assert isinstance(result, list)
+        assert len(result) == 10
+
+    def test_generate_names_returns_dataframe_when_requested(self, faker):
+        """as_dataframe=True must return a pandas DataFrame."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_names(20, as_dataframe=True)
+        assert isinstance(result, pd.DataFrame)
+
+    def test_generate_names_dataframe_shape(self, faker):
+        """DataFrame must have correct number of rows and exactly 4 columns."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_names(30, as_dataframe=True)
+        assert result.shape == (30, 4)
+
+    def test_generate_names_dataframe_columns(self, faker):
+        """DataFrame columns must be name, first_name, last_name, gender in order."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_names(5, as_dataframe=True)
+        assert list(result.columns) == ['name', 'first_name', 'last_name', 'gender']
+
+    def test_generate_names_dataframe_dtypes(self, faker):
+        """All DataFrame columns must be object (string) dtype."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_names(10, as_dataframe=True)
+        assert all(result[col].dtype == object for col in result.columns)
+
+    def test_generate_names_dataframe_no_nulls(self, faker):
+        """DataFrame must not contain any null values."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_names(50, as_dataframe=True)
+        assert result.isnull().sum().sum() == 0
+
+    def test_generate_names_dataframe_gender_filter(self, faker):
+        """Passing gender='male' with as_dataframe=True must produce all-male rows."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_names(20, gender='male', as_dataframe=True)
+        assert (result['gender'] == 'male').all()
+
+    def test_generate_names_dataframe_name_matches_parts(self, faker):
+        """name column must equal first_name + ' ' + last_name for every row."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_names(20, as_dataframe=True)
+        reconstructed = result['first_name'] + ' ' + result['last_name']
+        assert (result['name'] == reconstructed).all()
+
+    def test_generate_names_false_explicit(self, faker):
+        """Explicitly passing as_dataframe=False must still return a list."""
+        result = faker.generate_names(10, as_dataframe=False)
+        assert isinstance(result, list)
+
+    # --- generate_dataset ---
+
+    def test_generate_dataset_returns_list_by_default(self, faker):
+        """Default behavior must remain a list for backward compatibility."""
+        result = faker.generate_dataset(50)
+        assert isinstance(result, list)
+        assert len(result) == 50
+
+    def test_generate_dataset_returns_dataframe_when_requested(self, faker):
+        """as_dataframe=True must return a pandas DataFrame."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_dataset(40, as_dataframe=True)
+        assert isinstance(result, pd.DataFrame)
+
+    def test_generate_dataset_dataframe_shape(self, faker):
+        """DataFrame must have correct number of rows and exactly 4 columns."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_dataset(60, as_dataframe=True)
+        assert result.shape == (60, 4)
+
+    def test_generate_dataset_dataframe_columns(self, faker):
+        """DataFrame columns must be name, first_name, last_name, gender in order."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_dataset(10, as_dataframe=True)
+        assert list(result.columns) == ['name', 'first_name', 'last_name', 'gender']
+
+    def test_generate_dataset_dataframe_gender_ratio(self, faker):
+        """gender value_counts must respect male_ratio within 1-unit rounding."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_dataset(100, male_ratio=0.7, as_dataframe=True)
+        counts = result['gender'].value_counts()
+        assert abs(counts.get('male', 0) - 70) <= 1
+        assert abs(counts.get('female', 0) - 30) <= 1
+
+    def test_generate_dataset_dataframe_all_male(self, faker):
+        """male_ratio=1.0 with as_dataframe=True must produce all-male DataFrame."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_dataset(20, male_ratio=1.0, as_dataframe=True)
+        assert (result['gender'] == 'male').all()
+
+    def test_generate_dataset_dataframe_all_female(self, faker):
+        """male_ratio=0.0 with as_dataframe=True must produce all-female DataFrame."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_dataset(20, male_ratio=0.0, as_dataframe=True)
+        assert (result['gender'] == 'female').all()
+
+    def test_generate_dataset_dataframe_no_nulls(self, faker):
+        """DataFrame must not contain any null values."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_dataset(100, as_dataframe=True)
+        assert result.isnull().sum().sum() == 0
+
+    def test_generate_dataset_dataframe_name_matches_parts(self, faker):
+        """name column must equal first_name + ' ' + last_name for every row."""
+        pd = pytest.importorskip("pandas")
+        result = faker.generate_dataset(50, as_dataframe=True)
+        reconstructed = result['first_name'] + ' ' + result['last_name']
+        assert (result['name'] == reconstructed).all()
+
+    def test_generate_dataset_false_explicit(self, faker):
+        """Explicitly passing as_dataframe=False must still return a list."""
+        result = faker.generate_dataset(20, as_dataframe=False)
+        assert isinstance(result, list)
+
+
 class TestIntegration:
     """Integration tests for real-world usage scenarios."""
     
@@ -324,20 +456,13 @@ class TestIntegration:
     
     def test_realistic_usage_pattern(self):
         """Test a realistic usage pattern."""
-        # Create faker
         faker = FarsiFaker(seed=42)
         
-        # Generate individuals
         person1 = faker.full_name('male')
         person2 = faker.full_name('female')
-        
-        # Generate batch
         batch = faker.generate_names(10, 'male')
-        
-        # Generate dataset
         dataset = faker.generate_dataset(50, male_ratio=0.6)
         
-        # All should work together
         assert person1['gender'] == 'male'
         assert person2['gender'] == 'female'
         assert len(batch) == 10
@@ -348,14 +473,25 @@ class TestIntegration:
         faker = FarsiFaker()
         person = faker.full_name()
         
-        # Name should be valid Unicode string
         assert isinstance(person['name'], str)
         assert isinstance(person['first_name'], str)
         assert isinstance(person['last_name'], str)
         
-        # Should be able to encode/decode
         name_bytes = person['name'].encode('utf-8')
         assert name_bytes.decode('utf-8') == person['name']
+
+    def test_dataframe_pandas_workflow(self):
+        """Test typical data-science workflow: DataFrame -> groupby -> describe."""
+        pd = pytest.importorskip("pandas")
+        faker = FarsiFaker(seed=42)
+        df = faker.generate_dataset(200, male_ratio=0.5, as_dataframe=True)
+
+        # Should support common pandas operations without errors
+        gender_counts = df.groupby('gender').size()
+        assert set(gender_counts.index) == {'male', 'female'}
+
+        unique_lastnames = df['last_name'].nunique()
+        assert unique_lastnames > 1
 
 
 class TestErrorHandling:
