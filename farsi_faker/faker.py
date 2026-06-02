@@ -8,7 +8,10 @@ mock data generation, and development purposes.
 import random
 import pickle
 from pathlib import Path
-from typing import Optional, Dict, List, Literal, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Literal, Optional, Tuple, Union
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 # Type aliases for better code clarity
 GenderType = Literal['male', 'female']
@@ -17,42 +20,56 @@ GenderInput = Union[str, None]
 
 class FarsiFaker:
     """High-performance faker for authentic Persian/Farsi names.
-    
+
     This class provides methods to generate realistic Persian/Farsi names with
-    support for gender specification, reproducible results, and various output formats.
-    
-    The class uses optimized pickle-based data storage for fast loading and includes
-    10,000+ authentic Persian names sourced from real Iranian datasets.
-    
+    support for gender specification, reproducible results, and various output
+    formats including plain Python lists and optional pandas DataFrames.
+
+    The class uses optimized pickle-based data storage for fast loading and
+    includes 10,000+ authentic Persian names sourced from real Iranian datasets.
+    Name data is loaded once and cached at the class level so that creating
+    multiple FarsiFaker instances does not cause redundant file I/O.
+
     Attributes:
-        _male_names (List[str]): List of male first names
-        _female_names (List[str]): List of female first names
-        _last_names (List[str]): List of family names
-        _random (random.Random): Random number generator instance
-    
+        _male_names (List[str]): List of male first names loaded from the
+            embedded pickle database.
+        _female_names (List[str]): List of female first names loaded from the
+            embedded pickle database.
+        _last_names (List[str]): List of family names loaded from the embedded
+            pickle database.
+        _random (random.Random): Instance-level random number generator,
+            seeded via the constructor ``seed`` parameter.
+
     Example:
-        >>> from farsi_faker import FarsiFaker
-        >>> 
-        >>> faker = FarsiFaker(seed=42)
-        >>> person = faker.full_name('male')
-        >>> print(person)
-        {
-            'name': 'علی احمدی',
-            'first_name': 'علی',
-            'last_name': 'احمدی',
-            'gender': 'male'
-        }
-        >>> 
-        >>> # Generate 10 female names
-        >>> women = faker.generate_names(10, 'female')
-        >>> 
-        >>> # Generate balanced dataset as DataFrame
-        >>> df = faker.generate_dataset(100, male_ratio=0.5, as_dataframe=True)
+        Basic usage::
+
+            >>> from farsi_faker import FarsiFaker
+            >>> faker = FarsiFaker(seed=42)
+
+            >>> person = faker.full_name('male')
+            >>> print(person)
+            {'name': 'علی احمدی', 'first_name': 'علی', 'last_name': 'احمدی', 'gender': 'male'}
+
+        Generate many names at once::
+
+            >>> women = faker.generate_names(10, 'female')
+            >>> print(len(women))
+            10
+            >>> print(women[0]['gender'])
+            female
+
+        pandas DataFrame output::
+
+            >>> df = faker.generate_dataset(100, male_ratio=0.5, as_dataframe=True)
+            >>> print(df.shape)
+            (100, 4)
+            >>> print(list(df.columns))
+            ['name', 'first_name', 'last_name', 'gender']
     """
-    
+
     # Class-level cache for data (shared across instances for memory efficiency)
     _data_cache: Optional[Dict[str, List[str]]] = None
-    
+
     # Gender mapping for flexible input (supports Persian and English)
     _GENDER_MAP = {
         'male': 'male',
@@ -66,420 +83,570 @@ class FarsiFaker:
         'دختر': 'female',
         'مونث': 'female',
     }
-    
+
     def __init__(self, seed: Optional[int] = None) -> None:
-        """Initialize the Farsi faker.
-        
+        """Initialize the FarsiFaker instance.
+
+        Creates an instance-level random number generator and loads the names
+        database from the embedded pickle file.  The pickle data is cached at
+        the class level after the first load, so subsequent instantiations are
+        essentially free.
+
         Args:
-            seed: Optional random seed for reproducible results. If None,
-                  uses system randomness for non-deterministic generation.
-        
+            seed (int, optional): Random seed for reproducible results.
+                Pass the same seed to two separate instances to guarantee
+                identical output sequences.  If ``None`` (default), the
+                instance uses system entropy and produces non-deterministic
+                output.
+
         Raises:
-            FileNotFoundError: If the names data file cannot be found.
-            pickle.UnpicklingError: If the data file is corrupted.
-        
+            FileNotFoundError: If ``farsi_faker/data/names.pkl`` cannot be
+                found, which typically means the package was not installed
+                correctly.
+            pickle.UnpicklingError: If the names pickle file is corrupted or
+                was created with an incompatible pickle protocol.
+
         Example:
-            >>> # Random generation
-            >>> faker = FarsiFaker()
-            >>> 
-            >>> # Reproducible generation
-            >>> faker = FarsiFaker(seed=42)
-            >>> name1 = faker.full_name()
-            >>> faker = FarsiFaker(seed=42)  # Reset with same seed
-            >>> name2 = faker.full_name()
-            >>> assert name1 == name2  # Same results
+            Non-deterministic (default)::
+
+                >>> faker = FarsiFaker()
+                >>> faker.full_name()  # different every run
+                {'name': '...', 'first_name': '...', 'last_name': '...', 'gender': '...'}
+
+            Reproducible::
+
+                >>> faker1 = FarsiFaker(seed=42)
+                >>> faker2 = FarsiFaker(seed=42)
+                >>> assert faker1.full_name() == faker2.full_name()
         """
         self._random = random.Random(seed)
         self._load_data()
-    
+
+    # ------------------------------------------------------------------
+    # Private helpers
+    # ------------------------------------------------------------------
+
     def _load_data(self) -> None:
         """Load names data from pickle file with class-level caching.
-        
-        Uses class-level caching to avoid redundant file I/O operations when
-        creating multiple faker instances. The data is loaded once and shared
-        across all instances for optimal memory usage and performance.
-        
+
+        Called once per process.  Subsequent calls return immediately because
+        ``_data_cache`` is already populated.
+
         Raises:
-            FileNotFoundError: If names.pkl doesn't exist in the data directory.
-            pickle.UnpicklingError: If the pickle file is corrupted or invalid.
+            FileNotFoundError: If ``data/names.pkl`` is missing.
+            pickle.UnpicklingError: If the file exists but cannot be
+                deserialized (e.g., corrupted or wrong protocol).
         """
         if FarsiFaker._data_cache is None:
             data_path = Path(__file__).parent / 'data' / 'names.pkl'
-            
+
             if not data_path.exists():
                 raise FileNotFoundError(
                     f"Names data file not found: {data_path}\n"
                     "Please ensure the package is installed correctly.\n"
                     "Try reinstalling: pip install --force-reinstall farsi-faker"
                 )
-            
+
             try:
                 with open(data_path, 'rb') as f:
                     FarsiFaker._data_cache = pickle.load(f)
-            except Exception as e:
+            except Exception as exc:
                 raise pickle.UnpicklingError(
-                    f"Failed to load names data: {e}\n"
-                    "The data file may be corrupted. Try reinstalling the package:\n"
+                    f"Failed to load names data: {exc}\n"
+                    "The data file may be corrupted. Try reinstalling:\n"
                     "pip install --force-reinstall farsi-faker"
-                )
-        
-        # Use cached data
-        self._male_names = FarsiFaker._data_cache['male_names']
-        self._female_names = FarsiFaker._data_cache['female_names']
-        self._last_names = FarsiFaker._data_cache['last_names']
-    
+                ) from exc
+
+        self._male_names: List[str] = FarsiFaker._data_cache['male_names']
+        self._female_names: List[str] = FarsiFaker._data_cache['female_names']
+        self._last_names: List[str] = FarsiFaker._data_cache['last_names']
+
     def _normalize_gender(self, gender: GenderInput) -> Optional[GenderType]:
-        """Normalize gender input to standard format.
-        
-        Accepts various gender specifications in both Persian and English
-        and normalizes them to 'male' or 'female'.
-        
+        """Normalize a raw gender string to ``'male'`` or ``'female'``.
+
+        Accepts all supported Persian and English gender tokens and maps them
+        to the canonical two-value enum used internally.  This is an internal
+        helper; callers should use the public methods instead.
+
+        Supported tokens:
+
+        +------------------+----------+
+        | Input token      | Result   |
+        +==================+==========+
+        | ``'male'``, ``'m'``         | ``'male'``   |
+        +------------------+----------+
+        | ``'مرد'``, ``'پسر'``,       | ``'male'``   |
+        | ``'مذکر'``                  |              |
+        +------------------+----------+
+        | ``'female'``, ``'f'``       | ``'female'`` |
+        +------------------+----------+
+        | ``'زن'``, ``'دختر'``,       | ``'female'`` |
+        | ``'مونث'``                  |              |
+        +------------------+----------+
+        | ``None``         | ``None`` |
+        +------------------+----------+
+
         Args:
-            gender: Gender specification in various formats:
-                   - English: 'male', 'female', 'm', 'f'
-                   - Persian: 'مرد', 'زن', 'پسر', 'دختر', 'مذکر', 'مونث'
-                   - None for random selection
-        
+            gender (str or None): Raw gender token.  Leading/trailing
+                whitespace and casing are normalised before the lookup.
+
         Returns:
-            Normalized gender ('male' or 'female'), or None if input is None
-        
+            Optional[GenderType]: ``'male'``, ``'female'``, or ``None`` when
+            the input is ``None``.
+
         Raises:
-            ValueError: If gender value is not recognized
-        
-        Example:
-            >>> faker = FarsiFaker()
-            >>> faker._normalize_gender('مرد')
-            'male'
-            >>> faker._normalize_gender('f')
-            'female'
+            ValueError: If the token is not ``None`` and is not found in the
+                mapping table.  The error message lists all valid values.
         """
         if gender is None:
             return None
-        
+
         gender_lower = str(gender).lower().strip()
         normalized = self._GENDER_MAP.get(gender_lower)
-        
+
         if normalized is None:
             valid_values = ', '.join(f"'{v}'" for v in sorted(set(self._GENDER_MAP.keys())))
             raise ValueError(
                 f"Invalid gender: '{gender}'\n"
                 f"Valid values: {valid_values}"
             )
-        
+
         return normalized
-    
+
+    # ------------------------------------------------------------------
+    # Public API — single-item generators
+    # ------------------------------------------------------------------
+
     def male_first_name(self) -> str:
-        """Generate a random male first name.
-        
+        """Return a random male first name.
+
         Returns:
-            A randomly selected authentic male Persian name.
-        
-        Example:
-            >>> faker = FarsiFaker()
-            >>> name = faker.male_first_name()
-            >>> print(name)
-            محمد
+            str: A randomly selected authentic male Persian first name.
+
+        Example::
+
+            >>> faker = FarsiFaker(seed=0)
+            >>> faker.male_first_name()
+            'محمد'
         """
         return self._random.choice(self._male_names)
-    
+
     def female_first_name(self) -> str:
-        """Generate a random female first name.
-        
+        """Return a random female first name.
+
         Returns:
-            A randomly selected authentic female Persian name.
-        
-        Example:
-            >>> faker = FarsiFaker()
-            >>> name = faker.female_first_name()
-            >>> print(name)
-            فاطمه
+            str: A randomly selected authentic female Persian first name.
+
+        Example::
+
+            >>> faker = FarsiFaker(seed=0)
+            >>> faker.female_first_name()
+            'فاطمه'
         """
         return self._random.choice(self._female_names)
-    
+
     def first_name(self, gender: GenderInput = None) -> Tuple[str, GenderType]:
-        """Generate a first name with optional gender specification.
-        
+        """Return a first name together with its normalised gender.
+
         Args:
-            gender: Desired gender ('male', 'female', or Persian equivalents).
-                   If None, randomly selects between male and female.
-        
+            gender (str, optional): Desired gender.  Any value accepted by
+                :meth:`_normalize_gender` is valid (English or Persian tokens).
+                When ``None`` (default) the gender is chosen at random with
+                equal probability.
+
         Returns:
-            Tuple of (name, gender) where gender is normalized to 'male' or 'female'.
-        
+            Tuple[str, GenderType]: A 2-tuple ``(name, gender)`` where
+            *gender* is always ``'male'`` or ``'female'``.
+
         Raises:
-            ValueError: If gender is invalid.
-        
-        Example:
-            >>> faker = FarsiFaker()
-            >>> name, gender = faker.first_name('male')
-            >>> print(f"{name} ({gender})")
-            علی (male)
-            >>> 
-            >>> # Random gender
-            >>> name, gender = faker.first_name()
-            >>> print(f"{name} ({gender})")
-            مریم (female)
+            ValueError: If *gender* is not a recognised token.
+
+        Example::
+
+            >>> faker = FarsiFaker(seed=1)
+            >>> name, g = faker.first_name('male')
+            >>> print(name, g)
+            علی male
+
+            >>> name, g = faker.first_name('زن')
+            >>> print(g)
+            female
+
+            >>> name, g = faker.first_name()  # random gender
+            >>> g in ('male', 'female')
+            True
         """
         normalized_gender = self._normalize_gender(gender)
-        
+
         if normalized_gender is None:
             normalized_gender = self._random.choice(['male', 'female'])
-        
+
         if normalized_gender == 'male':
             return (self.male_first_name(), 'male')
         else:
             return (self.female_first_name(), 'female')
-    
+
     def last_name(self) -> str:
-        """Generate a random family name.
-        
+        """Return a random Persian family name.
+
         Returns:
-            A randomly selected authentic Persian family name.
-        
-        Example:
-            >>> faker = FarsiFaker()
-            >>> name = faker.last_name()
-            >>> print(name)
-            احمدی
+            str: A randomly selected authentic Persian family name.
+
+        Example::
+
+            >>> faker = FarsiFaker(seed=0)
+            >>> faker.last_name()
+            'احمدی'
         """
         return self._random.choice(self._last_names)
-    
+
     def full_name(self, gender: GenderInput = None) -> Dict[str, str]:
-        """Generate a complete person with full name and metadata.
-        
+        """Return a complete person record with full name and metadata.
+
+        Combines :meth:`first_name` and :meth:`last_name` into a single dict
+        that is ready to use as a test fixture or seed record.
+
         Args:
-            gender: Desired gender ('male', 'female', or Persian equivalents).
-                   If None, randomly selects gender.
-        
+            gender (str, optional): Desired gender.  Any value accepted by
+                :meth:`_normalize_gender` is valid.  When ``None`` (default)
+                the gender is chosen at random.
+
         Returns:
-            Dictionary containing:
-                - name: Full name (first + last)
-                - first_name: First name only
-                - last_name: Family name only
-                - gender: Normalized gender ('male' or 'female')
-        
+            Dict[str, str]: A dictionary with exactly four keys:
+
+            * ``'name'`` — full name (``first_name + ' ' + last_name``)
+            * ``'first_name'`` — first name only
+            * ``'last_name'`` — family name only
+            * ``'gender'`` — ``'male'`` or ``'female'``
+
         Raises:
-            ValueError: If gender is invalid.
-        
-        Example:
-            >>> faker = FarsiFaker()
+            ValueError: If *gender* is not a recognised token.
+
+        Example::
+
+            >>> faker = FarsiFaker(seed=7)
             >>> person = faker.full_name('female')
-            >>> print(person)
-            {
-                'name': 'فاطمه محمدی',
-                'first_name': 'فاطمه',
-                'last_name': 'محمدی',
-                'gender': 'female'
-            }
-            >>> 
-            >>> # Direct access
-            >>> print(person['name'])
-            فاطمه محمدی
+            >>> person['gender']
+            'female'
+            >>> person['name'] == person['first_name'] + ' ' + person['last_name']
+            True
+
+            >>> # Keys are always present and non-empty
+            >>> all(person[k] for k in ('name', 'first_name', 'last_name', 'gender'))
+            True
         """
         first, gender_result = self.first_name(gender)
         last = self.last_name()
-        
+
         return {
             'name': f"{first} {last}",
             'first_name': first,
             'last_name': last,
-            'gender': gender_result
+            'gender': gender_result,
         }
-    
+
+    # ------------------------------------------------------------------
+    # Public API — bulk generators
+    # ------------------------------------------------------------------
+
     def generate_names(
         self,
         count: int = 10,
         gender: GenderInput = None,
-        as_dataframe: bool = False
-    ) -> Union[List[Dict[str, str]], 'pandas.DataFrame']:
-        """Generate multiple full names.
-        
+        as_dataframe: bool = False,
+    ) -> Union[List[Dict[str, str]], 'pd.DataFrame']:
+        """Generate multiple full-name records.
+
         Args:
-            count: Number of names to generate (must be positive).
-            gender: Desired gender for all names. If None, randomly mixes genders.
-            as_dataframe: If True, returns a pandas DataFrame instead of a list.
-                         Requires pandas to be installed.
-        
+            count (int, optional): Number of records to generate.  Must be a
+                positive integer.  Defaults to ``10``.
+            gender (str, optional): Gender applied to *all* records.  When
+                ``None`` (default) each record's gender is chosen independently
+                at random.
+            as_dataframe (bool, optional): When ``True``, return a
+                ``pandas.DataFrame`` instead of a plain list.  Requires pandas
+                to be installed (``pip install pandas``).  Defaults to
+                ``False``.
+
         Returns:
-            List of person dictionaries (see full_name() for structure),
-            or a pandas DataFrame if as_dataframe=True.
-            Columns when as_dataframe=True: name, first_name, last_name, gender.
-        
+            List[Dict[str, str]] | pandas.DataFrame:
+                * **List** (default) — each element is a dict produced by
+                  :meth:`full_name`::
+
+                      [{'name': 'علی احمدی', 'first_name': 'علی',
+                        'last_name': 'احمدی', 'gender': 'male'}, ...]
+
+                * **DataFrame** (``as_dataframe=True``) — shape ``(count, 4)``,
+                  columns ``['name', 'first_name', 'last_name', 'gender']``,
+                  all dtype ``object``.
+
         Raises:
-            ValueError: If count is not positive or gender is invalid.
-            ImportError: If as_dataframe=True but pandas is not installed.
-        
+            ValueError: If *count* ≤ 0 or *gender* is unrecognised.
+            ImportError: If ``as_dataframe=True`` but pandas is not installed.
+
         Example:
-            >>> faker = FarsiFaker()
-            >>> 
-            >>> # Generate 5 male names as list (default)
-            >>> men = faker.generate_names(5, 'male')
-            >>> for person in men:
-            ...     print(person['name'])
-            علی احمدی
-            محمد رضایی
-            >>> 
-            >>> # Generate as pandas DataFrame
-            >>> df = faker.generate_names(100, as_dataframe=True)
-            >>> print(df.head())
-            >>> print(df['gender'].value_counts())
+            List output (default)::
+
+                >>> faker = FarsiFaker(seed=42)
+                >>> men = faker.generate_names(3, 'male')
+                >>> len(men)
+                3
+                >>> all(p['gender'] == 'male' for p in men)
+                True
+                >>> men[0].keys()
+                dict_keys(['name', 'first_name', 'last_name', 'gender'])
+
+            DataFrame output::
+
+                >>> df = faker.generate_names(50, as_dataframe=True)
+                >>> df.shape
+                (50, 4)
+                >>> list(df.columns)
+                ['name', 'first_name', 'last_name', 'gender']
+                >>> df.isnull().any().any()
+                False
+                >>> (df['name'] == df['first_name'] + ' ' + df['last_name']).all()
+                True
         """
         if count <= 0:
-            raise ValueError(f"Count must be positive, got: {count}")
-        
+            raise ValueError(f"count must be a positive integer, got: {count}")
+
         records = [self.full_name(gender) for _ in range(count)]
-        
+
         if as_dataframe:
             try:
-                import pandas as pd
-            except ImportError:
+                import pandas as _pd
+            except ImportError as exc:
                 raise ImportError(
-                    "pandas is required for as_dataframe=True.\n"
+                    "pandas is required when as_dataframe=True.\n"
                     "Install it with: pip install pandas"
-                )
-            return pd.DataFrame(records, columns=['name', 'first_name', 'last_name', 'gender'])
-        
+                ) from exc
+            return _pd.DataFrame(
+                records, columns=['name', 'first_name', 'last_name', 'gender']
+            )
+
         return records
-    
+
     def generate_dataset(
         self,
         count: int = 100,
         male_ratio: float = 0.5,
-        as_dataframe: bool = False
-    ) -> Union[List[Dict[str, str]], 'pandas.DataFrame']:
-        """Generate a balanced dataset with specified gender ratio.
-        
+        as_dataframe: bool = False,
+    ) -> Union[List[Dict[str, str]], 'pd.DataFrame']:
+        """Generate a gender-balanced dataset with a configurable male/female ratio.
+
+        Internally calls :meth:`generate_names` for each gender bucket, then
+        shuffles the combined list so that gender order is random.
+
         Args:
-            count: Total number of names to generate (must be positive).
-            male_ratio: Ratio of male names (0.0 to 1.0). Default is 0.5 (balanced).
-                Examples:
-                - 0.5 = 50% male, 50% female (balanced)
-                - 0.7 = 70% male, 30% female
-                - 0.0 = 100% female
-                - 1.0 = 100% male
-            as_dataframe: If True, returns a pandas DataFrame instead of a list.
-                         Requires pandas to be installed.
-        
+            count (int, optional): Total number of records.  Must be a positive
+                integer.  Defaults to ``100``.
+            male_ratio (float, optional): Fraction of records that should be
+                male, in the closed interval ``[0.0, 1.0]``.  Defaults to
+                ``0.5`` (balanced).  Examples:
+
+                * ``0.5``  → 50 % male, 50 % female
+                * ``0.7``  → 70 % male, 30 % female
+                * ``0.0``  → all female
+                * ``1.0``  → all male
+
+                The male count is computed as ``int(count * male_ratio)``;
+                the remainder goes to female, so floating-point rounding is
+                absorbed by the female bucket.
+            as_dataframe (bool, optional): When ``True``, return a
+                ``pandas.DataFrame`` instead of a plain list.  Requires pandas
+                to be installed (``pip install pandas``).  Defaults to
+                ``False``.
+
         Returns:
-            List of person dictionaries in random (shuffled) order,
-            or a pandas DataFrame if as_dataframe=True.
-            Columns when as_dataframe=True: name, first_name, last_name, gender.
-        
+            List[Dict[str, str]] | pandas.DataFrame:
+                * **List** (default) — shuffled list of person dicts (see
+                  :meth:`full_name` for the dict structure).
+                * **DataFrame** (``as_dataframe=True``) — shape
+                  ``(count, 4)``, columns
+                  ``['name', 'first_name', 'last_name', 'gender']``,
+                  all dtype ``object``.
+
         Raises:
-            ValueError: If count is not positive, or male_ratio is outside [0.0, 1.0].
-            ImportError: If as_dataframe=True but pandas is not installed.
-        
+            ValueError: If *count* ≤ 0, or *male_ratio* is outside
+                ``[0.0, 1.0]``.  The error message shows the computed male /
+                female counts and the total so the problem is immediately
+                obvious.
+            ImportError: If ``as_dataframe=True`` but pandas is not installed.
+
         Example:
-            >>> faker = FarsiFaker(seed=42)
-            >>> 
-            >>> # As list (default)
-            >>> dataset = faker.generate_dataset(100, male_ratio=0.6)
-            >>> 
-            >>> # As pandas DataFrame — ideal for data science workflows
-            >>> df = faker.generate_dataset(500, male_ratio=0.5, as_dataframe=True)
-            >>> print(df.shape)           # (500, 4)
-            >>> print(df.dtypes)          # all object (string)
-            >>> print(df['gender'].value_counts())
-            male      250
-            female    250
-            Name: gender, dtype: int64
+            List output (default)::
+
+                >>> faker = FarsiFaker(seed=42)
+                >>> dataset = faker.generate_dataset(10, male_ratio=0.6)
+                >>> len(dataset)
+                10
+                >>> sum(1 for p in dataset if p['gender'] == 'male')
+                6
+
+            DataFrame output::
+
+                >>> df = faker.generate_dataset(100, male_ratio=0.5, as_dataframe=True)
+                >>> df.shape
+                (100, 4)
+                >>> df['gender'].value_counts().to_dict()
+                {'male': 50, 'female': 50}
+                >>> list(df.columns)
+                ['name', 'first_name', 'last_name', 'gender']
+                >>> df.isnull().any().any()
+                False
+
+            Edge cases::
+
+                >>> all_female = faker.generate_dataset(5, male_ratio=0.0)
+                >>> all(p['gender'] == 'female' for p in all_female)
+                True
+
+                >>> all_male = faker.generate_dataset(5, male_ratio=1.0)
+                >>> all(p['gender'] == 'male' for p in all_male)
+                True
         """
         if count <= 0:
-            raise ValueError(f"Count must be positive, got: {count}")
-        
+            raise ValueError(f"count must be a positive integer, got: {count}")
+
         if not 0.0 <= male_ratio <= 1.0:
             raise ValueError(
                 f"male_ratio must be between 0.0 and 1.0, got: {male_ratio}\n"
                 f"This would generate {count * male_ratio:.1f} male and "
                 f"{count * (1 - male_ratio):.1f} female names out of {count} total.\n"
-                "Examples: 0.5 (balanced), 0.7 (70% male), 1.0 (all male)"
+                "Examples: 0.5 (balanced), 0.7 (70 % male), 1.0 (all male)"
             )
-        
+
         male_count = int(count * male_ratio)
         female_count = count - male_count
-        
-        dataset = []
-        
+
+        dataset: List[Dict[str, str]] = []
         if male_count > 0:
             dataset.extend(self.generate_names(male_count, 'male'))
-        
         if female_count > 0:
             dataset.extend(self.generate_names(female_count, 'female'))
-        
+
         self._random.shuffle(dataset)
-        
+
         if as_dataframe:
             try:
-                import pandas as pd
-            except ImportError:
+                import pandas as _pd
+            except ImportError as exc:
                 raise ImportError(
-                    "pandas is required for as_dataframe=True.\n"
+                    "pandas is required when as_dataframe=True.\n"
                     "Install it with: pip install pandas"
-                )
-            return pd.DataFrame(dataset, columns=['name', 'first_name', 'last_name', 'gender'])
-        
+                ) from exc
+            return _pd.DataFrame(
+                dataset, columns=['name', 'first_name', 'last_name', 'gender']
+            )
+
         return dataset
 
-    
+    # ------------------------------------------------------------------
+    # Public API — statistics
+    # ------------------------------------------------------------------
+
     def get_stats(self) -> Dict[str, int]:
-        """Get statistics about the names database.
-        
+        """Return statistics about the embedded names database.
+
+        All counts reflect the number of *unique* entries in the pickle
+        database.  ``possible_combinations`` is the cartesian product of
+        first-name candidates (male + female) and family names, i.e. the
+        theoretical upper bound on distinct full names.
+
         Returns:
-            Dictionary containing:
-                - male_names_count: Number of unique male first names
-                - female_names_count: Number of unique female first names
-                - last_names_count: Number of unique family names
-                - total_names: Sum of all unique names
-                - possible_combinations: Total possible full name combinations
-        
-        Example:
+            Dict[str, int]: A dictionary with exactly five keys:
+
+            * ``'male_names_count'`` — unique male first names
+            * ``'female_names_count'`` — unique female first names
+            * ``'last_names_count'`` — unique family names
+            * ``'total_names'`` — sum of the three counts above
+            * ``'possible_combinations'`` —
+              ``(male_names_count + female_names_count) * last_names_count``
+
+        Example::
+
             >>> faker = FarsiFaker()
             >>> stats = faker.get_stats()
-            >>> print(f"Male names: {stats['male_names_count']:,}")
-            Male names: 3,500
-            >>> print(f"Possible combinations: {stats['possible_combinations']:,}")
-            Possible combinations: 21,000,000
+            >>> stats['male_names_count'] > 0
+            True
+            >>> stats['female_names_count'] > 0
+            True
+            >>> stats['possible_combinations'] == \\
+            ...     (stats['male_names_count'] + stats['female_names_count']) \\
+            ...     * stats['last_names_count']
+            True
         """
         male_count = len(self._male_names)
         female_count = len(self._female_names)
         last_count = len(self._last_names)
-        
+
         return {
             'male_names_count': male_count,
             'female_names_count': female_count,
             'last_names_count': last_count,
             'total_names': male_count + female_count + last_count,
-            'possible_combinations': (male_count + female_count) * last_count
+            'possible_combinations': (male_count + female_count) * last_count,
         }
 
 
-# Convenience function for quick one-off name generation
-def generate_fake_name(gender: GenderInput = None, seed: Optional[int] = None) -> Dict[str, str]:
-    """Quick function to generate a single fake Persian name.
-    
-    This is a convenience function that creates a faker instance and generates
-    one name. For generating multiple names, create a FarsiFaker instance
-    directly for better performance.
-    
+# ---------------------------------------------------------------------------
+# Module-level convenience function
+# ---------------------------------------------------------------------------
+
+def generate_fake_name(
+    gender: GenderInput = None,
+    seed: Optional[int] = None,
+) -> Dict[str, str]:
+    """Generate a single fake Persian name without managing a FarsiFaker instance.
+
+    This is a convenience wrapper around :class:`FarsiFaker` for one-off
+    name generation.  When generating many names in a loop, prefer creating
+    a :class:`FarsiFaker` instance directly — it avoids the per-call
+    constructor overhead.
+
     Args:
-        gender: Desired gender ('male', 'female', or Persian equivalents).
-        seed: Optional random seed for reproducibility.
-    
+        gender (str, optional): Desired gender.  Accepts all tokens
+            recognised by :meth:`FarsiFaker._normalize_gender`
+            (English and Persian).  When ``None`` (default) the gender is
+            chosen at random.
+        seed (int, optional): Random seed for reproducible output.
+            Two calls with the same *seed* and *gender* will return the
+            same dict.  Defaults to ``None`` (non-deterministic).
+
     Returns:
-        Person dictionary with full name and metadata.
-    
+        Dict[str, str]: Person record — identical structure to
+        :meth:`FarsiFaker.full_name`:
+
+        * ``'name'`` — full name
+        * ``'first_name'`` — first name
+        * ``'last_name'`` — family name
+        * ``'gender'`` — ``'male'`` or ``'female'``
+
+    Raises:
+        ValueError: If *gender* is not a recognised token.
+
     Example:
-        >>> from farsi_faker import generate_fake_name
-        >>> 
-        >>> # Quick male name
-        >>> person = generate_fake_name('male')
-        >>> print(person['name'])
-        علی احمدی
-        >>> 
-        >>> # Reproducible
-        >>> person1 = generate_fake_name('female', seed=123)
-        >>> person2 = generate_fake_name('female', seed=123)
-        >>> assert person1 == person2
+        Quick male name::
+
+            >>> from farsi_faker import generate_fake_name
+            >>> person = generate_fake_name('male')
+            >>> person['gender']
+            'male'
+            >>> all(k in person for k in ('name', 'first_name', 'last_name', 'gender'))
+            True
+
+        Reproducible::
+
+            >>> p1 = generate_fake_name('female', seed=99)
+            >>> p2 = generate_fake_name('female', seed=99)
+            >>> p1 == p2
+            True
+
+        One-off vs. instance (performance note)::
+
+            >>> # Prefer this for bulk generation
+            >>> faker = FarsiFaker()
+            >>> names = [faker.full_name() for _ in range(1000)]
     """
-    faker = FarsiFaker(seed=seed)
-    return faker.full_name(gender)
+    return FarsiFaker(seed=seed).full_name(gender)
