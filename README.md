@@ -52,6 +52,7 @@
 - **📝 Fully Typed** - Complete type hints for better IDE support
 - **✅ Well Tested** - Comprehensive test coverage
 - **🌍 Unicode Support** - Full Persian/Farsi character support
+- **🐌 pandas Integration** - Optional DataFrame output for data science workflows
 
 ---
 
@@ -61,6 +62,12 @@
 
 ```bash
 pip install farsi-faker
+```
+
+### With pandas support (for DataFrame output)
+
+```bash
+pip install farsi-faker pandas
 ```
 
 ### From Source
@@ -75,7 +82,7 @@ pip install -e .
 
 - **Python 3.7+**
 - **No external dependencies** for production use
-- Optional: `pandas` for data processing (development only)
+- Optional: `pandas` for DataFrame output (`as_dataframe=True`)
 
 ---
 
@@ -106,26 +113,38 @@ print(female['name'])  # سپیده جلیلی
 ### Generate Multiple Names
 
 ```python
-# Generate 10 random names
+# Generate 10 random names (as list)
 people = faker.generate_names(10)
 
 # Generate 50 male names
 men = faker.generate_names(50, 'male')
 
-# Generate 30 female names
-women = faker.generate_names(30, 'female')
+# Generate 30 female names as pandas DataFrame
+import pandas as pd
+women_df = faker.generate_names(30, 'female', as_dataframe=True)
+print(women_df.head())
+#          name first_name last_name  gender
+# 0  فاطمه احمدی     فاطمه    احمدی  female
+# 1  زینب رضایی      زینب    رضایی  female
 ```
 
 ### Generate Balanced Dataset
 
 ```python
-# Generate 100 people with 60% male ratio
+# Generate 100 people with 60% male ratio (as list)
 dataset = faker.generate_dataset(100, male_ratio=0.6)
 
-# Verify ratio
-males = sum(1 for p in dataset if p['gender'] == 'male')
-print(f"Males: {males}, Females: {100 - males}")
-# Males: 60, Females: 40
+# Generate as pandas DataFrame — ideal for data science workflows
+df = faker.generate_dataset(500, male_ratio=0.5, as_dataframe=True)
+print(df.shape)                    # (500, 4)
+print(df['gender'].value_counts())
+# male      250
+# female    250
+print(df.dtypes)
+# name          object
+# first_name    object
+# last_name     object
+# gender        object
 ```
 
 ### Reproducible Results
@@ -266,52 +285,58 @@ person = faker.full_name('female')
 
 ---
 
-### `generate_names(count=10, gender=None) -> List[Dict[str, str]]`
+### `generate_names(count=10, gender=None, as_dataframe=False) -> List | DataFrame`
 
 Generate multiple full names.
 
 **Parameters:**
 - `count` (int): Number of names to generate
 - `gender` (str, optional): Gender for all names
+- `as_dataframe` (bool): If `True`, returns a `pandas.DataFrame`. Default: `False`.
 
-**Returns:** List of person dictionaries
+**Returns:** List of person dicts, or `pandas.DataFrame` when `as_dataframe=True`.
+DataFrame columns: `name`, `first_name`, `last_name`, `gender`.
 
-**Raises:** `ValueError` if count is not positive
+**Raises:** `ImportError` if `as_dataframe=True` and pandas is not installed.
 
 **Example:**
 ```python
+# List (default)
 people = faker.generate_names(5, 'male')
-# [
-#     {'name': 'علی صادقی عقیلی', 'first_name': 'علی', ...},
-#     {'name': 'محمدرضا قهطرانی', 'first_name': 'محمدرضا', ...},
-#     ...
-# ]
+
+# pandas DataFrame
+df = faker.generate_names(100, as_dataframe=True)
+print(df.shape)   # (100, 4)
+print(df.dtypes)  # all object
 ```
 
 ---
 
-### `generate_dataset(count=100, male_ratio=0.5) -> List[Dict[str, str]]`
+### `generate_dataset(count=100, male_ratio=0.5, as_dataframe=False) -> List | DataFrame`
 
 Generate a balanced dataset with specified gender ratio.
 
 **Parameters:**
 - `count` (int): Total number of names
 - `male_ratio` (float): Ratio of male names (0.0 to 1.0)
+- `as_dataframe` (bool): If `True`, returns a `pandas.DataFrame`. Default: `False`.
 
-**Returns:** List of person dictionaries (shuffled)
+**Returns:** Shuffled list of person dicts, or `pandas.DataFrame` when `as_dataframe=True`.
 
-**Raises:** `ValueError` if parameters are invalid
+**Raises:**
+- `ValueError` if count is not positive or male_ratio is outside [0.0, 1.0]
+- `ImportError` if `as_dataframe=True` and pandas is not installed
 
 **Example:**
 ```python
-# 60% male, 40% female
+# List (default)
 dataset = faker.generate_dataset(100, male_ratio=0.6)
 
-# All female
-all_women = faker.generate_dataset(50, male_ratio=0.0)
-
-# Balanced
-balanced = faker.generate_dataset(100, male_ratio=0.5)
+# pandas DataFrame
+df = faker.generate_dataset(500, male_ratio=0.5, as_dataframe=True)
+print(df['gender'].value_counts())
+# male      250
+# female    250
 ```
 
 ---
@@ -343,12 +368,6 @@ generate_fake_name(gender=None, seed=None) -> Dict[str, str]
 ```
 
 Convenience function for quick one-off name generation.
-
-**Parameters:**
-- `gender` (str, optional): Desired gender
-- `seed` (int, optional): Random seed
-
-**Returns:** Person dictionary
 
 **Example:**
 ```python
@@ -395,18 +414,24 @@ with open('people.csv', 'w', encoding='utf-8', newline='') as f:
     writer.writerows(dataset)
 ```
 
-### Example 3: pandas DataFrame
+### Example 3: pandas DataFrame for Data Science
 
 ```python
 import pandas as pd
 from farsi_faker import FarsiFaker
 
 faker = FarsiFaker(seed=123)
-dataset = faker.generate_dataset(500, male_ratio=0.55)
 
-df = pd.DataFrame(dataset)
+# Generate directly as DataFrame — no manual conversion needed
+df = faker.generate_dataset(500, male_ratio=0.55, as_dataframe=True)
+
 print(df.head())
 print(df['gender'].value_counts())
+print(df.describe(include='all'))
+
+# Works with all standard pandas operations
+grouped = df.groupby('gender')['last_name'].nunique()
+print(grouped)
 ```
 
 ### Example 4: pytest Fixture
@@ -457,28 +482,6 @@ The package accepts various gender formats:
 ### Persian (فارسی)
 - `'مرد'`, `'پسر'`, `'مذکر'` → Male  
 - `'زن'`, `'دختر'`, `'مونث'` → Female
-
-### Examples
-
-```python
-faker = FarsiFaker()
-
-# All these work for male
-faker.full_name('male')
-faker.full_name('m')
-faker.full_name('مرد')
-faker.full_name('پسر')
-
-# All these work for female
-faker.full_name('female')
-faker.full_name('f')
-faker.full_name('زن')
-faker.full_name('دختر')
-
-# Case-insensitive
-faker.full_name('MALE')
-faker.full_name('Female')
-```
 
 ---
 
@@ -625,30 +628,6 @@ Contributions are welcome! Please follow these steps:
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-```
-MIT License
-
-Copyright (c) 2025 Ali Sadeghi Aghili
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
 ---
 
 ## 📞 Contact & Links
@@ -666,12 +645,6 @@ SOFTWARE.
 - Names dataset sourced from publicly available Iranian name databases
 - Inspired by [Faker](https://github.com/joke2k/faker) library
 - Built with ❤️ for the Persian/Farsi development community
-
----
-
-## ⭐ Star History
-
-If you find this project useful, please consider giving it a star! ⭐
 
 ---
 

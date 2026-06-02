@@ -11,6 +11,36 @@ No unreleased changes yet.
 
 ---
 
+## [1.1.0] - 2026-06-02
+
+### Added
+
+- **`as_dataframe` parameter for `generate_names()`** — pass `as_dataframe=True` to get a
+  `pandas.DataFrame` instead of a list of dicts. Columns: `name`, `first_name`, `last_name`, `gender`.
+- **`as_dataframe` parameter for `generate_dataset()`** — same DataFrame output, fully compatible
+  with the `male_ratio` and `count` parameters.
+- pandas is an **optional** dependency; an `ImportError` with a helpful install message is raised
+  only when `as_dataframe=True` and pandas is not installed.
+
+### Improved
+
+- **`male_ratio` validation error message** now includes the computed male/female counts and
+  the total count so the problem is immediately obvious:
+  ```
+  male_ratio must be between 0.0 and 1.0, got: 1.5
+  This would generate 150.0 male and -50.0 female names out of 100 total.
+  ```
+- Added 18 new tests in a dedicated `TestDataFrame` class covering shape, column order,
+  dtypes, null checks, gender ratio accuracy, backward compatibility, and a full
+  pandas workflow integration test.
+
+### Backward Compatibility
+
+All changes are fully backward-compatible. Existing code that does not pass
+`as_dataframe=True` continues to receive a `list` of dicts, identical to v1.0.0 behavior.
+
+---
+
 ## [1.0.0] - 2025-12-21
 
 ### Initial Release
@@ -104,7 +134,7 @@ This project follows [Semantic Versioning](https://semver.org/):
 
 ## Future Roadmap
 
-### Planned for 1.1.0
+### Planned for 1.2.0
 - [ ] Add phone number generation
 - [ ] Add address generation (city, street)
 - [ ] Add email generation
@@ -122,5 +152,6 @@ This project follows [Semantic Versioning](https://semver.org/):
 
 ---
 
-[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/alisadeghiaghili/farsi-faker/releases/tag/v1.0.0
