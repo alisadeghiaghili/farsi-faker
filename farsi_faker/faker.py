@@ -46,8 +46,8 @@ class FarsiFaker:
         >>> # Generate 10 female names
         >>> women = faker.generate_names(10, 'female')
         >>> 
-        >>> # Generate balanced dataset
-        >>> dataset = faker.generate_dataset(100, male_ratio=0.5)
+        >>> # Generate balanced dataset as DataFrame
+        >>> df = faker.generate_dataset(100, male_ratio=0.5, as_dataframe=True)
     """
     
     # Class-level cache for data (shared across instances for memory efficiency)
@@ -289,46 +289,64 @@ class FarsiFaker:
     def generate_names(
         self,
         count: int = 10,
-        gender: GenderInput = None
-    ) -> List[Dict[str, str]]:
+        gender: GenderInput = None,
+        as_dataframe: bool = False
+    ) -> Union[List[Dict[str, str]], 'pandas.DataFrame']:
         """Generate multiple full names.
         
         Args:
             count: Number of names to generate (must be positive).
             gender: Desired gender for all names. If None, randomly mixes genders.
+            as_dataframe: If True, returns a pandas DataFrame instead of a list.
+                         Requires pandas to be installed.
         
         Returns:
-            List of person dictionaries (see full_name() for structure).
+            List of person dictionaries (see full_name() for structure),
+            or a pandas DataFrame if as_dataframe=True.
+            Columns when as_dataframe=True: name, first_name, last_name, gender.
         
         Raises:
             ValueError: If count is not positive or gender is invalid.
+            ImportError: If as_dataframe=True but pandas is not installed.
         
         Example:
             >>> faker = FarsiFaker()
             >>> 
-            >>> # Generate 5 male names
+            >>> # Generate 5 male names as list (default)
             >>> men = faker.generate_names(5, 'male')
             >>> for person in men:
             ...     print(person['name'])
             علی احمدی
             محمد رضایی
-            حسین کریمی
-            رضا محمدی
-            احمد حسینی
             >>> 
-            >>> # Generate 3 random gender names
-            >>> people = faker.generate_names(3)
+            >>> # Generate as pandas DataFrame
+            >>> df = faker.generate_names(100, as_dataframe=True)
+            >>> print(df.head())
+            >>> print(df['gender'].value_counts())
         """
         if count <= 0:
             raise ValueError(f"Count must be positive, got: {count}")
         
-        return [self.full_name(gender) for _ in range(count)]
+        records = [self.full_name(gender) for _ in range(count)]
+        
+        if as_dataframe:
+            try:
+                import pandas as pd
+            except ImportError:
+                raise ImportError(
+                    "pandas is required for as_dataframe=True.\n"
+                    "Install it with: pip install pandas"
+                )
+            return pd.DataFrame(records, columns=['name', 'first_name', 'last_name', 'gender'])
+        
+        return records
     
     def generate_dataset(
-    self,
-    count: int = 100,
-    male_ratio: float = 0.5
-    ) -> List[Dict[str, str]]:
+        self,
+        count: int = 100,
+        male_ratio: float = 0.5,
+        as_dataframe: bool = False
+    ) -> Union[List[Dict[str, str]], 'pandas.DataFrame']:
         """Generate a balanced dataset with specified gender ratio.
         
         Args:
@@ -339,19 +357,41 @@ class FarsiFaker:
                 - 0.7 = 70% male, 30% female
                 - 0.0 = 100% female
                 - 1.0 = 100% male
+            as_dataframe: If True, returns a pandas DataFrame instead of a list.
+                         Requires pandas to be installed.
         
         Returns:
-            List of person dictionaries in random (shuffled) order.
+            List of person dictionaries in random (shuffled) order,
+            or a pandas DataFrame if as_dataframe=True.
+            Columns when as_dataframe=True: name, first_name, last_name, gender.
         
         Raises:
-            ValueError: If count is not positive or male_ratio is out of range.
+            ValueError: If count is not positive, or male_ratio is outside [0.0, 1.0].
+            ImportError: If as_dataframe=True but pandas is not installed.
+        
+        Example:
+            >>> faker = FarsiFaker(seed=42)
+            >>> 
+            >>> # As list (default)
+            >>> dataset = faker.generate_dataset(100, male_ratio=0.6)
+            >>> 
+            >>> # As pandas DataFrame — ideal for data science workflows
+            >>> df = faker.generate_dataset(500, male_ratio=0.5, as_dataframe=True)
+            >>> print(df.shape)           # (500, 4)
+            >>> print(df.dtypes)          # all object (string)
+            >>> print(df['gender'].value_counts())
+            male      250
+            female    250
+            Name: gender, dtype: int64
         """
         if count <= 0:
             raise ValueError(f"Count must be positive, got: {count}")
         
-        if not 0 <= male_ratio <= 1:
+        if not 0.0 <= male_ratio <= 1.0:
             raise ValueError(
-                f"male_ratio must be between 0 and 1, got: {male_ratio}\n"
+                f"male_ratio must be between 0.0 and 1.0, got: {male_ratio}\n"
+                f"This would generate {count * male_ratio:.1f} male and "
+                f"{count * (1 - male_ratio):.1f} female names out of {count} total.\n"
                 "Examples: 0.5 (balanced), 0.7 (70% male), 1.0 (all male)"
             )
         
@@ -360,15 +400,23 @@ class FarsiFaker:
         
         dataset = []
         
-        # Only generate if count > 0
         if male_count > 0:
             dataset.extend(self.generate_names(male_count, 'male'))
         
         if female_count > 0:
             dataset.extend(self.generate_names(female_count, 'female'))
         
-        # Shuffle to mix genders randomly
         self._random.shuffle(dataset)
+        
+        if as_dataframe:
+            try:
+                import pandas as pd
+            except ImportError:
+                raise ImportError(
+                    "pandas is required for as_dataframe=True.\n"
+                    "Install it with: pip install pandas"
+                )
+            return pd.DataFrame(dataset, columns=['name', 'first_name', 'last_name', 'gender'])
         
         return dataset
 
