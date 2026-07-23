@@ -80,7 +80,7 @@ pip install -e .
 
 ### Requirements
 
-- **Python 3.7+**
+- **Python 3.9+**
 - **No external dependencies** for production use
 - Optional: `pandas` for DataFrame output (`as_dataframe=True`)
 
@@ -481,7 +481,6 @@ farsi-faker/
 │   └── data/names.pkl
 ├── tests/test_faker.py
 ├── scripts/create_pickle.py
-├── setup.py
 ├── pyproject.toml
 ├── CHANGELOG.md
 └── README.md
