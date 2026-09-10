@@ -28,7 +28,7 @@ Attributes:
 
 from typing import Optional
 
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 __version_info__ = tuple(int(i) for i in __version__.split('.') if i.isdigit())
 
 # Version components for programmatic access
@@ -41,8 +41,8 @@ VERSION_PATCH = __version_info__[2] if len(__version_info__) > 2 else 0
 __status__ = "Production/Stable"
 
 # Release information
-__release_date__ = "2026-07-24"
-__release_name__ = "Integrity"
+__release_date__ = "2026-09-10"
+__release_name__ = "Data Quality"
 
 # Package metadata
 __author__ = "Ali Sadeghi Aghili"
@@ -147,6 +147,18 @@ def check_version(required_version: str) -> bool:
 
 
 VERSION_HISTORY = {
+    "1.2.0": {
+        "date": "2026-09-10",
+        "status": "stable",
+        "changes": [
+            "Add farsi_faker.cleaning with OCR-split repair and gender-label filters",
+            "Rebuild names.pkl: remove singleton-token OCR artifacts and honorific noise",
+            "Male pool 7863→7633, female 3817→3730; zero singleton tokens and zero gender overlap",
+            "Preserve legitimate compounds (محمد رضا) and multi-word surnames (آب روشن)",
+            "Add scripts/rebuild_names_pkl.py",
+            "Add data-quality CI gates against the embedded database",
+        ],
+    },
     "1.1.1": {
         "date": "2026-07-24",
         "status": "stable",
