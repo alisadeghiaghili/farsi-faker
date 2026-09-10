@@ -28,7 +28,7 @@ Attributes:
 
 from typing import Optional
 
-__version__ = "1.5.0"
+__version__ = "1.6.0"
 __version_info__ = tuple(int(i) for i in __version__.split('.') if i.isdigit())
 
 # Version components for programmatic access
@@ -42,7 +42,7 @@ __status__ = "Production/Stable"
 
 # Release information
 __release_date__ = "2026-09-10"
-__release_name__ = "Extend & Core Coverage"
+__release_name__ = "Coverage Expansion"
 
 # Package metadata
 __author__ = "Ali Sadeghi Aghili"
@@ -147,6 +147,15 @@ def check_version(required_version: str) -> bool:
 
 
 VERSION_HISTORY = {
+    "1.6.0": {
+        "date": "2026-09-10",
+        "status": "stable",
+        "changes": [
+            "Expand curated seed names for broader initial coverage (و/ک/گ and more)",
+            "Rebuild names.pkl: male 7546→7572, female 3695→3705, last 5751→5758",
+            "Add CI gate for و/ک/گ first-letter coverage",
+        ],
+    },
     "1.5.0": {
         "date": "2026-09-10",
         "status": "stable",
