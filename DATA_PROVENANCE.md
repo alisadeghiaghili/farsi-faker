@@ -43,9 +43,24 @@ python scripts/rebuild_names_pkl.py
 | ≤1.1.1 | 7863 | 3817 | 5755 | pre-cleaning |
 | 1.2.0 | 7633 | 3730 | 5755 | OCR singleton + honorific pass |
 | 1.3.0 | 7493 | 3648 | 5748 | Abdol glue + truncated tokens |
-| 1.4.0 | 7493 | 3648 | 5748 | ZWNJ hygiene (no size change expected) |
+| 1.4.0 | 7493 | 3648 | 5748 | ZWNJ hygiene |
+| 1.5.0 | 7546 | 3695 | 5751 | curated seed expansion (core `م`/`ف`) |
 
 Exact numbers after each rebuild are printed by `rebuild_names_pkl.py`.
+
+## Seed expansion
+
+`farsi_faker/data/seed_names.py` holds curated common Iranian names that the
+historical pickle under-represented (notably most names starting with `م`
+and `ف`, including `محمد` and `فاطمه`). `scripts/rebuild_names_pkl.py`
+merges these seeds through `precision_repair` when rewriting `names.pkl`.
+
+At runtime you can merge additional names with:
+
+```python
+from farsi_faker import extend_name_pools
+extend_name_pools(male=['کیومرث'], female=['مهلقا'], last=['کیومرثی'])
+```
 
 ## CI gates
 
@@ -60,6 +75,8 @@ reappear in the embedded pickle:
 - truncated `ال` endings
 - unglued bare `عبد` / `عب`
 - names shorter than 3 letters
+- missing core common names (`محمد`, `فاطمه`, …)
+- insufficient `م` / `ف` initial coverage
 
 ## Profile field provenance
 
