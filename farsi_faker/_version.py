@@ -28,7 +28,7 @@ Attributes:
 
 from typing import Optional
 
-__version__ = "1.4.0"
+__version__ = "1.5.0"
 __version_info__ = tuple(int(i) for i in __version__.split('.') if i.isdigit())
 
 # Version components for programmatic access
@@ -42,7 +42,7 @@ __status__ = "Production/Stable"
 
 # Release information
 __release_date__ = "2026-09-10"
-__release_name__ = "Address & Provenance"
+__release_name__ = "Extend & Core Coverage"
 
 # Package metadata
 __author__ = "Ali Sadeghi Aghili"
@@ -147,6 +147,18 @@ def check_version(required_version: str) -> bool:
 
 
 VERSION_HISTORY = {
+    "1.5.0": {
+        "date": "2026-09-10",
+        "status": "stable",
+        "changes": [
+            "Fill critical coverage gap: core names starting with م and ف",
+            "Bake curated seed expansion into names.pkl (محمد، فاطمه، مهدی، …)",
+            "male 7493→7546, female 3648→3695, last 5748→5751",
+            "Add farsi_faker.extend.extend_name_pools for runtime merges",
+            "Add apply_seed_expansion / load_seed_expansion",
+            "CI gates for core common names and م/ف initial coverage",
+        ],
+    },
     "1.4.0": {
         "date": "2026-09-10",
         "status": "stable",

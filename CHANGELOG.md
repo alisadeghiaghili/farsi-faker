@@ -266,7 +266,12 @@ This project follows [Semantic Versioning](https://semver.org/):
 - [x] ZWNJ hygiene helpers wired into the cleaning pipeline
 - [x] Address / city generation
 
-### Planned for 1.5.0
+### Completed in 1.5.0
+
+- [x] Dynamic name-pool extension API (`extend_name_pools`)
+- [x] Curated seed expansion baked into names.pkl (core `م`/`ف` coverage)
+
+### Planned for 1.6.0
 
 - [ ] Restore raw CSV sources when available and document a from-source rebuild
 - [ ] Optional weighted sampling by name frequency
@@ -283,7 +288,8 @@ This project follows [Semantic Versioning](https://semver.org/):
 
 ---
 
-[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.1.1...v1.2.0

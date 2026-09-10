@@ -45,6 +45,7 @@
 
 - **Embedded name database** — Persian first and family names shipped with the package
 - **Gender-specific generation** — separate male and female first-name pools
+- **Dynamic extension** — `extend_name_pools()` to merge your own names at runtime
 - **Profile fields** — national ID (کد ملی with checksum), mobile, email, postal code, address
 - **CLI** — `python -m farsi_faker` for JSON/CSV fixtures
 - **Fast cold start** — pickle-backed name cache, shared across instances
@@ -57,9 +58,8 @@
 - **Optional pandas** — DataFrame output for data-science workflows
 - **Cleaning helpers** — `farsi_faker.cleaning` for OCR-split and ZWNJ repair
 
-> **Data provenance:** see [DATA_PROVENANCE.md](DATA_PROVENANCE.md) for how the
-> embedded name pools are cleaned and gated in CI. Treat generated names as
-> fixtures, not as a validated onomastics resource.
+> **Data provenance:** see [DATA_PROVENANCE.md](DATA_PROVENANCE.md). Core common
+> names (`محمد`, `فاطمه`, …) ship in the embedded pool as of v1.5.0.
 
 ---
 

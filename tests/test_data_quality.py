@@ -73,6 +73,23 @@ class TestEmbeddedDataQuality:
         assert 'آرمان' in male_set
         assert 'امیر' in male_set
 
+    def test_core_common_names_present(self) -> None:
+        """The most frequent Iranian names must ship in the embedded pool."""
+        male, female, last = _pools()
+        for name in ('محمد', 'علی', 'حسین', 'رضا', 'مهدی', 'مرتضی', 'یوسف'):
+            assert name in male, f'missing male core name: {name}'
+        for name in ('فاطمه', 'زهرا', 'مریم', 'زینب', 'نرگس', 'معصومه'):
+            assert name in female, f'missing female core name: {name}'
+        assert 'محمدی' in last
+
+    def test_initial_coverage_for_meem_and_feh(self) -> None:
+        """Pools must not be missing common Persian initials م and ف."""
+        male, female, _ = _pools()
+        assert sum(1 for n in male if n.startswith('م')) >= 10
+        assert sum(1 for n in male if n.startswith('ف')) >= 5
+        assert sum(1 for n in female if n.startswith('م')) >= 10
+        assert sum(1 for n in female if n.startswith('ف')) >= 5
+
     def test_no_truncated_al_tokens(self) -> None:
         from farsi_faker.cleaning import is_truncated_name
 
