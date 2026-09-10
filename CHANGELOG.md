@@ -11,6 +11,38 @@ No unreleased changes yet.
 
 ---
 
+## [1.2.0] - 2026-09-10
+
+### Added
+
+- `farsi_faker.cleaning` — pure helpers for repairing OCR/segmentation splits
+  and filtering gender-label noise (`join_ocr_splits`, `drop_from_pool`,
+  `clean_name_pools`, and supporting utilities).
+- `scripts/rebuild_names_pkl.py` — rebuild the embedded pickle from the
+  cleaning pipeline (`--dry-run` supported).
+- Data-quality CI gates that fail the build if singleton-token OCR artifacts,
+  honorific mislabels, gender overlap, or unsorted/duplicate pools reappear.
+
+### Changed
+
+- Rebuilt `farsi_faker/data/names.pkl` through the cleaning pipeline:
+  - male first names: 7863 → 7633
+  - female first names: 3817 → 3730
+  - family names: 5755 (unchanged; multi-word surnames preserved)
+  - singleton-token artifacts remaining: **0**
+  - male/female pool overlap: **0**
+- Legitimate compounds (`محمد رضا`, `آقا رضا`) and multi-word surnames
+  (`آب روشن`) are preserved; OCR forms such as `آ رمان` / `آر مان` / `با با`
+  are repaired or removed.
+- Public exports: `clean_name_pools`, `join_ocr_splits`.
+
+### Fixed
+
+- Truncated `آق`/`اق` heads expand to `آقا`/`اقا` instead of being glued
+  onto the next token.
+
+---
+
 ## [1.1.1] - 2026-07-24
 
 ### Fixed
@@ -170,13 +202,11 @@ This project follows [Semantic Versioning](https://semver.org/):
 
 ## Future Roadmap
 
-### Planned for 1.2.0 (data quality first)
+### Completed in 1.2.0
 
-- [ ] Restore/regenerate source CSVs with provenance
-- [ ] Remove OCR-split artifacts (`آ رمان` → `آرمان` and similar)
-- [ ] Resolve gender-label noise (honorifics in the wrong pool)
-- [ ] Allow ZWNJ in the Persian validator and rebuild `names.pkl`
-- [ ] Data-quality assertions in CI
+- [x] Remove OCR-split artifacts (`آ رمان` → `آرمان` and similar)
+- [x] Resolve gender-label noise (honorifics in the wrong pool)
+- [x] Data-quality assertions in CI
 
 ### Planned for 1.3.0 (synthetic profile fields)
 
@@ -185,6 +215,11 @@ This project follows [Semantic Versioning](https://semver.org/):
 - [ ] Email generation
 - [ ] Address / postal code generation
 - [ ] CLI (`farsi-faker generate`) with JSON/CSV output
+
+### Planned for 1.4.0 (source provenance)
+
+- [ ] Restore source CSVs or documented rebuild provenance
+- [ ] Optional ZWNJ-normalized rebuild from original sources
 
 ---
 
@@ -197,7 +232,8 @@ This project follows [Semantic Versioning](https://semver.org/):
 
 ---
 
-[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/alisadeghiaghili/farsi-faker/releases/tag/v1.0.0
