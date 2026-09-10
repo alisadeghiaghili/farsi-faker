@@ -10,6 +10,7 @@ Features:
     - Optional pandas DataFrame output
     - Zero required runtime dependencies
     - PEP 561 typed package (``py.typed``)
+    - Name-pool cleaning helpers (``farsi_faker.cleaning``)
 
 Quick Start:
     >>> from farsi_faker import FarsiFaker
@@ -34,11 +35,14 @@ from ._version import (
     __version_info__,
     check_version,
 )
+from .cleaning import clean_name_pools, join_ocr_splits
 from .faker import FarsiFaker, generate_fake_name
 
 __all__ = [
     'FarsiFaker',
     'generate_fake_name',
+    'clean_name_pools',
+    'join_ocr_splits',
     '__version__',
     '__version_info__',
     '__status__',
