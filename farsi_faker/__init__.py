@@ -11,18 +11,16 @@ Features:
     - Zero required runtime dependencies
     - PEP 561 typed package (``py.typed``)
     - Name-pool cleaning helpers (``farsi_faker.cleaning``)
+    - Synthetic profile fields: national ID, mobile, email, postal code
+    - CLI: ``python -m farsi_faker``
 
 Quick Start:
     >>> from farsi_faker import FarsiFaker
     >>> faker = FarsiFaker(seed=42)
-    >>> person = faker.full_name('male')
+    >>> person = faker.profile('male')
     >>> person['gender']
     'male'
-    >>> dataset = faker.generate_dataset(100, male_ratio=0.6)
-    >>> len(dataset)
-    100
-    >>> stats = faker.get_stats()
-    >>> stats['male_names_count'] > 0
+    >>> '@' in person['email']
     True
 
 Homepage: https://github.com/alisadeghiaghili/farsi-faker
@@ -37,12 +35,28 @@ from ._version import (
 )
 from .cleaning import clean_name_pools, join_ocr_splits
 from .faker import FarsiFaker, generate_fake_name
+from .profile import (
+    email_address,
+    is_valid_mobile,
+    is_valid_national_id,
+    mobile_number,
+    national_id,
+    postal_code,
+    profile_record,
+)
 
 __all__ = [
     'FarsiFaker',
     'generate_fake_name',
     'clean_name_pools',
     'join_ocr_splits',
+    'national_id',
+    'is_valid_national_id',
+    'mobile_number',
+    'is_valid_mobile',
+    'email_address',
+    'postal_code',
+    'profile_record',
     '__version__',
     '__version_info__',
     '__status__',
