@@ -1,106 +1,76 @@
-"""Farsi Faker - Generate realistic fake Persian/Farsi data.
+"""Farsi Faker - Generate Persian/Farsi names for testing and development.
 
-فارسی فیکر - تولید داده‌های فیک فارسی برای تست
-
-This package provides a simple and efficient way to generate realistic Persian/Farsi
-names for testing, data generation, mock data, and other applications.
+Generate Persian/Farsi names for tests, fixtures, mock data, and local
+development without external service dependencies.
 
 Features:
-    - 10,000+ authentic Persian names from real Iranian datasets
-    - Gender-specific name generation (male/female)
-    - High-performance with pickle-based optimized data storage
-    - Thread-safe implementation
-    - Reproducible results with seed support
-    - Zero external dependencies for production use
-    - Fully typed with comprehensive type hints
-    - Extensive test coverage
+    - Embedded Persian name database (male, female, family names)
+    - Gender-specific name generation
+    - Reproducible output via seed
+    - Optional pandas DataFrame output
+    - Zero required runtime dependencies
+    - PEP 561 typed package (``py.typed``)
 
 Quick Start:
     >>> from farsi_faker import FarsiFaker
-    >>> 
-    >>> # Create faker instance
-    >>> faker = FarsiFaker()
-    >>> 
-    >>> # Generate a random male name
+    >>> faker = FarsiFaker(seed=42)
     >>> person = faker.full_name('male')
-    >>> print(person['name'])
-    علی احمدی
-    >>> 
-    >>> # Generate 100 people with 60% male ratio
+    >>> person['gender']
+    'male'
     >>> dataset = faker.generate_dataset(100, male_ratio=0.6)
-    >>> 
-    >>> # Get database statistics
+    >>> len(dataset)
+    100
     >>> stats = faker.get_stats()
-    >>> print(f"Total combinations: {stats['possible_combinations']:,}")
+    >>> stats['male_names_count'] > 0
+    True
 
-Examples:
-    Generate single names:
-        >>> faker = FarsiFaker()
-        >>> male_name = faker.male_first_name()
-        >>> female_name = faker.female_first_name()
-        >>> last_name = faker.last_name()
-    
-    Generate with reproducible results:
-        >>> faker = FarsiFaker(seed=42)
-        >>> name1 = faker.full_name()
-        >>> faker = FarsiFaker(seed=42)
-        >>> name2 = faker.full_name()
-        >>> assert name1 == name2  # Same results!
-    
-    Quick one-off generation:
-        >>> from farsi_faker import generate_fake_name
-        >>> person = generate_fake_name('female', seed=123)
-        >>> print(person['name'])
-
-For detailed documentation, visit: https://github.com/alisadeghiaghili/farsi-faker
+Homepage: https://github.com/alisadeghiaghili/farsi-faker
 """
 
-from .faker import FarsiFaker, generate_fake_name
 from ._version import (
+    __release_date__,
+    __status__,
     __version__,
     __version_info__,
-    __status__,
-    __release_date__,
+    check_version,
 )
+from .faker import FarsiFaker, generate_fake_name
 
-# Public API
 __all__ = [
     'FarsiFaker',
     'generate_fake_name',
     '__version__',
     '__version_info__',
+    '__status__',
+    '__release_date__',
+    'check_version',
+    'get_info',
+    'show_info',
 ]
 
-# Package metadata
 __author__ = 'Ali Sadeghi Aghili'
 __author_email__ = 'alisadeghiaghili@gmail.com'
-__maintainer__ = 'Ali Sadeghi Aghili'
-__maintainer_email__ = 'alisadeghiaghili@gmail.com'
 __license__ = 'MIT'
-__copyright__ = f'Copyright (c) 2025 {__author__}'
+__copyright__ = f'Copyright (c) 2025-2026 {__author__}'
 __url__ = 'https://github.com/alisadeghiaghili/farsi-faker'
-__docs_url__ = 'https://github.com/alisadeghiaghili/farsi-faker#readme'
-__source_url__ = 'https://github.com/alisadeghiaghili/farsi-faker'
-__tracker_url__ = 'https://github.com/alisadeghiaghili/farsi-faker/issues'
-__pypi_url__ = 'https://pypi.org/project/farsi-faker/'
-__description__ = 'Generate realistic fake Persian/Farsi names for testing and development'
-__long_description__ = __doc__
+__description__ = 'Generate Persian/Farsi names for testing and development'
 
-# Development status
-__status__ = __status__  # From _version.py
 
-# Package info for introspection
-def get_info():
-    """Get package information.
-    
+def get_info() -> dict:
+    """Return package metadata for introspection.
+
     Returns:
-        dict: Package metadata including version, author, license, etc.
-    
+        dict: Keys include ``name``, ``version``, ``version_info``,
+        ``status``, ``release_date``, ``author``, ``license``, ``url``,
+        and ``description``.
+
     Example:
         >>> from farsi_faker import get_info
         >>> info = get_info()
-        >>> print(f"Version: {info['version']}")
-        >>> print(f"Author: {info['author']}")
+        >>> info['name']
+        'farsi-faker'
+        >>> info['version'] == __import__('farsi_faker').__version__
+        True
     """
     return {
         'name': 'farsi-faker',
@@ -112,62 +82,29 @@ def get_info():
         'author_email': __author_email__,
         'license': __license__,
         'url': __url__,
-        'docs_url': __docs_url__,
-        'pypi_url': __pypi_url__,
         'description': __description__,
     }
 
 
-def show_info():
-    """Print package information in a formatted way.
-    
+def show_info() -> None:
+    """Print package metadata to stdout.
+
     Example:
         >>> from farsi_faker import show_info
-        >>> show_info()
-        farsi-faker v1.0.0
-        ==================
-        Author: Ali Sadeghi Aghili
-        License: MIT
-        URL: https://github.com/alisadeghiaghili/farsi-faker
+        >>> show_info()  # doctest: +ELLIPSIS
+        farsi-faker v...
     """
     info = get_info()
-    print(f"{info['name']} v{info['version']}")
-    print("=" * (len(info['name']) + len(info['version']) + 3))
+    banner = f"{info['name']} v{info['version']}"
+    print(banner)
+    print('=' * len(banner))
     print(f"Status: {info['status']}")
     print(f"Release Date: {info['release_date']}")
     print(f"Author: {info['author']} <{info['author_email']}>")
     print(f"License: {info['license']}")
     print(f"Homepage: {info['url']}")
-    print(f"PyPI: {info['pypi_url']}")
     print(f"\nDescription: {info['description']}")
 
 
-# Version check helper
-def check_version(required_version: str) -> bool:
-    """Check if current version meets the required version.
-    
-    Args:
-        required_version: Minimum required version (e.g., "1.0.0")
-    
-    Returns:
-        bool: True if current version >= required version
-    
-    Example:
-        >>> from farsi_faker import check_version
-        >>> if check_version("1.0.0"):
-        ...     print("Version OK!")
-    """
-    try:
-        required = tuple(int(i) for i in required_version.split('.') if i.isdigit())
-        return __version_info__ >= required
-    except (ValueError, AttributeError):
-        return False
-
-
-# Expose get_info and show_info in __all__ if you want them public
-__all__.extend(['get_info', 'show_info', 'check_version'])
-
-
-# Optional: Print info when module is imported with python -m
 if __name__ == '__main__':
     show_info()

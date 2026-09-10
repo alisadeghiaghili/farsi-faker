@@ -17,8 +17,8 @@ Examples:
     - 2.0.0: Major release with breaking changes
 
 Attributes:
-    __version__ (str): The current version string (e.g., "1.1.0")
-    __version_info__ (tuple): Version as a tuple (e.g., (1, 1, 0))
+    __version__ (str): The current version string (e.g., "1.1.1")
+    __version_info__ (tuple): Version as a tuple (e.g., (1, 1, 1))
     VERSION_MAJOR (int): Major version number
     VERSION_MINOR (int): Minor version number
     VERSION_PATCH (int): Patch version number
@@ -26,7 +26,9 @@ Attributes:
     __release_date__ (str): Release date in ISO format (YYYY-MM-DD)
 """
 
-__version__ = "1.1.0"
+from typing import Optional
+
+__version__ = "1.1.1"
 __version_info__ = tuple(int(i) for i in __version__.split('.') if i.isdigit())
 
 # Version components for programmatic access
@@ -39,8 +41,8 @@ VERSION_PATCH = __version_info__[2] if len(__version_info__) > 2 else 0
 __status__ = "Production/Stable"
 
 # Release information
-__release_date__ = "2026-06-02"
-__release_name__ = "DataFrame Integration"
+__release_date__ = "2026-07-24"
+__release_name__ = "Integrity"
 
 # Package metadata
 __author__ = "Ali Sadeghi Aghili"
@@ -59,13 +61,13 @@ def get_version() -> str:
     """Get the current version string.
 
     Returns:
-        str: Version string (e.g., ``"1.1.0"``)
+        str: Version string (e.g., ``"1.1.1"``)
 
     Example::
 
         >>> from farsi_faker._version import get_version
-        >>> get_version()
-        '1.1.0'
+        >>> get_version() == __version__
+        True
     """
     return __version__
 
@@ -74,13 +76,13 @@ def get_version_info() -> tuple:
     """Get the current version as a tuple.
 
     Returns:
-        tuple: Version tuple (e.g., ``(1, 1, 0)``)
+        tuple: Version tuple (e.g., ``(1, 1, 1)``)
 
     Example::
 
         >>> from farsi_faker._version import get_version_info
-        >>> get_version_info()
-        (1, 1, 0)
+        >>> get_version_info() == __version_info__
+        True
     """
     return __version_info__
 
@@ -94,8 +96,8 @@ def get_full_version() -> str:
     Example::
 
         >>> from farsi_faker._version import get_full_version
-        >>> get_full_version()
-        'farsi-faker v1.1.0 (Production/Stable) - Released: 2026-06-02'
+        >>> get_full_version().startswith('farsi-faker v')
+        True
     """
     return (
         f"farsi-faker v{__version__} "
@@ -108,12 +110,14 @@ def check_version(required_version: str) -> bool:
     """Check if the installed version meets a minimum requirement.
 
     Args:
-        required_version (str): Minimum required version string
-            (e.g., ``"1.1.0"``).
+        required_version (str): Minimum required dotted version string
+            (e.g., ``"1.1.0"``). Every component must be a non-negative
+            integer.
 
     Returns:
         bool: ``True`` if the current version is greater than or equal to
-        *required_version*, ``False`` otherwise.
+        *required_version*. ``False`` if the requirement is unmet or the
+        input is not a valid dotted version.
 
     Example::
 
@@ -122,51 +126,75 @@ def check_version(required_version: str) -> bool:
         True
         >>> check_version("2.0.0")
         False
+        >>> check_version("not-a-version")
+        False
+        >>> check_version("")
+        False
     """
-    try:
-        required = tuple(int(i) for i in required_version.split('.') if i.isdigit())
-        return __version_info__ >= required
-    except (ValueError, AttributeError):
+    if not isinstance(required_version, str):
         return False
+
+    parts = required_version.strip().split('.')
+    if not parts or not all(part.isdigit() for part in parts):
+        return False
+
+    required = tuple(int(part) for part in parts)
+    # Pad the shorter side so (1, 1) vs (1, 1, 0) compares correctly.
+    width = max(len(required), len(__version_info__))
+    required = required + (0,) * (width - len(required))
+    current = __version_info__ + (0,) * (width - len(__version_info__))
+    return current >= required
 
 
 VERSION_HISTORY = {
+    "1.1.1": {
+        "date": "2026-07-24",
+        "status": "stable",
+        "changes": [
+            "Fix create_pickle.py so importing the script no longer runs main()",
+            "Align count validation tests with runtime error messages",
+            "Replace flaky single-space full_name assertion with join contract",
+            "Load name pools under a lock and expose them as immutable tuples",
+            "Document concurrent instantiation safety (one instance per thread)",
+            "Add py.typed and declare requires-python >=3.9",
+            "Consolidate packaging metadata into pyproject.toml",
+            "Deduplicate check_version and reject non-semver inputs",
+            "Add packaging integrity tests and CI test workflow",
+        ],
+    },
     "1.1.0": {
         "date": "2026-06-02",
         "status": "stable",
         "changes": [
             "Add as_dataframe parameter to generate_names() and generate_dataset()",
             "Improve male_ratio validation error message with computed counts",
-            "Bullet-proof all docstrings with runnable examples and output",
             "Use TYPE_CHECKING guard for pandas import (zero runtime cost)",
             "Fix exception chaining (raise ... from exc) throughout",
-            "Add 18 new tests in TestDataFrame covering shape, dtypes, nulls, "
-            "gender ratio accuracy, backward compatibility, and pandas workflow",
+            "Add tests for as_dataframe covering shape, dtypes, nulls, and ratios",
         ],
     },
     "1.0.0": {
         "date": "2025-12-21",
         "status": "stable",
         "changes": [
-            "Initial release with 10,000+ authentic Persian names",
+            "Initial release with embedded Persian names database",
             "Gender-specific name generation (male/female)",
-            "High-performance pickle-based data storage",
-            "Thread-safe implementation",
+            "Pickle-based data storage",
             "Reproducible results with seed support",
             "Zero external dependencies",
             "Full type hints support",
-            "Comprehensive test coverage",
+            "Test suite for core generators",
         ],
     },
 }
 
 
-def get_changelog(version: str = None) -> dict:
+def get_changelog(version: Optional[str] = None) -> dict:
     """Get the changelog for a specific version or all versions.
 
     Args:
         version (str, optional): Version string to look up
-            (e.g., ``"1.1.0"``).  When ``None`` (default) the full
+            (e.g., ``"1.1.1"``).  When ``None`` (default) the full
             history dict is returned.
 
     Returns:
@@ -177,9 +205,9 @@ def get_changelog(version: str = None) -> dict:
     Example::
 
         >>> from farsi_faker._version import get_changelog
-        >>> entry = get_changelog("1.1.0")
+        >>> entry = get_changelog("1.1.1")
         >>> entry["date"]
-        '2026-06-02'
+        '2026-07-24'
         >>> isinstance(entry["changes"], list)
         True
     """
