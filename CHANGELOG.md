@@ -11,6 +11,42 @@ No unreleased changes yet.
 
 ---
 
+## [1.1.1] - 2026-07-24
+
+### Fixed
+
+- `scripts/create_pickle.py` no longer runs `main()` when the module is imported
+  (the stray notebook call with a hardcoded personal path was removed).
+- Count-validation error messages and tests now agree:
+  `count must be a positive integer, got: <value>`.
+- Replaced the flaky “exactly one space in full_name” assertion with a join
+  contract (`name == first_name + ' ' + last_name`). Family names may contain spaces.
+- `check_version()` rejects non-semver strings instead of treating them as `()`
+  and returning `True`.
+- Single source of truth for `check_version` (re-exported from `_version`).
+
+### Changed
+
+- Name pools are loaded under a process lock and stored as immutable `tuple`s,
+  so concurrent `FarsiFaker()` construction is safe and shared cache cannot be
+  mutated through an instance.
+- Thread-safety documentation is explicit: concurrent *instantiation* is safe;
+  a single instance is not designed for concurrent use from multiple threads
+  (use one instance per thread).
+- `requires-python` is `>=3.9` (matches typing constructs actually used).
+- Packaging metadata consolidated in `pyproject.toml`; `setup.py` is a thin shim.
+- Version is resolved via `tool.setuptools.dynamic` from `farsi_faker._version`.
+- Added `py.typed` so type checkers honor inline annotations.
+- Added GitHub Actions CI: test matrix (3.9–3.13, Ubuntu/Windows) plus sdist/wheel build.
+- Added packaging integrity tests and concurrency tests.
+
+### Known issues
+
+- Embedded name data still contains OCR/segmentation artifacts (stray spaces,
+  occasional gender-label noise). Data-quality overhaul is targeted for v1.2.0.
+
+---
+
 ## [1.1.0] - 2026-06-02
 
 ### Added
@@ -134,12 +170,21 @@ This project follows [Semantic Versioning](https://semver.org/):
 
 ## Future Roadmap
 
-### Planned for 1.2.0
-- [ ] Add phone number generation
-- [ ] Add address generation (city, street)
-- [ ] Add email generation
-- [ ] Add national ID (کد ملی) generation
-- [ ] Add postal code generation
+### Planned for 1.2.0 (data quality first)
+
+- [ ] Restore/regenerate source CSVs with provenance
+- [ ] Remove OCR-split artifacts (`آ رمان` → `آرمان` and similar)
+- [ ] Resolve gender-label noise (honorifics in the wrong pool)
+- [ ] Allow ZWNJ in the Persian validator and rebuild `names.pkl`
+- [ ] Data-quality assertions in CI
+
+### Planned for 1.3.0 (synthetic profile fields)
+
+- [ ] Mobile number generation with Iranian prefix validation
+- [ ] National ID (کد ملی) with checksum
+- [ ] Email generation
+- [ ] Address / postal code generation
+- [ ] CLI (`farsi-faker generate`) with JSON/CSV output
 
 ---
 
@@ -152,6 +197,7 @@ This project follows [Semantic Versioning](https://semver.org/):
 
 ---
 
-[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/alisadeghiaghili/farsi-faker/releases/tag/v1.0.0

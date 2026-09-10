@@ -9,8 +9,9 @@ include API_REFERENCE.md
 include setup.py
 include pyproject.toml
 
-# Include data files
+# Include data files and typing marker
 recursive-include farsi_faker/data *.pkl
+include farsi_faker/py.typed
 
 # Exclude unnecessary files
 recursive-exclude * __pycache__

@@ -1,76 +1,81 @@
 """Core faker module for generating Persian/Farsi names.
 
-This module provides the FarsiFaker class for generating authentic Persian/Iranian
-names with gender specification and various configuration options for testing,
+This module provides the FarsiFaker class for generating Persian/Iranian
+names with gender specification and configuration options for testing,
 mock data generation, and development purposes.
 """
 
-import random
 import pickle
+import random
+import threading
 from pathlib import Path
 from typing import TYPE_CHECKING, Dict, List, Literal, Optional, Tuple, Union
 
 if TYPE_CHECKING:
     import pandas as pd
 
-# Type aliases for better code clarity
 GenderType = Literal['male', 'female']
 GenderInput = Union[str, None]
+NamePool = Tuple[str, ...]
 
 
 class FarsiFaker:
-    """High-performance faker for authentic Persian/Farsi names.
+    """High-performance faker for Persian/Farsi names.
 
-    This class provides methods to generate realistic Persian/Farsi names with
-    support for gender specification, reproducible results, and various output
-    formats including plain Python lists and optional pandas DataFrames.
+    Generates Persian/Farsi names with gender specification, reproducible
+    results, and optional pandas DataFrames for data-science workflows.
 
-    The class uses optimized pickle-based data storage for fast loading and
-    includes 10,000+ authentic Persian names sourced from real Iranian datasets.
-    Name data is loaded once and cached at the class level so that creating
-    multiple FarsiFaker instances does not cause redundant file I/O.
+    Name data is loaded once from the embedded pickle database and cached at
+    the class level as immutable tuples. Subsequent instantiations reuse that
+    cache and do not re-read the file.
+
+    Thread-safety:
+        Creating instances concurrently is safe: the shared name cache is
+        guarded by a lock and exposed as immutable sequences.
+        A *single* instance is **not** safe for concurrent mutation from
+        multiple threads, because each instance owns a private
+        ``random.Random``. Use one instance per thread when generating in
+        parallel.
 
     Attributes:
-        _male_names (List[str]): List of male first names loaded from the
-            embedded pickle database.
-        _female_names (List[str]): List of female first names loaded from the
-            embedded pickle database.
-        _last_names (List[str]): List of family names loaded from the embedded
-            pickle database.
-        _random (random.Random): Instance-level random number generator,
-            seeded via the constructor ``seed`` parameter.
+        _male_names (NamePool): Male first names from the embedded database.
+        _female_names (NamePool): Female first names from the embedded database.
+        _last_names (NamePool): Family names from the embedded database.
+        _random (random.Random): Instance-level RNG, seeded via ``seed``.
 
     Example:
         Basic usage::
 
             >>> from farsi_faker import FarsiFaker
             >>> faker = FarsiFaker(seed=42)
-
             >>> person = faker.full_name('male')
-            >>> print(person)
-            {'name': 'علی احمدی', 'first_name': 'علی', 'last_name': 'احمدی', 'gender': 'male'}
+            >>> sorted(person)
+            ['first_name', 'gender', 'last_name', 'name']
+            >>> person['gender']
+            'male'
+            >>> person['name'] == person['first_name'] + ' ' + person['last_name']
+            True
 
-        Generate many names at once::
+        Bulk generation::
 
             >>> women = faker.generate_names(10, 'female')
-            >>> print(len(women))
+            >>> len(women)
             10
-            >>> print(women[0]['gender'])
-            female
+            >>> all(row['gender'] == 'female' for row in women)
+            True
 
-        pandas DataFrame output::
+        DataFrame output::
 
             >>> df = faker.generate_dataset(100, male_ratio=0.5, as_dataframe=True)
-            >>> print(df.shape)
+            >>> df.shape
             (100, 4)
-            >>> print(list(df.columns))
+            >>> list(df.columns)
             ['name', 'first_name', 'last_name', 'gender']
     """
 
-    # Class-level cache for data (shared across instances for memory efficiency)
-    _data_cache: Optional[Dict[str, List[str]]] = None
+    _data_cache: Optional[Dict[str, NamePool]] = None
+    _data_lock = threading.Lock()
 
-    # Gender mapping for flexible input (supports Persian and English)
     _GENDER_MAP = {
         'male': 'male',
         'm': 'male',
@@ -127,39 +132,72 @@ class FarsiFaker:
     # ------------------------------------------------------------------
 
     def _load_data(self) -> None:
-        """Load names data from pickle file with class-level caching.
+        """Load names from pickle into a process-wide immutable cache.
 
-        Called once per process.  Subsequent calls return immediately because
-        ``_data_cache`` is already populated.
+        Uses double-checked locking so concurrent instantiations load the
+        database exactly once. Cached pools are tuples and must not be
+        mutated by callers.
 
         Raises:
             FileNotFoundError: If ``data/names.pkl`` is missing.
             pickle.UnpicklingError: If the file exists but cannot be
                 deserialized (e.g., corrupted or wrong protocol).
+            KeyError: If the pickle does not contain the expected keys.
         """
-        if FarsiFaker._data_cache is None:
-            data_path = Path(__file__).parent / 'data' / 'names.pkl'
+        cache = FarsiFaker._data_cache
+        if cache is None:
+            with FarsiFaker._data_lock:
+                cache = FarsiFaker._data_cache
+                if cache is None:
+                    cache = self._read_names_database()
+                    FarsiFaker._data_cache = cache
 
-            if not data_path.exists():
-                raise FileNotFoundError(
-                    f"Names data file not found: {data_path}\n"
-                    "Please ensure the package is installed correctly.\n"
-                    "Try reinstalling: pip install --force-reinstall farsi-faker"
-                )
+        self._male_names: NamePool = cache['male_names']
+        self._female_names: NamePool = cache['female_names']
+        self._last_names: NamePool = cache['last_names']
 
-            try:
-                with open(data_path, 'rb') as f:
-                    FarsiFaker._data_cache = pickle.load(f)
-            except Exception as exc:
-                raise pickle.UnpicklingError(
-                    f"Failed to load names data: {exc}\n"
-                    "The data file may be corrupted. Try reinstalling:\n"
-                    "pip install --force-reinstall farsi-faker"
-                ) from exc
+    @staticmethod
+    def _read_names_database() -> Dict[str, NamePool]:
+        """Deserialize ``names.pkl`` and coerce pools to immutable tuples.
 
-        self._male_names: List[str] = FarsiFaker._data_cache['male_names']
-        self._female_names: List[str] = FarsiFaker._data_cache['female_names']
-        self._last_names: List[str] = FarsiFaker._data_cache['last_names']
+        Returns:
+            Dict[str, NamePool]: Mapping with keys ``male_names``,
+            ``female_names``, and ``last_names``.
+
+        Raises:
+            FileNotFoundError: If the embedded pickle is missing.
+            pickle.UnpicklingError: If deserialization fails.
+            KeyError: If required keys are absent from the payload.
+        """
+        data_path = Path(__file__).parent / 'data' / 'names.pkl'
+
+        if not data_path.exists():
+            raise FileNotFoundError(
+                f"Names data file not found: {data_path}\n"
+                "Please ensure the package is installed correctly.\n"
+                "Try reinstalling: pip install --force-reinstall farsi-faker"
+            )
+
+        try:
+            with open(data_path, 'rb') as handle:
+                raw = pickle.load(handle)
+        except Exception as exc:
+            raise pickle.UnpicklingError(
+                f"Failed to load names data: {exc}\n"
+                "The data file may be corrupted. Try reinstalling:\n"
+                "pip install --force-reinstall farsi-faker"
+            ) from exc
+
+        required_keys = ('male_names', 'female_names', 'last_names')
+        missing = [key for key in required_keys if key not in raw]
+        if missing:
+            raise KeyError(f"Names database is missing keys: {missing}")
+
+        return {
+            'male_names': tuple(raw['male_names']),
+            'female_names': tuple(raw['female_names']),
+            'last_names': tuple(raw['last_names']),
+        }
 
     def _normalize_gender(self, gender: GenderInput) -> Optional[GenderType]:
         """Normalize a raw gender string to ``'male'`` or ``'female'``.

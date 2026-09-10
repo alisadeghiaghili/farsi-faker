@@ -108,10 +108,13 @@ class TestFarsiFaker:
         assert len(person['first_name']) > 0
         assert len(person['last_name']) > 0
     
-    def test_full_name_contains_space(self, faker):
-        """Test that full name contains exactly one space."""
-        person = faker.full_name()
-        assert person['name'].count(' ') == 1
+    def test_full_name_join_contract(self, faker):
+        """name must be first_name + single space + last_name (last may contain spaces)."""
+        for _ in range(50):
+            person = faker.full_name()
+            assert person['name'] == f"{person['first_name']} {person['last_name']}"
+            assert person['first_name'].strip() != ''
+            assert person['last_name'].strip() != ''
     
     def test_generate_names_count(self, faker):
         """Test generating multiple names."""
@@ -123,11 +126,11 @@ class TestFarsiFaker:
         assert all(n['gender'] == 'male' for n in names)
     
     def test_generate_names_invalid_count(self, faker):
-        """Test that invalid count raises ValueError."""
-        with pytest.raises(ValueError, match="Count must be positive"):
+        """Non-positive count must raise ValueError naming the parameter and value."""
+        with pytest.raises(ValueError, match=r"count must be a positive integer, got: -5"):
             faker.generate_names(-5)
-        
-        with pytest.raises(ValueError, match="Count must be positive"):
+
+        with pytest.raises(ValueError, match=r"count must be a positive integer, got: 0"):
             faker.generate_names(0)
     
     def test_generate_names_mixed_gender(self, faker):
@@ -183,11 +186,11 @@ class TestFarsiFaker:
             faker.generate_dataset(200, male_ratio=1.5)
     
     def test_generate_dataset_invalid_count(self, faker):
-        """Test that invalid count raises ValueError."""
-        with pytest.raises(ValueError, match="Count must be positive"):
+        """Non-positive count must raise ValueError naming the parameter and value."""
+        with pytest.raises(ValueError, match=r"count must be a positive integer, got: -10"):
             faker.generate_dataset(-10)
-        
-        with pytest.raises(ValueError, match="Count must be positive"):
+
+        with pytest.raises(ValueError, match=r"count must be a positive integer, got: 0"):
             faker.generate_dataset(0)
     
     def test_generate_dataset_is_shuffled(self):
@@ -249,18 +252,47 @@ class TestFarsiFaker:
         assert faker1._last_names is faker2._last_names
     
     def test_data_immutability(self, faker):
-        """Test that name lists are not accidentally modified."""
+        """Name pools must be immutable sequences so shared cache cannot be corrupted."""
+        assert isinstance(faker._male_names, tuple)
+        assert isinstance(faker._female_names, tuple)
+        assert isinstance(faker._last_names, tuple)
+
         original_male_count = len(faker._male_names)
         original_female_count = len(faker._female_names)
         original_last_count = len(faker._last_names)
-        
-        # Generate some names
+
         faker.generate_dataset(100)
-        
-        # Counts should remain the same
+
         assert len(faker._male_names) == original_male_count
         assert len(faker._female_names) == original_female_count
         assert len(faker._last_names) == original_last_count
+
+        with pytest.raises((TypeError, AttributeError)):
+            faker._male_names.append("x")  # type: ignore[union-attr]
+
+    def test_concurrent_instantiation_is_safe(self):
+        """Parallel FarsiFaker() calls must load the shared cache without error."""
+        import threading
+
+        errors = []
+        results = []
+
+        def worker():
+            try:
+                local = FarsiFaker(seed=7)
+                results.append(local.full_name("male"))
+            except Exception as exc:  # pragma: no cover - failure path
+                errors.append(exc)
+
+        threads = [threading.Thread(target=worker) for _ in range(8)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+
+        assert errors == []
+        assert len(results) == 8
+        assert all(r["gender"] == "male" for r in results)
     
     def test_convenience_function(self):
         """Test the convenience function."""
@@ -321,10 +353,19 @@ class TestDataFrame:
         assert list(result.columns) == ['name', 'first_name', 'last_name', 'gender']
 
     def test_generate_names_dataframe_dtypes(self, faker):
-        """All DataFrame columns must be object (string) dtype."""
+        """All DataFrame cells must be text; dtype may be object or StringDtype."""
         pd = pytest.importorskip("pandas")
+        from pandas.api.types import is_object_dtype, is_string_dtype
+
         result = faker.generate_names(10, as_dataframe=True)
-        assert all(result[col].dtype == object for col in result.columns)
+        for col in result.columns:
+            series = result[col]
+            assert is_object_dtype(series) or is_string_dtype(series), (
+                f"column {col!r} has unexpected dtype {series.dtype!r}"
+            )
+            assert all(isinstance(value, str) for value in series), (
+                f"column {col!r} contains non-str values"
+            )
 
     def test_generate_names_dataframe_no_nulls(self, faker):
         """DataFrame must not contain any null values."""
