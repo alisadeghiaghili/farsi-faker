@@ -45,7 +45,7 @@
 
 - **Embedded name database** — Persian first and family names shipped with the package
 - **Gender-specific generation** — separate male and female first-name pools
-- **Profile fields** — national ID (کد ملی with checksum), mobile, email, postal code
+- **Profile fields** — national ID (کد ملی with checksum), mobile, email, postal code, address
 - **CLI** — `python -m farsi_faker` for JSON/CSV fixtures
 - **Fast cold start** — pickle-backed name cache, shared across instances
 - **Reproducible** — seed support for stable fixtures
@@ -55,11 +55,10 @@
 - **Tested** — unit, packaging, concurrency, profile, and data-quality gates in CI
 - **Unicode** — Persian/Farsi text output
 - **Optional pandas** — DataFrame output for data-science workflows
-- **Cleaning helpers** — `farsi_faker.cleaning` for OCR-split repair on your own lists
+- **Cleaning helpers** — `farsi_faker.cleaning` for OCR-split and ZWNJ repair
 
-> **Data quality (v1.3.0+):** the embedded database was precision-rebuilt
-> (OCR joins, Abdol glue, truncated-token removal). Multi-word surnames and
-> legitimate compound first names are preserved. Treat generated names as
+> **Data provenance:** see [DATA_PROVENANCE.md](DATA_PROVENANCE.md) for how the
+> embedded name pools are cleaned and gated in CI. Treat generated names as
 > fixtures, not as a validated onomastics resource.
 
 ---
