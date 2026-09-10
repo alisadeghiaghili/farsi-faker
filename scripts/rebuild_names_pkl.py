@@ -37,7 +37,7 @@ def _stats(pools: dict) -> dict:
 
 
 def rebuild(pkl_path: Path, *, dry_run: bool = False) -> dict:
-    """Load, clean, and optionally rewrite names.pkl.
+    """Load, clean, merge seed expansion, and optionally rewrite names.pkl.
 
     Args:
         pkl_path (Path): Path to the pickle database.
@@ -46,12 +46,43 @@ def rebuild(pkl_path: Path, *, dry_run: bool = False) -> dict:
     Returns:
         dict: Before/after statistics.
     """
+    from farsi_faker.cleaning import precision_repair
+    from farsi_faker.extend import load_seed_expansion
+
     with pkl_path.open('rb') as handle:
         raw = pickle.load(handle)
 
     before = _stats(raw)
     cleaned = clean_name_pools(raw)
-    after = _stats(cleaned)
+
+    seeds = load_seed_expansion()
+    male = set(cleaned['male_names'])
+    female = set(cleaned['female_names'])
+    last = set(cleaned['last_names'])
+
+    male_added = female_added = last_added = 0
+    for name in seeds['male_names']:
+        repaired = precision_repair(name, pool_gender='male')
+        if repaired and repaired not in male and repaired not in female:
+            male.add(repaired)
+            male_added += 1
+    for name in seeds['female_names']:
+        repaired = precision_repair(name, pool_gender='female')
+        if repaired and repaired not in female and repaired not in male:
+            female.add(repaired)
+            female_added += 1
+    for name in seeds['last_names']:
+        repaired = precision_repair(name, pool_gender='last')
+        if repaired and repaired not in last:
+            last.add(repaired)
+            last_added += 1
+
+    expanded = {
+        'male_names': sorted(male),
+        'female_names': sorted(female),
+        'last_names': sorted(last),
+    }
+    after = _stats(expanded)
 
     print('Before:', before)
     print('After: ', after)
@@ -62,10 +93,15 @@ def rebuild(pkl_path: Path, *, dry_run: bool = False) -> dict:
             l=before['last'] - after['last'],
         )
     )
+    print(
+        'Seed added: male={m} female={f} last={l}'.format(
+            m=male_added, f=female_added, l=last_added
+        )
+    )
 
     if not dry_run:
         with pkl_path.open('wb') as handle:
-            pickle.dump(cleaned, handle, protocol=pickle.HIGHEST_PROTOCOL)
+            pickle.dump(expanded, handle, protocol=pickle.HIGHEST_PROTOCOL)
         print(f'Wrote {pkl_path} ({pkl_path.stat().st_size / 1024:.2f} KB)')
 
     return {'before': before, 'after': after}
