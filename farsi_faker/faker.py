@@ -627,6 +627,118 @@ class FarsiFaker:
             'possible_combinations': (male_count + female_count) * last_count,
         }
 
+    # ------------------------------------------------------------------
+    # Public API — synthetic profile fields
+    # ------------------------------------------------------------------
+
+    def national_id(self) -> str:
+        """Return a checksum-valid Iranian national ID (کد ملی).
+
+        Returns:
+            str: 10-digit national ID.
+
+        Example::
+            >>> faker = FarsiFaker(seed=42)
+            >>> from farsi_faker.profile import is_valid_national_id
+            >>> is_valid_national_id(faker.national_id())
+            True
+        """
+        from .profile import national_id as _generate
+
+        return _generate(rng=self._random)
+
+    def mobile_number(self) -> str:
+        """Return an Iranian mobile number (``09xxxxxxxxx``).
+
+        Returns:
+            str: 11-digit mobile number with a known operator prefix.
+
+        Example::
+            >>> faker = FarsiFaker(seed=42)
+            >>> len(faker.mobile_number())
+            11
+        """
+        from .profile import mobile_number as _generate
+
+        return _generate(rng=self._random)
+
+    def email(self) -> str:
+        """Return a synthetic email derived from a fresh name pair.
+
+        Returns:
+            str: Email address.
+
+        Example::
+            >>> faker = FarsiFaker(seed=42)
+            >>> '@' in faker.email()
+            True
+        """
+        from .profile import email_address as _generate
+
+        person = self.full_name()
+        return _generate(
+            first_name=person['first_name'],
+            last_name=person['last_name'],
+            rng=self._random,
+        )
+
+    def postal_code(self) -> str:
+        """Return a 10-digit Iranian postal code.
+
+        Returns:
+            str: Postal code.
+
+        Example::
+            >>> faker = FarsiFaker(seed=42)
+            >>> len(faker.postal_code())
+            10
+        """
+        from .profile import postal_code as _generate
+
+        return _generate(rng=self._random)
+
+    def profile(self, gender: GenderInput = None) -> Dict[str, str]:
+        """Return a full synthetic person record with contact fields.
+
+        Combines :meth:`full_name` with national ID, mobile, email, and
+        postal code. All fields share this instance's RNG stream.
+
+        Args:
+            gender (str, optional): Desired gender token.
+
+        Returns:
+            Dict[str, str]: Keys ``name``, ``first_name``, ``last_name``,
+            ``gender``, ``national_id``, ``mobile``, ``email``,
+            ``postal_code``.
+
+        Example::
+            >>> faker = FarsiFaker(seed=42)
+            >>> person = faker.profile('male')
+            >>> person['gender']
+            'male'
+            >>> '@' in person['email']
+            True
+        """
+        from .profile import email_address
+
+        base = self.full_name(gender)
+        nid = self.national_id()
+        mobile = self.mobile_number()
+        email = email_address(
+            first_name=base['first_name'],
+            last_name=base['last_name'],
+            rng=self._random,
+        )
+        postal = self.postal_code()
+
+        return {
+            **base,
+            'national_id': nid,
+            'mobile': mobile,
+            'email': email,
+            'postal_code': postal,
+        }
+
 
 # ---------------------------------------------------------------------------
 # Module-level convenience function
