@@ -11,6 +11,34 @@ No unreleased changes yet.
 
 ---
 
+## [1.6.0] - 2026-09-10
+
+### Changed
+
+- Expanded curated seed names for broader Persian initial coverage
+  (including `و`, `ک`, `گ` gaps).
+- Rebuilt embedded `names.pkl`: male 7546→7572, female 3695→3705, last 5751→5758.
+- Added CI gate asserting non-empty `و`/`ک`/`گ` first-name pools.
+
+---
+
+## [1.5.0] - 2026-09-10
+
+### Added
+
+- `farsi_faker.extend.extend_name_pools(...)` — merge additional names into the
+  process-wide cache at runtime (cleaned, deduped, gender-overlap safe).
+- `apply_seed_expansion` / `load_seed_expansion` — curated built-in expansion.
+- CI gates: core common names (`محمد`, `فاطمه`, …) and minimum `م`/`ف` initial coverage.
+
+### Fixed
+
+- Embedded pools were missing most names starting with **م** and **ف**
+  (including `محمد` and `فاطمه`). Curated seeds are now baked into
+  `names.pkl`.
+
+---
+
 ## [1.4.0] - 2026-09-10
 
 ### Added
@@ -271,7 +299,16 @@ This project follows [Semantic Versioning](https://semver.org/):
 - [x] Dynamic name-pool extension API (`extend_name_pools`)
 - [x] Curated seed expansion baked into names.pkl (core `م`/`ف` coverage)
 
-### Planned for 1.6.0
+### Completed in 1.5.0
+
+- [x] Dynamic name-pool extension API (`extend_name_pools`)
+- [x] Curated seed expansion baked into names.pkl (core `م`/`ف` coverage)
+
+### Completed in 1.6.0
+
+- [x] Broader curated seed expansion (`و`/`ک`/`گ` and more)
+
+### Planned for 1.7.0
 
 - [ ] Restore raw CSV sources when available and document a from-source rebuild
 - [ ] Optional weighted sampling by name frequency
@@ -288,7 +325,8 @@ This project follows [Semantic Versioning](https://semver.org/):
 
 ---
 
-[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.2.0...v1.3.0
