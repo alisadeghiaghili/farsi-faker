@@ -4,6 +4,7 @@ include LICENSE
 include CHANGELOG.md
 include CONTRIBUTING.md
 include API_REFERENCE.md
+include DATA_PROVENANCE.md
 
 # Include package configuration
 include setup.py
