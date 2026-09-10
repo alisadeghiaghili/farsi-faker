@@ -50,14 +50,16 @@
 - **Zero required dependencies** — production install needs only the standard library
 - **Concurrent instantiation** — shared name cache is lock-guarded and immutable
 - **Typed** — type hints plus a `py.typed` marker (PEP 561)
-- **Tested** — unit, packaging, and concurrency tests in CI
+- **Tested** — unit, packaging, concurrency, and data-quality gates in CI
 - **Unicode** — Persian/Farsi text output
 - **Optional pandas** — DataFrame output for data-science workflows
+- **Cleaning helpers** — `farsi_faker.cleaning` for OCR-split repair on your own lists
 
-> **Note on data quality:** the embedded database still contains historical
-> OCR/segmentation artifacts (for example names with stray internal spaces).
-> A data-quality overhaul is planned for v1.2. Treat generated names as
-> fixtures, not as a validated onomastics resource.
+> **Data quality (v1.2.0+):** the embedded database was rebuilt to remove
+> historical OCR/segmentation artifacts (`آ رمان` → `آرمان`) and female
+> honorifics mislabeled in the male pool. Multi-word surnames and legitimate
+> compound first names are preserved. Treat generated names as fixtures, not
+> as a validated onomastics resource.
 
 ---
 
