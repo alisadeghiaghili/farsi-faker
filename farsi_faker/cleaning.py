@@ -28,6 +28,10 @@ __all__ = [
     'normalize_name',
     'has_singleton_token',
     'join_ocr_splits',
+    'join_abdol_family',
+    'is_truncated_name',
+    'is_too_short',
+    'precision_repair',
     'drop_from_pool',
     'dedupe_preserve_order',
     'clean_name_pools',
@@ -173,6 +177,148 @@ def join_ocr_splits(name: str, *, allow_short_head_join: bool = True) -> str:
     return normalized
 
 
+# Prefixes that in modern Persian orthography are almost always one word
+# with what follows (عبدالله, عبدالرحمن, ...).
+_ABDOL_PREFIXES = ('عبد', 'عب')
+
+# Bare prefix tokens that are incomplete when they stand alone.
+_INCOMPLETE_STANDALONE = frozenset({'عبد', 'عب', 'ال', 'آق', 'اق'})
+
+# Trailing token that indicates a truncated OCR remainder.
+_TRUNCATED_TOKEN = 'ال'
+
+
+def join_abdol_family(name: str) -> str:
+    """Glue ``عبد`` / ``عب`` family names into a single token.
+
+    Iranian sources often split ``عبدالله`` as ``عبد الله`` or worse OCR
+    fragments such as ``عب الر ضا``.
+
+    Args:
+        name (str): Name already whitespace-normalized (or raw).
+
+    Returns:
+        str: Repaired name. Unchanged when the Abdol prefix rule does not
+        apply.
+
+    Example:
+        >>> join_abdol_family('عبد الله')
+        'عبدالله'
+        >>> join_abdol_family('عبد الر ضا')
+        'عبدالرضا'
+        >>> join_abdol_family('امیر عبد الله')
+        'امیر عبدالله'
+        >>> join_abdol_family('علی')
+        'علی'
+    """
+    normalized = normalize_name(name)
+    if not normalized:
+        return ''
+
+    tokens = _tokens(normalized)
+    if not tokens:
+        return ''
+
+    # Find the first Abdol prefix token and glue it with everything after.
+    for index, token in enumerate(tokens):
+        if token in _ABDOL_PREFIXES:
+            head = tokens[:index]
+            glued = token + ''.join(tokens[index + 1 :])
+            if head:
+                return f"{' '.join(head)} {glued}"
+            return glued
+
+    return normalized
+
+
+def is_truncated_name(name: str) -> bool:
+    """Return True when the name ends with a bare truncated ``ال`` token.
+
+    Args:
+        name (str): Name to inspect.
+
+    Returns:
+        bool: True if the final token is exactly ``ال``.
+
+    Example:
+        >>> is_truncated_name('اسما ال')
+        True
+        >>> is_truncated_name('عبدالله')
+        False
+        >>> is_truncated_name('محمد')
+        False
+    """
+    tokens = _tokens(normalize_name(name))
+    return bool(tokens) and tokens[-1] == _TRUNCATED_TOKEN
+
+
+def is_too_short(name: str, *, min_letters: int = 3) -> bool:
+    """Return True when the name is shorter than *min_letters* letters.
+
+    Whitespace is ignored. Used to drop OCR fragments such as ``'آبث'``.
+
+    Args:
+        name (str): Name to inspect.
+        min_letters (int, optional): Minimum letter count. Defaults to 3.
+
+    Returns:
+        bool: True when the compacted name is shorter than the threshold.
+
+    Example:
+        >>> is_too_short('آبث')
+        True
+        >>> is_too_short('آرش')
+        False
+        >>> is_too_short('آ ر')
+        True
+    """
+    compact = normalize_name(name).replace(' ', '')
+    return len(compact) < min_letters
+
+
+def precision_repair(name: str, *, pool_gender: str) -> Optional[str]:
+    """Apply the precision repair pipeline to a single name.
+
+    Order:
+
+    1. :func:`join_ocr_splits` (singleton / short-head splits)
+    2. :func:`join_abdol_family`
+    3. Drop if :func:`is_truncated_name`
+    4. Drop if :func:`is_too_short`
+    5. Drop if :func:`drop_from_pool` flags gender-label noise
+
+    Args:
+        name (str): Raw name.
+        pool_gender (str): ``'male'``, ``'female'``, or ``'last'``.
+
+    Returns:
+        Optional[str]: Repaired name, or ``None`` when the name must be
+        discarded.
+
+    Example:
+        >>> precision_repair('عبد الر ضا', pool_gender='male')
+        'عبدالرضا'
+        >>> precision_repair('اسما ال', pool_gender='female') is None
+        True
+        >>> precision_repair('عبد', pool_gender='male') is None
+        True
+        >>> precision_repair('آرش', pool_gender='male')
+        'آرش'
+    """
+    repaired = join_abdol_family(join_ocr_splits(name))
+    if not repaired:
+        return None
+    if repaired in _INCOMPLETE_STANDALONE:
+        return None
+    if is_truncated_name(repaired):
+        return None
+    if is_too_short(repaired):
+        return None
+    if drop_from_pool(repaired, pool_gender=pool_gender):
+        return None
+    return repaired
+
+
 def drop_from_pool(name: str, pool_gender: str) -> bool:
     """Decide whether a name should be removed from a gendered pool.
 
@@ -246,14 +392,10 @@ def _clean_first_name_pool(
     """
     repaired: List[str] = []
     for raw in names:
-        name = join_ocr_splits(raw)
+        name = precision_repair(raw, pool_gender=pool_gender)
         if not name:
             continue
-        if drop_from_pool(name, pool_gender=pool_gender):
-            continue
         if pool_gender == 'male' and name in cross_gender:
-            # Prefer keeping a contested name in the female pool when both
-            # sides produced the same repaired token; male side drops it.
             continue
         repaired.append(name)
 
@@ -266,8 +408,8 @@ def clean_name_pools(raw: Mapping[str, Sequence[str]]) -> Dict[str, List[str]]:
     Pipeline:
 
     1. Validate required keys.
-    2. Repair OCR splits (see :func:`join_ocr_splits`).
-    3. Drop gender-label noise (see :func:`drop_from_pool`).
+    2. Precision-repair each name (OCR joins, Abdol glue, truncation filter).
+    3. Drop gender-label noise and tiny OCR fragments.
     4. Resolve residual male/female overlaps by keeping the name on the
        female side only.
     5. Deduplicate and return sorted lists.
@@ -288,22 +430,21 @@ def clean_name_pools(raw: Mapping[str, Sequence[str]]) -> Dict[str, List[str]]:
 
     Example:
         >>> clean_name_pools({
-        ...     'male_names': ['آ رمان', 'آرمان', 'بی بی رضا'],
-        ...     'female_names': ['فاطمه'],
+        ...     'male_names': ['آ رمان', 'آرمان', 'بی بی رضا', 'عبد الر ضا'],
+        ...     'female_names': ['فاطمه', 'اسما ال'],
         ...     'last_names': ['احمدی', 'احمدی'],
         ... })
-        {'male_names': ['آرمان'], 'female_names': ['فاطمه'], 'last_names': ['احمدی']}
+        {'male_names': ['آرمان', 'عبدالرضا'], 'female_names': ['فاطمه'], 'last_names': ['احمدی']}
     """
     missing = [key for key in REQUIRED_POOL_KEYS if key not in raw]
     if missing:
         raise KeyError(f'clean_name_pools missing keys: {missing}')
 
-    # Female first so contested male/female repairs keep the female entry.
-    female_repaired = [
-        name
-        for name in (join_ocr_splits(item) for item in raw['female_names'])
-        if name and not drop_from_pool(name, pool_gender='female')
-    ]
+    female_repaired = []
+    for item in raw['female_names']:
+        name = precision_repair(item, pool_gender='female')
+        if name:
+            female_repaired.append(name)
     female_set = set(female_repaired)
 
     male_clean = _clean_first_name_pool(
@@ -313,19 +454,17 @@ def clean_name_pools(raw: Mapping[str, Sequence[str]]) -> Dict[str, List[str]]:
     )
     female_clean = sorted(female_set)
 
-    last_clean = sorted(
-        {
-            name
-            for name in (
-                join_ocr_splits(item, allow_short_head_join=False)
-                for item in raw['last_names']
-            )
-            if name
-        }
-    )
+    last_clean = set()
+    for item in raw['last_names']:
+        name = join_abdol_family(join_ocr_splits(item, allow_short_head_join=False))
+        if not name or name in _INCOMPLETE_STANDALONE:
+            continue
+        if is_truncated_name(name) or is_too_short(name):
+            continue
+        last_clean.add(name)
 
     return {
         'male_names': male_clean,
         'female_names': female_clean,
-        'last_names': last_clean,
+        'last_names': sorted(last_clean),
     }

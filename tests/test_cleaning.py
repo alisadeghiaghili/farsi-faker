@@ -9,8 +9,12 @@ from farsi_faker.cleaning import (
     dedupe_preserve_order,
     drop_from_pool,
     has_singleton_token,
+    is_too_short,
+    is_truncated_name,
+    join_abdol_family,
     join_ocr_splits,
     normalize_name,
+    precision_repair,
 )
 
 
@@ -179,3 +183,49 @@ class TestCleanNamePools:
     def test_requires_expected_keys(self) -> None:
         with pytest.raises(KeyError):
             clean_name_pools({"male_names": []})
+
+
+class TestPrecisionRules:
+    """v1.3.0 precision repairs beyond basic OCR joins."""
+
+    def test_join_abdol_family_simple(self) -> None:
+        assert join_abdol_family("عبد الله") == "عبدالله"
+        assert join_abdol_family("عبد الر ضا") == "عبدالرضا"
+
+    def test_join_abdol_family_with_prefix(self) -> None:
+        assert join_abdol_family("امیر عبد الله") == "امیر عبدالله"
+
+    def test_join_abdol_family_noop(self) -> None:
+        assert join_abdol_family("علی") == "علی"
+        assert join_abdol_family("محمد رضا") == "محمد رضا"
+
+    def test_is_truncated_name(self) -> None:
+        assert is_truncated_name("اسما ال") is True
+        assert is_truncated_name("عبدالله") is False
+        assert is_truncated_name("") is False
+
+    def test_is_too_short(self) -> None:
+        assert is_too_short("آر") is True
+        assert is_too_short("آ ر") is True
+        assert is_too_short("آرش") is False
+        assert is_too_short("آبث", min_letters=4) is True
+        assert is_too_short("آب روشن") is False
+
+    def test_precision_repair_pipeline(self) -> None:
+        assert precision_repair("عبد الر ضا", pool_gender="male") == "عبدالرضا"
+        assert precision_repair("اسما ال", pool_gender="female") is None
+        assert precision_repair("آر", pool_gender="male") is None
+        assert precision_repair("آرش", pool_gender="male") == "آرش"
+        assert precision_repair("بی بی مریم", pool_gender="male") is None
+
+    def test_clean_pools_applies_precision(self) -> None:
+        cleaned = clean_name_pools(
+            {
+                "male_names": ["عبد الر ضا", "آ رمان", "آر", "علی"],
+                "female_names": ["اسما ال", "فاطمه"],
+                "last_names": ["محمدی", "ال"],
+            }
+        )
+        assert cleaned["male_names"] == ["آرمان", "عبدالرضا", "علی"]
+        assert cleaned["female_names"] == ["فاطمه"]
+        assert cleaned["last_names"] == ["محمدی"]

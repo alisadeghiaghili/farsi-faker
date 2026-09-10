@@ -72,3 +72,35 @@ class TestEmbeddedDataQuality:
 
         assert 'آرمان' in male_set
         assert 'امیر' in male_set
+
+    def test_no_truncated_al_tokens(self) -> None:
+        from farsi_faker.cleaning import is_truncated_name
+
+        for pool in _pools():
+            bad = [name for name in pool if is_truncated_name(name)]
+            assert bad == [], f'truncated ال names remain: {bad[:10]}'
+
+    def test_abdol_family_is_glued(self) -> None:
+        """عبد-family names must not keep a bare عبد/عب head token."""
+        male, female, _ = _pools()
+        for pool in (male, female):
+            bad = [
+                name
+                for name in pool
+                if name == 'عبد'
+                or name == 'عب'
+                or name.startswith('عبد ')
+                or name.startswith('عب ')
+            ]
+            assert bad == [], f'unglued Abdol names: {bad[:10]}'
+
+        # Reconstructed forms should exist for common compounds.
+        assert 'عبدالله' in set(male) | set(female) or any(
+            'عبدالله' in name for name in male
+        )
+
+    def test_no_tiny_names(self) -> None:
+        for pool in _pools():
+            for name in pool:
+                compact = name.replace(' ', '')
+                assert len(compact) >= 3, f'tiny name: {name!r}'
