@@ -11,6 +11,25 @@ No unreleased changes yet.
 
 ---
 
+## [1.4.0] - 2026-09-10
+
+### Added
+
+- `DATA_PROVENANCE.md` — documents source status, rebuild pipeline, pool sizes
+  by release, and CI data-quality gates.
+- `normalize_zwnj` / `apply_zwnj_policy` in `farsi_faker.cleaning` for
+  ZWNJ (نیم‌فاصله) hygiene on inputs and selected lexical compounds.
+- Address generation in `farsi_faker.profile`:
+  - `iranian_cities`, `city_name`, `street_name`, `address_record`
+  - `profile()` / `profile_record` now include `city`, `street`, `alley`, `plaque`
+
+### Changed
+
+- ZWNJ normalization is wired into `precision_repair`; embedded pool sizes
+  unchanged (7493 / 3648 / 5748).
+
+---
+
 ## [1.3.0] - 2026-09-10
 
 ### Added
@@ -241,11 +260,16 @@ This project follows [Semantic Versioning](https://semver.org/):
 - [x] Postal code generation
 - [x] CLI with JSON/CSV output
 
-### Planned for 1.4.0
+### Completed in 1.4.0
 
-- [ ] Restore source CSVs or documented rebuild provenance
-- [ ] Optional ZWNJ-normalized rebuild from original sources
-- [ ] Address / city generation
+- [x] Data provenance documentation (`DATA_PROVENANCE.md`)
+- [x] ZWNJ hygiene helpers wired into the cleaning pipeline
+- [x] Address / city generation
+
+### Planned for 1.5.0
+
+- [ ] Restore raw CSV sources when available and document a from-source rebuild
+- [ ] Optional weighted sampling by name frequency
 
 ---
 
@@ -255,10 +279,12 @@ This project follows [Semantic Versioning](https://semver.org/):
 - **PyPI:** https://pypi.org/project/farsi-faker/
 - **Issues:** https://github.com/alisadeghiaghili/farsi-faker/issues
 - **Changelog:** https://github.com/alisadeghiaghili/farsi-faker/releases
+- **Data provenance:** [DATA_PROVENANCE.md](DATA_PROVENANCE.md)
 
 ---
 
-[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.1.0...v1.1.1
