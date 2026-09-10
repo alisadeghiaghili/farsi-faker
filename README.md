@@ -43,16 +43,21 @@
 
 ## ✨ Features
 
-- **🎯 10,000+ Authentic Names** - Real Persian names from Iranian datasets
-- **👥 Gender-Specific** - Separate male and female name generation
-- **⚡ High Performance** - Optimized pickle-based data storage
-- **🔄 Reproducible** - Seed support for consistent results
-- **🚀 Zero Dependencies** - No external packages required for production
-- **🔒 Thread-Safe** - Safe for concurrent use
-- **📝 Fully Typed** - Complete type hints for better IDE support
-- **✅ Well Tested** - Comprehensive test coverage
-- **🌍 Unicode Support** - Full Persian/Farsi character support
-- **🐌 pandas Integration** - Optional DataFrame output for data science workflows
+- **Embedded name database** — Persian first and family names shipped with the package
+- **Gender-specific generation** — separate male and female first-name pools
+- **Fast cold start** — pickle-backed name cache, shared across instances
+- **Reproducible** — seed support for stable fixtures
+- **Zero required dependencies** — production install needs only the standard library
+- **Concurrent instantiation** — shared name cache is lock-guarded and immutable
+- **Typed** — type hints plus a `py.typed` marker (PEP 561)
+- **Tested** — unit, packaging, and concurrency tests in CI
+- **Unicode** — Persian/Farsi text output
+- **Optional pandas** — DataFrame output for data-science workflows
+
+> **Note on data quality:** the embedded database still contains historical
+> OCR/segmentation artifacts (for example names with stray internal spaces).
+> A data-quality overhaul is planned for v1.2. Treat generated names as
+> fixtures, not as a validated onomastics resource.
 
 ---
 
@@ -67,7 +72,7 @@ pip install farsi-faker
 ### With pandas support (for DataFrame output)
 
 ```bash
-pip install farsi-faker pandas
+pip install farsi-faker[pandas]
 ```
 
 ### From Source
@@ -75,12 +80,12 @@ pip install farsi-faker pandas
 ```bash
 git clone https://github.com/alisadeghiaghili/farsi-faker.git
 cd farsi-faker
-pip install -e .
+pip install -e ".[dev]"
 ```
 
 ### Requirements
 
-- **Python 3.7+**
+- **Python 3.9+**
 - **No external dependencies** for production use
 - Optional: `pandas` for DataFrame output (`as_dataframe=True`)
 
