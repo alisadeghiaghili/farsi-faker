@@ -698,10 +698,11 @@ class FarsiFaker:
         return _generate(rng=self._random)
 
     def profile(self, gender: GenderInput = None) -> Dict[str, str]:
-        """Return a full synthetic person record with contact fields.
+        """Return a full synthetic person record with contact and address fields.
 
-        Combines :meth:`full_name` with national ID, mobile, email, and
-        postal code. All fields share this instance's RNG stream.
+        Combines :meth:`full_name` with national ID, mobile, email, postal
+        code, city, street, alley, and plaque. All fields share this
+        instance's RNG stream.
 
         Args:
             gender (str, optional): Desired gender token.
@@ -709,7 +710,7 @@ class FarsiFaker:
         Returns:
             Dict[str, str]: Keys ``name``, ``first_name``, ``last_name``,
             ``gender``, ``national_id``, ``mobile``, ``email``,
-            ``postal_code``.
+            ``postal_code``, ``city``, ``street``, ``alley``, ``plaque``.
 
         Example::
             >>> faker = FarsiFaker(seed=42)
@@ -718,8 +719,10 @@ class FarsiFaker:
             'male'
             >>> '@' in person['email']
             True
+            >>> person['city']
+            '...'
         """
-        from .profile import email_address
+        from .profile import address_record, email_address
 
         base = self.full_name(gender)
         nid = self.national_id()
@@ -730,6 +733,7 @@ class FarsiFaker:
             rng=self._random,
         )
         postal = self.postal_code()
+        address = address_record(rng=self._random, postal_code_value=postal)
 
         return {
             **base,
@@ -737,6 +741,10 @@ class FarsiFaker:
             'mobile': mobile,
             'email': email,
             'postal_code': postal,
+            'city': address['city'],
+            'street': address['street'],
+            'alley': address['alley'],
+            'plaque': address['plaque'],
         }
 
 
