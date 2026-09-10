@@ -28,7 +28,7 @@ Attributes:
 
 from typing import Optional
 
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 __version_info__ = tuple(int(i) for i in __version__.split('.') if i.isdigit())
 
 # Version components for programmatic access
@@ -42,7 +42,7 @@ __status__ = "Production/Stable"
 
 # Release information
 __release_date__ = "2026-09-10"
-__release_name__ = "Profile Fields"
+__release_name__ = "Address & Provenance"
 
 # Package metadata
 __author__ = "Ali Sadeghi Aghili"
@@ -147,6 +147,17 @@ def check_version(required_version: str) -> bool:
 
 
 VERSION_HISTORY = {
+    "1.4.0": {
+        "date": "2026-09-10",
+        "status": "stable",
+        "changes": [
+            "Add DATA_PROVENANCE.md documenting source status and rebuild pipeline",
+            "Add normalize_zwnj / apply_zwnj_policy for ZWNJ hygiene",
+            "Wire ZWNJ normalization into precision_repair",
+            "Add iranian_cities, city_name, street_name, address_record",
+            "Extend profile() / profile_record with city, street, alley, plaque",
+        ],
+    },
     "1.3.0": {
         "date": "2026-09-10",
         "status": "stable",

@@ -22,10 +22,13 @@ Example:
 
 from __future__ import annotations
 
+import re
 from typing import Dict, Iterable, List, Mapping, Optional, Sequence
 
 __all__ = [
     'normalize_name',
+    'normalize_zwnj',
+    'apply_zwnj_policy',
     'has_singleton_token',
     'join_ocr_splits',
     'join_abdol_family',
@@ -84,6 +87,96 @@ def normalize_name(name: Optional[str]) -> str:
     if name is None:
         return ''
     return ' '.join(str(name).split())
+
+
+ZWNJ = '‌'
+
+# Space-separated compounds that take a ZWNJ (نیم‌فاصله) in modern orthography.
+# Keep this list conservative: only high-confidence lexical pairs, not names.
+_ZWNJ_COMPOUNDS = frozenset(
+    {
+        ('می', 'خواهد'),
+        ('می', 'رود'),
+        ('می', 'آید'),
+        ('می', 'دهد'),
+        ('می', 'گوید'),
+        ('می', 'بیند'),
+        ('می', 'شود'),
+        ('می', 'تواند'),
+        ('خانه', 'دار'),
+        ('کتاب', 'خانه'),
+        ('مدرسه', 'رو'),
+    }
+)
+
+
+def normalize_zwnj(name: Optional[str]) -> str:
+    """Clean ZWNJ placement around spaces and at string edges.
+
+    Removes spaces that sit next to a ZWNJ and strips leading/trailing ZWNJ.
+    Internal ZWNJ characters are preserved.
+
+    Args:
+        name (str, optional): Raw or normalized name.
+
+    Returns:
+        str: ZWNJ-hygienic string; empty when input is blank.
+
+    Example:
+        >>> normalize_zwnj('می‌ رود')
+        'می‌رود'
+        >>> normalize_zwnj('‌علی‌')
+        'علی'
+        >>> normalize_zwnj('می‌رود')
+        'می‌رود'
+    """
+    if name is None:
+        return ''
+    text = str(name)
+    # Drop spaces that abut ZWNJ.
+    text = re.sub(rf'{ZWNJ}\s+', ZWNJ, text)
+    text = re.sub(rf'\s+{ZWNJ}', ZWNJ, text)
+    # Strip ZWNJ at edges.
+    text = text.strip(ZWNJ)
+    return text
+
+
+def apply_zwnj_policy(name: str) -> str:
+    """Rewrite known space-separated compounds using ZWNJ.
+
+    Only pairs listed in the internal compound set are rewritten. Person
+    names such as ``محمد رضا`` are left unchanged.
+
+    Args:
+        name (str): Name already whitespace-normalized.
+
+    Returns:
+        str: Name with selected compounds joined by ZWNJ.
+
+    Example:
+        >>> apply_zwnj_policy('می خواهد')
+        'می‌خواهد'
+        >>> apply_zwnj_policy('محمد رضا')
+        'محمد رضا'
+    """
+    normalized = normalize_zwnj(normalize_name(name))
+    if not normalized:
+        return ''
+
+    tokens = _tokens(normalized)
+    if len(tokens) < 2:
+        return normalized
+
+    result: List[str] = [tokens[0]]
+    index = 1
+    while index < len(tokens):
+        pair = (result[-1], tokens[index])
+        if pair in _ZWNJ_COMPOUNDS:
+            result[-1] = result[-1] + ZWNJ + tokens[index]
+        else:
+            result.append(tokens[index])
+        index += 1
+    return ' '.join(result)
 
 
 def _tokens(name: str) -> List[str]:
@@ -283,9 +376,10 @@ def precision_repair(name: str, *, pool_gender: str) -> Optional[str]:
 
     1. :func:`join_ocr_splits` (singleton / short-head splits)
     2. :func:`join_abdol_family`
-    3. Drop if :func:`is_truncated_name`
-    4. Drop if :func:`is_too_short`
-    5. Drop if :func:`drop_from_pool` flags gender-label noise
+    3. :func:`normalize_zwnj`
+    4. Drop if :func:`is_truncated_name`
+    5. Drop if :func:`is_too_short`
+    6. Drop if :func:`drop_from_pool` flags gender-label noise
 
     Args:
         name (str): Raw name.
@@ -305,7 +399,7 @@ def precision_repair(name: str, *, pool_gender: str) -> Optional[str]:
         >>> precision_repair('آرش', pool_gender='male')
         'آرش'
     """
-    repaired = join_abdol_family(join_ocr_splits(name))
+    repaired = normalize_zwnj(join_abdol_family(join_ocr_splits(name)))
     if not repaired:
         return None
     if repaired in _INCOMPLETE_STANDALONE:

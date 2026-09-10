@@ -26,6 +26,10 @@ __all__ = [
     'is_valid_mobile',
     'email_address',
     'postal_code',
+    'iranian_cities',
+    'city_name',
+    'street_name',
+    'address_record',
     'profile_record',
 ]
 
@@ -323,6 +327,8 @@ def profile_record(
     generator = random.Random(seed)
     faker = FarsiFaker(seed=generator.randint(0, 2**32 - 1))
     person = faker.full_name(gender)
+    post = postal_code(rng=generator)
+    address = address_record(rng=generator, postal_code_value=post)
 
     return {
         **person,
@@ -333,5 +339,169 @@ def profile_record(
             last_name=person['last_name'],
             rng=generator,
         ),
-        'postal_code': postal_code(rng=generator),
+        'postal_code': post,
+        'city': address['city'],
+        'street': address['street'],
+        'alley': address['alley'],
+        'plaque': address['plaque'],
+    }
+
+
+# ---------------------------------------------------------------------------
+# City / address
+# ---------------------------------------------------------------------------
+
+_IRANIAN_CITIES: tuple = (
+    'تهران',
+    'مشهد',
+    'اصفهان',
+    'کرج',
+    'شیراز',
+    'تبریز',
+    'قم',
+    'اهواز',
+    'کرمانشاه',
+    'ارومیه',
+    'رشت',
+    'زاهدان',
+    'همدان',
+    'کرمان',
+    'یزد',
+    'اردبیل',
+    'بندرعباس',
+    'اراک',
+    'اسلامشهر',
+    'زنجان',
+    'سنندج',
+    'قزوین',
+    'خرم‌آباد',
+    'گرگان',
+    'ساری',
+    'بیرجند',
+    'بوشهر',
+    'بجنورد',
+    'ایلام',
+    'شهرکرد',
+)
+
+_STREET_PREFIXES = (
+    'خیابان',
+    'بلوار',
+    'کوچه',
+)
+
+_STREET_NAMES = (
+    'ولیعصر',
+    'آزادی',
+    'انقلاب',
+    'امام حسین',
+    'فردوسی',
+    'حافظ',
+    'سعادت‌آباد',
+    'نیاوران',
+    'پاسداران',
+    'مدرس',
+    'جمهوری',
+    'طالقانی',
+    'کارگر',
+    'شیخ بهایی',
+    'میرداماد',
+    'اشرفی اصفهانی',
+    'چمران',
+    'همت',
+    'نواب',
+    'ستارخان',
+)
+
+_ALLEY_PREFIXES = (
+    'کوچه',
+    'بن‌بست',
+    'کوی',
+)
+
+
+def iranian_cities() -> tuple:
+    """Return the built-in pool of major Iranian city names.
+
+    Returns:
+        tuple: Persian city names (immutable).
+
+    Example:
+        >>> 'تهران' in iranian_cities()
+        True
+    """
+    return _IRANIAN_CITIES
+
+
+def city_name(rng: Optional[random.Random] = None) -> str:
+    """Pick a random Iranian city.
+
+    Args:
+        rng (random.Random, optional): Seeded RNG for reproducibility.
+
+    Returns:
+        str: A city name from :func:`iranian_cities`.
+
+    Raises:
+        TypeError: If *rng* is not a ``random.Random``.
+
+    Example:
+        >>> city_name() in iranian_cities()
+        True
+    """
+    generator = _require_random(rng)
+    return generator.choice(_IRANIAN_CITIES)
+
+
+def street_name(rng: Optional[random.Random] = None) -> str:
+    """Build a synthetic Persian street label.
+
+    Args:
+        rng (random.Random, optional): Seeded RNG for reproducibility.
+
+    Returns:
+        str: e.g. ``'خیابان ولیعصر'``.
+
+    Example:
+        >>> street_name().startswith(('خیابان', 'بلوار', 'کوچه'))
+        True
+    """
+    generator = _require_random(rng)
+    prefix = generator.choice(_STREET_PREFIXES)
+    name = generator.choice(_STREET_NAMES)
+    return f'{prefix} {name}'
+
+
+def address_record(
+    rng: Optional[random.Random] = None,
+    *,
+    postal_code_value: Optional[str] = None,
+) -> Dict[str, str]:
+    """Build a synthetic Iranian address block.
+
+    Args:
+        rng (random.Random, optional): Seeded RNG for reproducibility.
+        postal_code_value (str, optional): Reuse an existing postal code
+            instead of generating a new one.
+
+    Returns:
+        Dict[str, str]: Keys ``city``, ``street``, ``alley``, ``plaque``,
+        ``postal_code``.
+
+    Example:
+        >>> addr = address_record()
+        >>> addr['city'] in iranian_cities()
+        True
+        >>> len(addr['postal_code'])
+        10
+    """
+    generator = _require_random(rng)
+    alley_prefix = generator.choice(_ALLEY_PREFIXES)
+    alley_name = generator.choice(_STREET_NAMES)
+    return {
+        'city': city_name(rng=generator),
+        'street': street_name(rng=generator),
+        'alley': f'{alley_prefix} {alley_name}',
+        'plaque': str(generator.randint(1, 200)),
+        'postal_code': postal_code_value or postal_code(rng=generator),
     }
