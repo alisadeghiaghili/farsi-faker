@@ -28,7 +28,7 @@ Attributes:
 
 from typing import Optional
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 __version_info__ = tuple(int(i) for i in __version__.split('.') if i.isdigit())
 
 # Version components for programmatic access
@@ -42,7 +42,7 @@ __status__ = "Production/Stable"
 
 # Release information
 __release_date__ = "2026-09-10"
-__release_name__ = "Data Quality"
+__release_name__ = "Profile Fields"
 
 # Package metadata
 __author__ = "Ali Sadeghi Aghili"
@@ -147,6 +147,17 @@ def check_version(required_version: str) -> bool:
 
 
 VERSION_HISTORY = {
+    "1.3.0": {
+        "date": "2026-09-10",
+        "status": "stable",
+        "changes": [
+            "Precision-repair name pools: glue Abdol family, drop truncated ال and bare prefixes",
+            "Rebuild names.pkl: male 7633→7493, female 3730→3648",
+            "Add farsi_faker.profile: national_id (checksum), mobile, email, postal_code",
+            "Add FarsiFaker.profile() and field helpers on the class",
+            "Add CLI: python -m farsi_faker (JSON/CSV, --profile, --seed)",
+        ],
+    },
     "1.2.0": {
         "date": "2026-09-10",
         "status": "stable",

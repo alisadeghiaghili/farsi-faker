@@ -11,6 +11,30 @@ No unreleased changes yet.
 
 ---
 
+## [1.3.0] - 2026-09-10
+
+### Added
+
+- `farsi_faker.profile` — synthetic Iranian profile fields:
+  - `national_id` / `is_valid_national_id` (10-digit with official checksum)
+  - `mobile_number` / `is_valid_mobile` (`09x` operator prefixes)
+  - `email_address` (romanized Persian name parts)
+  - `postal_code`
+  - `profile_record` composite helper
+- `FarsiFaker.national_id()`, `.mobile_number()`, `.email()`, `.postal_code()`, `.profile()`
+- CLI: `python -m farsi_faker` with `--count`, `--gender`, `--format json|csv`,
+  `--profile`, `--seed`
+
+### Changed
+
+- Precision rebuild of embedded name pools:
+  - Abdol family glued (`عبد الر ضا` → `عبدالرضا`)
+  - Truncated `ال` endings and bare prefixes (`عبد`, `آق`, …) dropped
+  - male 7633 → **7493**, female 3730 → **3648**, last 5748
+- Data-quality gates extended (no truncated `ال`, no unglued Abdol, min length 3)
+
+---
+
 ## [1.2.0] - 2026-09-10
 
 ### Added
@@ -208,18 +232,20 @@ This project follows [Semantic Versioning](https://semver.org/):
 - [x] Resolve gender-label noise (honorifics in the wrong pool)
 - [x] Data-quality assertions in CI
 
-### Planned for 1.3.0 (synthetic profile fields)
+### Completed in 1.3.0
 
-- [ ] Mobile number generation with Iranian prefix validation
-- [ ] National ID (کد ملی) with checksum
-- [ ] Email generation
-- [ ] Address / postal code generation
-- [ ] CLI (`farsi-faker generate`) with JSON/CSV output
+- [x] Precision repairs (Abdol glue, truncated `ال`, tiny fragments)
+- [x] Mobile number generation with Iranian prefix validation
+- [x] National ID (کد ملی) with checksum
+- [x] Email generation
+- [x] Postal code generation
+- [x] CLI with JSON/CSV output
 
-### Planned for 1.4.0 (source provenance)
+### Planned for 1.4.0
 
 - [ ] Restore source CSVs or documented rebuild provenance
 - [ ] Optional ZWNJ-normalized rebuild from original sources
+- [ ] Address / city generation
 
 ---
 
@@ -232,7 +258,8 @@ This project follows [Semantic Versioning](https://semver.org/):
 
 ---
 
-[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/alisadeghiaghili/farsi-faker/compare/v1.0.0...v1.1.0

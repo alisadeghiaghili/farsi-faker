@@ -45,21 +45,22 @@
 
 - **Embedded name database** — Persian first and family names shipped with the package
 - **Gender-specific generation** — separate male and female first-name pools
+- **Profile fields** — national ID (کد ملی with checksum), mobile, email, postal code
+- **CLI** — `python -m farsi_faker` for JSON/CSV fixtures
 - **Fast cold start** — pickle-backed name cache, shared across instances
 - **Reproducible** — seed support for stable fixtures
 - **Zero required dependencies** — production install needs only the standard library
 - **Concurrent instantiation** — shared name cache is lock-guarded and immutable
 - **Typed** — type hints plus a `py.typed` marker (PEP 561)
-- **Tested** — unit, packaging, concurrency, and data-quality gates in CI
+- **Tested** — unit, packaging, concurrency, profile, and data-quality gates in CI
 - **Unicode** — Persian/Farsi text output
 - **Optional pandas** — DataFrame output for data-science workflows
 - **Cleaning helpers** — `farsi_faker.cleaning` for OCR-split repair on your own lists
 
-> **Data quality (v1.2.0+):** the embedded database was rebuilt to remove
-> historical OCR/segmentation artifacts (`آ رمان` → `آرمان`) and female
-> honorifics mislabeled in the male pool. Multi-word surnames and legitimate
-> compound first names are preserved. Treat generated names as fixtures, not
-> as a validated onomastics resource.
+> **Data quality (v1.3.0+):** the embedded database was precision-rebuilt
+> (OCR joins, Abdol glue, truncated-token removal). Multi-word surnames and
+> legitimate compound first names are preserved. Treat generated names as
+> fixtures, not as a validated onomastics resource.
 
 ---
 
@@ -114,6 +115,32 @@ print(male['name'])   # علی صادقی عقیلی
 # Generate female name
 female = faker.full_name('female')
 print(female['name'])  # سپیده جلیلی
+```
+
+### Synthetic Profile Fields (v1.3.0+)
+
+```python
+from farsi_faker import FarsiFaker, is_valid_national_id
+
+faker = FarsiFaker(seed=42)
+person = faker.profile('male')
+# {
+#   'name': '...', 'first_name': '...', 'last_name': '...', 'gender': 'male',
+#   'national_id': '10-digit کد ملی',
+#   'mobile': '0912...',
+#   'email': 'first.last@gmail.com',
+#   'postal_code': '10-digit',
+# }
+assert is_valid_national_id(person['national_id'])
+assert person['mobile'].startswith('09')
+```
+
+### CLI
+
+```bash
+python -m farsi_faker --count 5 --seed 42
+python -m farsi_faker --count 100 --profile --format csv > people.csv
+python -m farsi_faker --count 3 --gender female --format json
 ```
 
 ### Generate Multiple Names
