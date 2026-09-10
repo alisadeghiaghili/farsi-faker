@@ -11,7 +11,7 @@ Features:
     - Zero required runtime dependencies
     - PEP 561 typed package (``py.typed``)
     - Name-pool cleaning helpers (``farsi_faker.cleaning``)
-    - Synthetic profile fields: national ID, mobile, email, postal code
+    - Synthetic profile fields: national ID, mobile, email, postal code, address
     - CLI: ``python -m farsi_faker``
 
 Quick Start:
@@ -33,16 +33,20 @@ from ._version import (
     __version_info__,
     check_version,
 )
-from .cleaning import clean_name_pools, join_ocr_splits
+from .cleaning import apply_zwnj_policy, clean_name_pools, join_ocr_splits, normalize_zwnj
 from .faker import FarsiFaker, generate_fake_name
 from .profile import (
+    address_record,
+    city_name,
     email_address,
+    iranian_cities,
     is_valid_mobile,
     is_valid_national_id,
     mobile_number,
     national_id,
     postal_code,
     profile_record,
+    street_name,
 )
 
 __all__ = [
@@ -50,12 +54,18 @@ __all__ = [
     'generate_fake_name',
     'clean_name_pools',
     'join_ocr_splits',
+    'normalize_zwnj',
+    'apply_zwnj_policy',
     'national_id',
     'is_valid_national_id',
     'mobile_number',
     'is_valid_mobile',
     'email_address',
     'postal_code',
+    'iranian_cities',
+    'city_name',
+    'street_name',
+    'address_record',
     'profile_record',
     '__version__',
     '__version_info__',
