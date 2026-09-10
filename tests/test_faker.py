@@ -353,10 +353,14 @@ class TestDataFrame:
         assert list(result.columns) == ['name', 'first_name', 'last_name', 'gender']
 
     def test_generate_names_dataframe_dtypes(self, faker):
-        """All DataFrame columns must be object (string) dtype."""
+        """Columns must be string-like (object or pandas StringDtype)."""
         pd = pytest.importorskip("pandas")
         result = faker.generate_names(10, as_dataframe=True)
-        assert all(result[col].dtype == object for col in result.columns)
+
+        def _is_text_dtype(dtype) -> bool:
+            return dtype == object or str(dtype) in {"object", "string"}
+
+        assert all(_is_text_dtype(result[col].dtype) for col in result.columns)
 
     def test_generate_names_dataframe_no_nulls(self, faker):
         """DataFrame must not contain any null values."""
