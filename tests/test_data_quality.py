@@ -90,6 +90,14 @@ class TestEmbeddedDataQuality:
         assert sum(1 for n in female if n.startswith('م')) >= 10
         assert sum(1 for n in female if n.startswith('ف')) >= 5
 
+    def test_initial_coverage_for_vav_kaf_gaf(self) -> None:
+        """و / ک / گ must not be empty in first-name pools."""
+        male, female, _ = _pools()
+        assert sum(1 for n in male if n.startswith('و')) >= 1
+        assert sum(1 for n in male if n.startswith('گ')) >= 1
+        assert sum(1 for n in female if n.startswith('و')) >= 1
+        assert sum(1 for n in female if n.startswith('ک')) >= 1
+
     def test_no_truncated_al_tokens(self) -> None:
         from farsi_faker.cleaning import is_truncated_name
 

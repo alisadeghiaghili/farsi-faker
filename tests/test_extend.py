@@ -27,36 +27,34 @@ class TestExtendNamePools:
 
     def test_merges_new_male_names(self, fresh_cache) -> None:
         before = FarsiFaker().get_stats()["male_names_count"]
-        added = extend_name_pools(male=["کیومرث"])
+        added = extend_name_pools(male=["برسام"])
         after = FarsiFaker().get_stats()["male_names_count"]
 
         assert added["male_added"] == 1
         assert after == before + 1
-        assert "کیومرث" in FarsiFaker()._male_names
+        assert "برسام" in FarsiFaker()._male_names
 
     def test_cleans_ocr_in_input(self, fresh_cache) -> None:
-        extend_name_pools(male=["کی ومرث"])
+        extend_name_pools(male=["بر سام"])
         names = FarsiFaker()._male_names
-        assert "کی ومرث" not in names
-        assert "کیومرث" in names
+        assert "بر سام" not in names
+        assert "برسام" in names
 
     def test_deduplicates_against_existing(self, fresh_cache) -> None:
-        first = extend_name_pools(male=["کیومرث"])["male_added"]
-        second = extend_name_pools(male=["کیومرث"])["male_added"]
+        first = extend_name_pools(male=["برسام"])["male_added"]
+        second = extend_name_pools(male=["برسام"])["male_added"]
         assert first == 1
         assert second == 0
 
     def test_extends_all_pools(self, fresh_cache) -> None:
         added = extend_name_pools(
-            male=["کیومرث"],
-            female=["مهلقا"],
-            last=["کیومرثی"],
+            male=["برسام"],
+            female=["کیمیا"],
+            last=["پویانی"],
         )
-        # کیومرثی may already exist as a surname; assert male/female at least.
-        assert added["male_added"] == 1
-        assert added["female_added"] == 1
-        assert added["last_added"] >= 0
-        assert "مهلقا" in FarsiFaker()._female_names
+        assert added == {"male_added": 1, "female_added": 1, "last_added": 1}
+        assert "کیمیا" in FarsiFaker()._female_names
+        assert "پویانی" in FarsiFaker()._last_names
 
     def test_rejects_non_sequence(self, fresh_cache) -> None:
         with pytest.raises(TypeError):
