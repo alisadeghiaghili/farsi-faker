@@ -107,6 +107,22 @@ class TestDropFromPool:
     def test_drops_agha_titles_from_female_when_clear(self) -> None:
         assert drop_from_pool("آقا رضا", pool_gender="female") is True
 
+    def test_drops_honorific_token_anywhere_in_first_name(self) -> None:
+        # Titles/honorifics glued onto a first name are contamination and are
+        # dropped regardless of position or pool, e.g. "آدم خان", "آذر بی بی".
+        assert drop_from_pool("آدم خان", pool_gender="male") is True
+        assert drop_from_pool("آقا محمد", pool_gender="male") is True
+        assert drop_from_pool("امیر خان", pool_gender="male") is True
+        assert drop_from_pool("آذر بی بی", pool_gender="female") is True
+        assert drop_from_pool("آتیه بیگم", pool_gender="female") is True
+        assert drop_from_pool("اشرف بانو", pool_gender="female") is True
+
+    def test_keeps_unisex_haj_in_both_pools(self) -> None:
+        # حاج/حاجی are unisex honorifics and must remain allowed in both pools.
+        assert drop_from_pool("حاج محمد", pool_gender="male") is False
+        assert drop_from_pool("حاجی احمد", pool_gender="male") is False
+        assert drop_from_pool("حاج فاطمه", pool_gender="female") is False
+
     def test_keeps_normal_female_names(self) -> None:
         assert drop_from_pool("فاطمه", pool_gender="female") is False
         assert drop_from_pool("زهرا", pool_gender="female") is False
@@ -209,6 +225,23 @@ class TestCleanNamePools:
         assert "اسما ال" not in cleaned["last_names"]
         assert "آر" not in cleaned["last_names"]
         assert cleaned["last_names"] == ["رضایی"]
+
+    def test_drops_honorific_contaminated_first_names(self) -> None:
+        # Title/honorific tokens glued onto first names are dropped from both
+        # pools during a full rebuild, while clean names (including unisex حاج
+        # compounds) are preserved.
+        cleaned = clean_name_pools(
+            {
+                "male_names": ["علی", "آدم خان", "آقا محمد", "حاج رضا"],
+                "female_names": ["فاطمه", "آذر بی بی", "آتیه بیگم"],
+                "last_names": ["احمدی"],
+            }
+        )
+        assert "آدم خان" not in cleaned["male_names"]
+        assert "آقا محمد" not in cleaned["male_names"]
+        assert "حاج رضا" in cleaned["male_names"]
+        assert "آذر بی بی" not in cleaned["female_names"]
+        assert "آتیه بیگم" not in cleaned["female_names"]
 
     def test_cross_gender_overlap_kept_only_female(self) -> None:
         # A first name present in both pools is retained on the female side
