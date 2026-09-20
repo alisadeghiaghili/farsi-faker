@@ -33,12 +33,17 @@ __all__ = [
     'profile_record',
 ]
 
-# Common Iranian mobile operator prefixes (first three digits after 0).
+# Iranian mobile operator prefixes (first three digits after 0).
+# 098 is deliberately omitted: it is not assigned to any Iranian operator.
 _MOBILE_PREFIXES = (
     '090',
     '091',
     '092',
     '093',
+    '094',
+    '095',
+    '096',
+    '097',
     '099',
 )
 
@@ -136,7 +141,7 @@ def is_valid_national_id(code: str) -> bool:
         bool: True when the code is well-formed and the checksum matches.
 
     Example:
-        >>> is_valid_national_id('0013540399')
+        >>> is_valid_national_id('0013540394')
         True
         >>> is_valid_national_id('0013540398')
         False
@@ -167,11 +172,22 @@ def national_id(rng: Optional[random.Random] = None) -> str:
         True
     """
     generator = _require_random(rng)
-    # Avoid leading-all-zero edge cases that look fake; allow a leading zero
-    # when the remaining digits are non-trivial.
+    # Avoid the all-zero edge case that looks fake. A real RNG almost never
+    # yields this (the 9 digits would all have to be 0), but a degenerate or
+    # mocked RNG can, in which case the naive "set one digit to randint(1, 9)"
+    # guard is itself a no-op because that call may also return 0. So: set the
+    # digit directly, then re-verify, looping until the body is genuinely
+    # non-zero. Bounded to a few attempts for safety with a stuck RNG.
     body = [generator.randint(0, 9) for _ in range(9)]
     if all(digit == 0 for digit in body):
-        body[-1] = generator.randint(1, 9)
+        for _attempt in range(5):
+            body[-1] = generator.randint(1, 9)
+            if not all(digit == 0 for digit in body):
+                break
+        else:
+            # A RNG that returns 0 for randint(1, 9) is not a real
+            # random.Random; the last-resort guarantee of a non-fake ID.
+            body[-1] = 1
     digits = ''.join(str(digit) for digit in body)
     return f'{digits}{_national_id_checksum(digits)}'
 
@@ -256,8 +272,9 @@ def email_address(
         TypeError: If *rng* is not a ``random.Random``.
 
     Example:
-        >>> email_address(first_name='Ali', last_name='Ahmadi')
-        'ali.ahmadi@gmail.com'
+        >>> import random
+        >>> email_address(first_name='Ali', last_name='Ahmadi', rng=random.Random(1))
+        'ali.ahmadi@yahoo.com'
     """
     generator = _require_random(rng)
     parts = []

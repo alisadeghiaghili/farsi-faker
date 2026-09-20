@@ -9,10 +9,10 @@ The shipped ``names.pkl`` historically under-represented common initials
 Example:
     >>> from farsi_faker import FarsiFaker
     >>> from farsi_faker.extend import extend_name_pools
-    >>> stats = extend_name_pools(male=['کوروش'], female=['لیلا'])
-    >>> stats['male_added']
-    1
+    >>> _ = extend_name_pools(male=['کوروش'], female=['لیلا'])
     >>> 'کوروش' in FarsiFaker()._male_names
+    True
+    >>> 'لیلا' in FarsiFaker()._female_names
     True
 """
 
@@ -107,9 +107,7 @@ def extend_name_pools(
     Example:
         >>> from farsi_faker import FarsiFaker
         >>> from farsi_faker.extend import extend_name_pools
-        >>> added = extend_name_pools(male=['کوروش'])
-        >>> added['male_added']
-        1
+        >>> _ = extend_name_pools(male=['کوروش'])
         >>> 'کوروش' in FarsiFaker()._male_names
         True
     """

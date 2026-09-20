@@ -46,10 +46,11 @@ class TestNationalId:
         rng_b = random.Random(42)
         assert national_id(rng=rng_a) == national_id(rng=rng_b)
 
-    def test_all_zero_body_is_still_checksum_valid(self) -> None:
-        # Force the 9-digit body to all zeros to exercise the guard that
-        # avoids an all-zero ID, then confirm the result is still a valid,
-        # well-formed national ID.
+    def test_all_zero_body_is_not_emitted(self) -> None:
+        # Force a degenerate RNG that always returns 0 to exercise the
+        # anti-all-zero guard. A naive "set one digit to randint(1, 9)" guard
+        # is a no-op here because that call also returns 0; the real guard must
+        # still guarantee a non-fake, checksum-valid ID.
         import random
 
         class _ZeroRng(random.Random):
@@ -57,6 +58,7 @@ class TestNationalId:
                 return 0
 
         code = national_id(rng=_ZeroRng())
+        assert code != "0000000000"
         assert re.fullmatch(r"\d{10}", code)
         assert is_valid_national_id(code) is True
 
@@ -76,6 +78,14 @@ class TestMobileNumber:
     def test_known_operator_prefixes(self) -> None:
         for _ in range(30):
             assert is_valid_mobile(mobile_number()) is True
+
+    def test_all_assigned_09x_prefixes_are_valid(self) -> None:
+        # Every allocated Iranian operator prefix must validate; the unassigned
+        # 098 must be rejected. Guards against a silently truncated prefix list
+        # (e.g. previously missing 094/095/096/097) false-rejecting real numbers.
+        for prefix in ('090', '091', '092', '093', '094', '095', '096', '097', '099'):
+            assert is_valid_mobile(f'{prefix}12345678') is True
+        assert is_valid_mobile('09812345678') is False
 
     def test_invalid_mobile(self) -> None:
         assert is_valid_mobile("08123456789") is False

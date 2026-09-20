@@ -41,6 +41,27 @@ def _build_records(
     return [faker.full_name(gender) for _ in range(count)]
 
 
+def _ensure_utf8_stdout() -> None:
+    """Force ``sys.stdout`` to UTF-8 so Persian text survives non-UTF-8 consoles.
+
+    On Windows the console default is often a legacy code page (cp1252),
+    where printing Persian raises ``UnicodeEncodeError``. Reconfiguring to
+    UTF-8 (lossy) makes the CLI's primary job — printing Persian names —
+    work everywhere. This is a no-op when stdout is not reconfigurable
+    (e.g. a test double from ``capsys``) or is already UTF-8.
+    """
+    stdout = sys.stdout
+    reconfigure = getattr(stdout, "reconfigure", None)
+    if reconfigure is None:
+        return
+    try:
+        reconfigure(encoding="utf-8", errors="replace")
+    except (ValueError, OSError):  # pragma: no cover - exotic stream types
+        # Detached/closed streams or test doubles that refuse reconfigure;
+        # fall back to the original encoding rather than crash the CLI.
+        pass
+
+
 def _emit(records: Sequence[Dict[str, Any]], fmt: str) -> None:
     """Write records to stdout as JSON or CSV.
 
@@ -50,6 +71,8 @@ def _emit(records: Sequence[Dict[str, Any]], fmt: str) -> None:
     """
     if not records:
         return
+
+    _ensure_utf8_stdout()
 
     if fmt == 'json':
         json.dump(list(records), sys.stdout, ensure_ascii=False, indent=2)

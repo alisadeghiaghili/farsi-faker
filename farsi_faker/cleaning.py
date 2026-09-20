@@ -62,6 +62,58 @@ _MALE_TITLE_PREFIXES = (
     'میرزا ',
 )
 
+# Honorific/title tokens that should never appear *anywhere* in a first name.
+# A first-name entry like ``آدم خان`` or ``آذر بی بی`` is honorific
+# contamination (a title glued onto a name by the source data), not a real
+# first name, so the whole entry is dropped. This is stricter than
+# :data:`_FEMALE_HONORIFICS` (which only drops when a female honorific is a
+# substring) and also drops male-pool titles such as ``آقا محمد``.
+#
+# حاج / حاجی are deliberately excluded: they are unisex honorifics that must
+# remain allowed in both pools.
+_FIRST_NAME_HONORIFIC_TOKENS = frozenset(
+    {
+        'آقا',
+        'اقا',
+        'آقای',
+        'میرزا',
+        'مولا',
+        'مولی',
+        'خان',
+        'خانم',
+        'بیگم',
+        'بی‌بی',
+        'بانو',
+    }
+)
+
+
+def _has_first_name_honorific(name: str) -> bool:
+    """Return True when a first name contains an honorific/title token.
+
+    The two-token honorific ``بی بی`` (which normalizes away the ZWNJ to two
+    separate ``بی`` tokens) is detected as an adjacent pair; every other
+    honorific is detected as a standalone token. Single-token names can only
+    match a single-token honorific.
+
+    Args:
+        name (str): A (whitespace-normalised) first name.
+
+    Returns:
+        bool: True when the name is honorific-contaminated.
+    """
+    tokens = _tokens(name)
+    for index, token in enumerate(tokens):
+        if token in _FIRST_NAME_HONORIFIC_TOKENS:
+            return True
+        if (
+            token == 'بی'
+            and index + 1 < len(tokens)
+            and tokens[index + 1] == 'بی'
+        ):
+            return True
+    return False
+
 
 def normalize_name(name: Optional[str]) -> str:
     """Normalize whitespace on a name string.
@@ -348,7 +400,8 @@ def is_truncated_name(name: str) -> bool:
 def is_too_short(name: str, *, min_letters: int = 3) -> bool:
     """Return True when the name is shorter than *min_letters* letters.
 
-    Whitespace is ignored. Used to drop OCR fragments such as ``'آبث'``.
+    Whitespace is ignored. Used to drop OCR fragments such as ``'آر'`` (a
+    lone initial plus one letter, i.e. fewer than the default three letters).
 
     Args:
         name (str): Name to inspect.
@@ -358,7 +411,7 @@ def is_too_short(name: str, *, min_letters: int = 3) -> bool:
         bool: True when the compacted name is shorter than the threshold.
 
     Example:
-        >>> is_too_short('آبث')
+        >>> is_too_short('آر')
         True
         >>> is_too_short('آرش')
         False
@@ -426,23 +479,33 @@ def drop_from_pool(name: str, pool_gender: str) -> bool:
     Example:
         >>> drop_from_pool('بی بی مریم', pool_gender='male')
         True
+        >>> drop_from_pool('آدم خان', pool_gender='male')
+        True
+        >>> drop_from_pool('آذر بی بی', pool_gender='female')
+        True
+        >>> drop_from_pool('حاج محمد', pool_gender='male')
+        False
         >>> drop_from_pool('علی', pool_gender='male')
         False
         >>> drop_from_pool('آب روشن', pool_gender='last')
         False
     """
-    if pool_gender == 'last':
+    # Only first-name (male/female) pools are filtered; family names and any
+    # unrecognised token are left untouched.
+    if pool_gender not in ('male', 'female'):
         return False
 
     text = normalize_name(name)
 
+    # Honorific tokens glued onto a first name (any position) are contamination
+    # in either pool and are dropped. حاج/حاجی are intentionally not in the set.
+    if _has_first_name_honorific(text):
+        return True
+
     if pool_gender == 'male':
         return any(marker in text for marker in _FEMALE_HONORIFICS)
 
-    if pool_gender == 'female':
-        return any(text.startswith(prefix) for prefix in _MALE_TITLE_PREFIXES)
-
-    return False
+    return any(text.startswith(prefix) for prefix in _MALE_TITLE_PREFIXES)
 
 
 def dedupe_preserve_order(names: Iterable[str]) -> List[str]:

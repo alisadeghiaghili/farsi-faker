@@ -37,6 +37,14 @@ jobs:
         run: |
           pytest --cov=farsi_faker --cov-report=term-missing --cov-fail-under=95
 
+      # Doctests double as runnable documentation, so they are enforced too.
+      # Run in a separate step (own process) because the module doctests mutate
+      # the shared FarsiFaker name cache (extend_name_pools), so they must not
+      # interleave with the unit tests in one session.
+      - name: Run doctests
+        run: |
+          pytest --doctest-modules farsi_faker
+
   package:
     name: build sdist/wheel
     runs-on: ubuntu-latest
