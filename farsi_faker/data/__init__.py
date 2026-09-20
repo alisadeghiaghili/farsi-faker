@@ -16,8 +16,10 @@ Example:
     >>> from farsi_faker import FarsiFaker
     >>> faker = FarsiFaker()
     >>> 
-    >>> # Incorrect usage (will raise AttributeError)
-    >>> from farsi_faker.data import names  # Don't do this!
+    >>> # Incorrect usage (will raise AttributeError) — illustrative only;
+    >>> # the guard itself is covered by tests/test_public_api.py.
+    >>> # Don't do this — importing names directly is deliberately blocked:
+    >>> from farsi_faker.data import names  # doctest: +SKIP
 """
 
 __all__ = []
@@ -37,7 +39,7 @@ def __getattr__(name):
         AttributeError: Always raised to prevent direct data access
     
     Example:
-        >>> from farsi_faker.data import names
+        >>> from farsi_faker.data import names  # doctest: +SKIP
         AttributeError: 'names' should not be accessed directly.
         Use FarsiFaker class to access names data.
     """

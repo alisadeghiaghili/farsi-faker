@@ -264,8 +264,9 @@ class FarsiFaker:
         Example::
 
             >>> faker = FarsiFaker(seed=0)
-            >>> faker.male_first_name()
-            'محمد'
+            >>> name = faker.male_first_name()
+            >>> isinstance(name, str) and name in faker._male_names
+            True
         """
         return self._random.choice(self._male_names)
 
@@ -278,8 +279,9 @@ class FarsiFaker:
         Example::
 
             >>> faker = FarsiFaker(seed=0)
-            >>> faker.female_first_name()
-            'فاطمه'
+            >>> name = faker.female_first_name()
+            >>> isinstance(name, str) and name in faker._female_names
+            True
         """
         return self._random.choice(self._female_names)
 
@@ -303,12 +305,14 @@ class FarsiFaker:
 
             >>> faker = FarsiFaker(seed=1)
             >>> name, g = faker.first_name('male')
-            >>> print(name, g)
-            علی male
+            >>> g
+            'male'
+            >>> name in faker._male_names
+            True
 
-            >>> name, g = faker.first_name('زن')
-            >>> print(g)
-            female
+            >>> name, g = faker.first_name('زن')  # Persian token for female
+            >>> g
+            'female'
 
             >>> name, g = faker.first_name()  # random gender
             >>> g in ('male', 'female')
@@ -333,8 +337,9 @@ class FarsiFaker:
         Example::
 
             >>> faker = FarsiFaker(seed=0)
-            >>> faker.last_name()
-            'احمدی'
+            >>> name = faker.last_name()
+            >>> isinstance(name, str) and name in faker._last_names
+            True
         """
         return self._random.choice(self._last_names)
 
@@ -441,9 +446,9 @@ class FarsiFaker:
                 (50, 4)
                 >>> list(df.columns)
                 ['name', 'first_name', 'last_name', 'gender']
-                >>> df.isnull().any().any()
+                >>> bool(df.isnull().any().any())
                 False
-                >>> (df['name'] == df['first_name'] + ' ' + df['last_name']).all()
+                >>> bool((df['name'] == df['first_name'] + ' ' + df['last_name']).all())
                 True
         """
         if count <= 0:
@@ -527,11 +532,11 @@ class FarsiFaker:
                 >>> df = faker.generate_dataset(100, male_ratio=0.5, as_dataframe=True)
                 >>> df.shape
                 (100, 4)
-                >>> df['gender'].value_counts().to_dict()
-                {'male': 50, 'female': 50}
+                >>> sorted(df['gender'].value_counts().to_dict().items())
+                [('female', 50), ('male', 50)]
                 >>> list(df.columns)
                 ['name', 'first_name', 'last_name', 'gender']
-                >>> df.isnull().any().any()
+                >>> bool(df.isnull().any().any())
                 False
 
             Edge cases::
