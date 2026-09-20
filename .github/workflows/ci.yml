@@ -35,7 +35,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest --cov=farsi_faker --cov-report=term-missing --cov-fail-under=85
+          pytest --cov=farsi_faker --cov-report=term-missing --cov-fail-under=95
 
   package:
     name: build sdist/wheel
