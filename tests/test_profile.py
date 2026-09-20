@@ -46,6 +46,20 @@ class TestNationalId:
         rng_b = random.Random(42)
         assert national_id(rng=rng_a) == national_id(rng=rng_b)
 
+    def test_all_zero_body_is_still_checksum_valid(self) -> None:
+        # Force the 9-digit body to all zeros to exercise the guard that
+        # avoids an all-zero ID, then confirm the result is still a valid,
+        # well-formed national ID.
+        import random
+
+        class _ZeroRng(random.Random):
+            def randint(self, a, b):
+                return 0
+
+        code = national_id(rng=_ZeroRng())
+        assert re.fullmatch(r"\d{10}", code)
+        assert is_valid_national_id(code) is True
+
     def test_rejects_bad_rng(self) -> None:
         with pytest.raises(TypeError):
             national_id(rng="nope")  # type: ignore[arg-type]
@@ -94,6 +108,15 @@ class TestEmail:
     def test_without_names_still_valid(self) -> None:
         email = email_address()
         assert re.fullmatch(r"[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,}", email)
+
+    def test_names_that_romanize_to_empty_fall_back_to_handle(self) -> None:
+        # Arabic-Indic digits have no Latin mapping, so both slug parts are
+        # empty and the generator must fall back to a random handle.
+        email = email_address(first_name="١", last_name="٢")
+        assert re.fullmatch(r"[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,}", email)
+        # The local part is the generated handle, not an empty string.
+        local = email.split("@", 1)[0]
+        assert local and local != "."
 
     def test_reproducible(self) -> None:
         import random

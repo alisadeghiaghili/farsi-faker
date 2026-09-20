@@ -1,5 +1,9 @@
 """Comprehensive tests for FarsiFaker."""
 
+import pickle
+import re
+import sys
+
 import pytest
 from farsi_faker import FarsiFaker, generate_fake_name
 
@@ -579,6 +583,98 @@ class TestErrorHandling:
         
         with pytest.raises(ValueError):
             faker.generate_dataset(-1)
+
+
+class TestFakerProfileFields:
+    """Per-instance synthetic field methods reuse the instance RNG stream."""
+
+    @pytest.fixture
+    def faker(self):
+        return FarsiFaker(seed=42)
+
+    def test_email_method_returns_valid_email(self, faker):
+        email = faker.email()
+        assert "@" in email
+        local, domain = email.split("@", 1)
+        assert local and "." in domain
+        assert re.fullmatch(r"[a-z0-9._-]+", local)
+
+    def test_email_method_is_reproducible(self):
+        import random
+
+        # Build two isolated RNG streams via seeded instances.
+        a = FarsiFaker(seed=5).email()
+        b = FarsiFaker(seed=5).email()
+        assert a == b
+
+    def test_national_id_mobile_postal_methods_delegated(self, faker):
+        from farsi_faker.profile import is_valid_national_id, is_valid_mobile
+
+        assert is_valid_national_id(faker.national_id()) is True
+        assert is_valid_mobile(faker.mobile_number()) is True
+        assert len(faker.postal_code()) == 10
+
+
+class TestDataLoadingErrors:
+    """The pickle load path must surface actionable, correctly-typed errors.
+
+    Each case forces one failure branch of ``_read_names_database`` while the
+    class cache is reset so the real loader runs.
+    """
+
+    @pytest.fixture(autouse=True)
+    def _reset_cache(self):
+        # Ensure the real loader path runs (not a leftover cached pool).
+        FarsiFaker._data_cache = None
+        yield
+        FarsiFaker._data_cache = None
+
+    def test_missing_pickle_raises_filenotfound(self, monkeypatch):
+        import farsi_faker.faker as faker_mod
+
+        monkeypatch.setattr(faker_mod.Path, "exists", lambda self: False)
+        with pytest.raises(FileNotFoundError, match="Names data file not found"):
+            FarsiFaker()
+
+    def test_corrupt_pickle_raises_unpickling_error(self, monkeypatch):
+        import farsi_faker.faker as faker_mod
+
+        def _boom(*args, **kwargs):
+            raise OSError("disk error")
+
+        monkeypatch.setattr(faker_mod.Path, "exists", lambda self: True)
+        monkeypatch.setattr(faker_mod.pickle, "load", _boom)
+        with pytest.raises(pickle.UnpicklingError, match="Failed to load names data"):
+            FarsiFaker()
+
+    def test_missing_keys_raises_keyerror(self, monkeypatch):
+        import farsi_faker.faker as faker_mod
+
+        monkeypatch.setattr(faker_mod.Path, "exists", lambda self: True)
+        monkeypatch.setattr(
+            faker_mod.pickle,
+            "load",
+            lambda *a, **k: {"male_names": ["a"], "female_names": ["b"]},
+        )
+        with pytest.raises(KeyError, match="missing keys"):
+            FarsiFaker()
+
+
+class TestPandasOptionalImport:
+    """as_dataframe=True must raise a helpful ImportError when pandas is absent."""
+
+    def test_generate_names_import_error(self, monkeypatch):
+        # Simulate pandas being uninstalled.
+        monkeypatch.setitem(sys.modules, "pandas", None)
+        faker = FarsiFaker(seed=1)
+        with pytest.raises(ImportError, match="pandas is required"):
+            faker.generate_names(5, as_dataframe=True)
+
+    def test_generate_dataset_import_error(self, monkeypatch):
+        monkeypatch.setitem(sys.modules, "pandas", None)
+        faker = FarsiFaker(seed=1)
+        with pytest.raises(ImportError, match="pandas is required"):
+            faker.generate_dataset(10, as_dataframe=True)
 
 
 class TestPerformance:

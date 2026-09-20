@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from farsi_faker.__main__ import main
+from farsi_faker.__main__ import _emit, main
 
 
 class TestCli:
@@ -47,3 +47,15 @@ class TestCli:
         main(["--count", "2", "--seed", "99"])
         second = capsys.readouterr().out
         assert first == second
+
+
+class TestEmit:
+    """The output writer must be a no-op for an empty record list."""
+
+    def test_empty_records_write_nothing_json(self, capsys: pytest.CaptureFixture) -> None:
+        _emit([], "json")
+        assert capsys.readouterr().out == ""
+
+    def test_empty_records_write_nothing_csv(self, capsys: pytest.CaptureFixture) -> None:
+        _emit([], "csv")
+        assert capsys.readouterr().out == ""
