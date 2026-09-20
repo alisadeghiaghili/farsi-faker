@@ -34,15 +34,19 @@ class TestEmbeddedDataQuality:
             bad = [name for name in pool if has_singleton_token(name)]
             assert bad == [], f'{label} pool still has OCR singleton tokens: {bad[:10]}'
 
-    def test_no_female_honorifics_in_male_pool(self) -> None:
+    def test_no_honorific_contamination_in_male_pool(self) -> None:
+        # No first-name entry may carry a title/honorific token (آقا، خان،
+        # بیگم، ...) in any position — these are source-data contamination,
+        # not real first names.
         male, _, _ = _pools()
         bad = [name for name in male if drop_from_pool(name, pool_gender='male')]
         assert bad == [], f'male pool honorific noise: {bad[:10]}'
 
-    def test_no_male_titles_leading_female_pool(self) -> None:
+    def test_no_honorific_contamination_in_female_pool(self) -> None:
+        # Same invariant for the female pool (e.g. "آذر بی بی", "آتیه بیگم").
         _, female, _ = _pools()
         bad = [name for name in female if drop_from_pool(name, pool_gender='female')]
-        assert bad == [], f'female pool title noise: {bad[:10]}'
+        assert bad == [], f'female pool honorific noise: {bad[:10]}'
 
     def test_male_and_female_pools_are_disjoint(self) -> None:
         male, female, _ = _pools()
@@ -129,3 +133,20 @@ class TestEmbeddedDataQuality:
             for name in pool:
                 compact = name.replace(' ', '')
                 assert len(compact) >= 3, f'tiny name: {name!r}'
+
+    def test_multi_word_first_name_ratio_is_not_regressing(self) -> None:
+        """Tripwire on the share of multi-token first names in the pool.
+
+        A meaningful share of shipped first names are legitimately
+        multi-token compounds (آبان دخت، آرتا دخت، محمد رضا). A *hard* cap
+        low would destroy those, so this is a **degradation tripwire**, not a
+        quality target: it only fails if the ratio climbs well past the current
+        baseline (~30 % male / ~23 % female), which would indicate the source
+        data has been re-contaminated with non-name entries. Raise the ceilings
+        intentionally only with a deliberate data decision.
+        """
+        male, female, _ = _pools()
+        male_ratio = sum(1 for n in male if ' ' in n) / len(male)
+        female_ratio = sum(1 for n in female if ' ' in n) / len(female)
+        assert male_ratio <= 0.35, f'male multi-word ratio regressed: {male_ratio:.2%}'
+        assert female_ratio <= 0.30, f'female multi-word ratio regressed: {female_ratio:.2%}'
