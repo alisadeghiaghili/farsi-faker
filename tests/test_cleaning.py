@@ -83,6 +83,14 @@ class TestJoinOcrSplits:
         assert join_ocr_splits("") == ""
 
 
+class TestJoinAbdolEmpty:
+    """join_abdol_family must short-circuit on blank input."""
+
+    def test_blank_returns_empty(self) -> None:
+        assert join_abdol_family("") == ""
+        assert join_abdol_family("   ") == ""
+
+
 class TestDropFromPool:
     """Gender-label noise filters."""
 
@@ -106,6 +114,10 @@ class TestDropFromPool:
     def test_last_names_not_filtered(self) -> None:
         assert drop_from_pool("محمدی", pool_gender="last") is False
         assert drop_from_pool("آب روشن", pool_gender="last") is False
+
+    def test_unknown_pool_gender_is_not_filtered(self) -> None:
+        # An unrecognized pool_gender token must not accidentally drop names.
+        assert drop_from_pool("بی بی مریم", pool_gender="unknown") is False
 
 
 class TestDedupePreserveOrder:
@@ -184,6 +196,35 @@ class TestCleanNamePools:
         with pytest.raises(KeyError):
             clean_name_pools({"male_names": []})
 
+    def test_last_names_drop_truncated_and_tiny(self) -> None:
+        # Last names keep multi-word compounds but still drop truncated ``ال``
+        # tails and fragments shorter than three letters.
+        cleaned = clean_name_pools(
+            {
+                "male_names": ["علی"],
+                "female_names": ["فاطمه"],
+                "last_names": ["اسما ال", "آر", "رضایی"],
+            }
+        )
+        assert "اسما ال" not in cleaned["last_names"]
+        assert "آر" not in cleaned["last_names"]
+        assert cleaned["last_names"] == ["رضایی"]
+
+    def test_cross_gender_overlap_kept_only_female(self) -> None:
+        # A first name present in both pools is retained on the female side
+        # and dropped from the male side (the male pool is filtered against
+        # the already-repaired female set).
+        cleaned = clean_name_pools(
+            {
+                "male_names": ["آناهید", "علی"],
+                "female_names": ["آناهید"],
+                "last_names": ["رضایی"],
+            }
+        )
+        assert "آناهید" in cleaned["female_names"]
+        assert "آناهید" not in cleaned["male_names"]
+        assert "علی" in cleaned["male_names"]
+
 
 class TestPrecisionRules:
     """v1.3.0 precision repairs beyond basic OCR joins."""
@@ -217,6 +258,14 @@ class TestPrecisionRules:
         assert precision_repair("آر", pool_gender="male") is None
         assert precision_repair("آرش", pool_gender="male") == "آرش"
         assert precision_repair("بی بی مریم", pool_gender="male") is None
+
+    def test_precision_repair_blank_and_incomplete_standalone(self) -> None:
+        # Blank input short-circuits to None before any rule runs.
+        assert precision_repair("", pool_gender="male") is None
+        # A bare prefix that survives joining is treated as an incomplete
+        # standalone fragment and dropped.
+        assert precision_repair("عبد", pool_gender="male") is None
+        assert precision_repair("ال", pool_gender="female") is None
 
     def test_clean_pools_applies_precision(self) -> None:
         cleaned = clean_name_pools(

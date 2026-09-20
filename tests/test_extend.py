@@ -60,6 +60,21 @@ class TestExtendNamePools:
         with pytest.raises(TypeError):
             extend_name_pools(male=123)  # type: ignore[arg-type]
 
+    def test_rejects_sequence_of_non_strings(self, fresh_cache) -> None:
+        with pytest.raises(TypeError, match="entries must be str"):
+            extend_name_pools(male=["برسام", 42])  # type: ignore[list-item]
+
+    def test_rejects_string_passed_as_sequence(self, fresh_cache) -> None:
+        # A bare string is a Sequence but must be rejected, not iterated char-wise.
+        with pytest.raises(TypeError, match="must be a sequence of strings"):
+            extend_name_pools(male="برسام")  # type: ignore[arg-type]
+
+    def test_empty_strings_are_ignored(self, fresh_cache) -> None:
+        # Blank entries are filtered out before dedupe; a non-blank one still lands.
+        added = extend_name_pools(male=["", "   ", "برسام"])
+        assert added == {"male_added": 1, "female_added": 0, "last_added": 0}
+        assert "برسام" in FarsiFaker()._male_names
+
     def test_empty_is_noop(self, fresh_cache) -> None:
         added = extend_name_pools()
         assert added == {"male_added": 0, "female_added": 0, "last_added": 0}

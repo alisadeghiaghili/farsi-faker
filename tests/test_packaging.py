@@ -84,3 +84,15 @@ class TestVersionSurface:
         assert farsi_faker.check_version(farsi_faker.__version__) is True
         assert farsi_faker.check_version("99.0.0") is False
         assert farsi_faker.check_version("not-a-version") is False
+
+    def test_get_version_returns_string(self) -> None:
+        from farsi_faker._version import get_version, get_version_info
+
+        assert get_version() == farsi_faker.__version__
+        assert isinstance(get_version(), str)
+
+    def test_get_version_info_returns_tuple(self) -> None:
+        from farsi_faker._version import get_version_info
+
+        assert get_version_info() == farsi_faker.__version_info__
+        assert isinstance(get_version_info(), tuple)
