@@ -46,6 +46,7 @@ python scripts/rebuild_names_pkl.py
 | 1.4.0 | 7493 | 3648 | 5748 | ZWNJ hygiene |
 | 1.5.0 | 7546 | 3695 | 5751 | curated seed expansion (core `م`/`ف`) |
 | 1.6.0 | 7572 | 3705 | 5758 | broader initial coverage (`و`/`ک`/`گ`) |
+| 1.6.1 | 7439 | 3317 | 5758 | honorific-contamination pass (drop title tokens in first names) |
 
 Exact numbers after each rebuild are printed by `rebuild_names_pkl.py`.
 
