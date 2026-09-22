@@ -28,7 +28,7 @@ Attributes:
 
 from typing import Optional
 
-__version__ = "1.6.0"
+__version__ = "1.6.1"
 __version_info__ = tuple(int(i) for i in __version__.split('.') if i.isdigit())
 
 # Version components for programmatic access
@@ -41,8 +41,8 @@ VERSION_PATCH = __version_info__[2] if len(__version_info__) > 2 else 0
 __status__ = "Production/Stable"
 
 # Release information
-__release_date__ = "2026-09-10"
-__release_name__ = "Coverage Expansion"
+__release_date__ = "2026-09-22"
+__release_name__ = "Correctness and data-quality fixes"
 
 # Package metadata
 __author__ = "Ali Sadeghi Aghili"
@@ -147,6 +147,19 @@ def check_version(required_version: str) -> bool:
 
 
 VERSION_HISTORY = {
+    "1.6.1": {
+        "date": "2026-09-22",
+        "status": "stable",
+        "changes": [
+            "Fix CLI UnicodeEncodeError on Windows (cp1252) consoles: stdout is reconfigured to UTF-8 before emitting Persian text",
+            "Enforce doctests in CI (separate step) and fix 13 broken/stale doctest examples, including the national-ID checksum and is_too_short doc examples",
+            "Add missing Iranian mobile prefixes 094/095/096/097 (098 omitted: not assigned)",
+            "national_id(): all-zero guard now truly prevents 0000000000 with a degenerate RNG",
+            "Drop first-name entries contaminated with honorific/title tokens (آقا، خان، بیگم، بی‌بی، …) in both pools; حاج/حاجی remain allowed",
+            "Rebuild names.pkl: male 7572→7439, female 3705→3317 (521 contaminated entries removed); overlap and singleton invariants preserved",
+            "Add data-quality gate for honorific contamination plus a multi-word first-name ratio degradation tripwire",
+        ],
+    },
     "1.6.0": {
         "date": "2026-09-10",
         "status": "stable",

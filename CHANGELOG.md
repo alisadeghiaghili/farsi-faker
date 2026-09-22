@@ -11,6 +11,40 @@ No unreleased changes yet.
 
 ---
 
+## [1.6.1] - 2026-09-22
+
+### Fixed
+
+- **CLI on Windows**: `python -m farsi_faker` no longer raises
+  `UnicodeEncodeError` on cp1252 consoles — stdout is reconfigured to UTF-8
+  before emitting Persian text (guarded, so it is a no-op on non-reconfigurable
+  streams).
+- **Doctest layer**: corrected two wrong examples (the national-ID checksum
+  example and the `is_too_short('آبث')` example), made seed-based examples
+  data-agnostic so they survive future data rebuilds, and made numpy-dependent
+  reprs deterministic. Doctests are now enforced in CI via a separate step.
+- **Mobile numbers**: `is_valid_mobile` no longer false-rejects valid Iranian
+  numbers — added operator prefixes `094`/`095`/`096`/`097` (`098` is not
+  assigned to any operator).
+- **National ID**: the all-zero guard now truly prevents `0000000000` even
+  with a degenerate RNG (re-verify loop with a last-resort fallback).
+
+### Added
+
+- `farsi_faker.cleaning` now drops first-name entries containing an
+  honorific/title token (e.g. `آقا`, `خان`, `بیگم`, `بی بی`) from either
+  gender pool; `حاج`/`حاجی` remain allowed (unisex).
+- Data-quality gate: `test_no_honorific_contamination_in_{male,female}_pool`
+  and a multi-word first-name ratio degradation tripwire.
+
+### Changed
+
+- Rebuilt embedded `names.pkl`: male 7572→7439, female 3705→3317 (521
+  honorific-contaminated first-name entries removed). Zero male/female overlap
+  and zero singleton-token invariants preserved.
+
+---
+
 ## [1.6.0] - 2026-09-10
 
 ### Changed
