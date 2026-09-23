@@ -50,7 +50,14 @@ from .profile import (
     profile_record,
     street_name,
 )
-from .surnames import SURNAME_PREFIXES, SURNAME_SUFFIXES, compound_surname, region_surname
+from .surnames import (
+    OCCUPATION_SURNAMES,
+    SURNAME_PREFIXES,
+    SURNAME_SUFFIXES,
+    compound_surname,
+    occupation_surname,
+    region_surname,
+)
 
 __all__ = [
     'FarsiFaker',
@@ -63,8 +70,10 @@ __all__ = [
     'apply_seed_expansion',
     'compound_surname',
     'region_surname',
+    'occupation_surname',
     'SURNAME_PREFIXES',
     'SURNAME_SUFFIXES',
+    'OCCUPATION_SURNAMES',
     'national_id',
     'is_valid_national_id',
     'mobile_number',
