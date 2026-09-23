@@ -8,7 +8,13 @@ import pytest
 
 import farsi_faker
 from farsi_faker import FarsiFaker
-from farsi_faker.surnames import SURNAME_PREFIXES, SURNAME_SUFFIXES, compound_surname
+from farsi_faker.profile import iranian_cities
+from farsi_faker.surnames import (
+    SURNAME_PREFIXES,
+    SURNAME_SUFFIXES,
+    compound_surname,
+    region_surname,
+)
 
 
 class TestCompoundSurname:
@@ -127,9 +133,59 @@ class TestExports:
         assert "compound_surname" in farsi_faker.__all__
         assert "SURNAME_PREFIXES" in farsi_faker.__all__
         assert "SURNAME_SUFFIXES" in farsi_faker.__all__
+        assert "region_surname" in farsi_faker.__all__
 
     def test_affix_lists_are_non_empty_and_unique(self) -> None:
         assert len(SURNAME_PREFIXES) > 10
         assert len(SURNAME_SUFFIXES) > 10
         assert len(set(SURNAME_PREFIXES)) == len(SURNAME_PREFIXES)
         assert len(set(SURNAME_SUFFIXES)) == len(SURNAME_SUFFIXES)
+
+
+class TestRegionSurname:
+    """Region-based surnames: city -> city + ی."""
+
+    def test_appends_i_to_city(self) -> None:
+        assert region_surname("تهران") == "تهرانی"
+        assert region_surname("اصفهان") == "اصفهانی"
+
+    def test_keeps_i_ending_when_present(self) -> None:
+        # A city that already ends in ی must not get a doubled termination.
+        assert region_surname("تبریز") == "تبریزی"
+        assert region_surname("قم") == "قمی"
+
+    def test_is_deterministic_per_city(self) -> None:
+        # Same city -> same surname, regardless of seed.
+        assert region_surname("شیراز", rng=random.Random(1)) == region_surname(
+            "شیراز", rng=random.Random(99)
+        )
+
+    def test_rejects_empty_city(self) -> None:
+        with pytest.raises(ValueError):
+            region_surname("  ")
+
+    def test_rejects_bad_rng(self) -> None:
+        with pytest.raises(TypeError):
+            region_surname("تهران", rng="nope")  # type: ignore[arg-type]
+
+
+class TestFarsiFakerRegionIntegration:
+    """FarsiFaker.region_last_name wires a city into region_surname."""
+
+    def test_explicit_city(self) -> None:
+        assert FarsiFaker(seed=1).region_last_name(city="تهران") == "تهرانی"
+
+    def test_default_city_is_from_pool(self) -> None:
+        faker = FarsiFaker(seed=2)
+        name = faker.region_last_name()
+        cities = set(iranian_cities())
+        # The result must be the -ی form of one of the built-in cities.
+        assert any(
+            name == (city if city.endswith("ی") else city + "ی")
+            for city in cities
+        ), name
+
+    def test_reproducible(self) -> None:
+        a = FarsiFaker(seed=4).region_last_name()
+        b = FarsiFaker(seed=4).region_last_name()
+        assert a == b

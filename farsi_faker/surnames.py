@@ -28,6 +28,7 @@ __all__ = [
     'SURNAME_PREFIXES',
     'SURNAME_SUFFIXES',
     'compound_surname',
+    'region_surname',
 ]
 
 # Common Persian title/name prefixes used at the head of a family name.
@@ -186,4 +187,45 @@ def compound_surname(base: str, *, rng: Optional[random.Random] = None) -> str:
     else:  # prefix
         result = f'{generator.choice(SURNAME_PREFIXES)} {base}'
 
+    return normalize_name(result)
+
+
+def region_surname(city: str, *, rng: Optional[random.Random] = None) -> str:
+    """Turn an Iranian city name into a region-based family name.
+
+    This produces the common "X-i" regional surname from a place name, e.g.
+    ``تهران`` -> ``تهرانی``, ``اصفهان`` -> ``اصفهانی``, ``تبریز`` ->
+    ``تبریزی``. Cities that already end in the termination are returned
+    unchanged.
+
+    The rule is deterministic, so the same city always yields the same
+    surname; ``rng`` is accepted (and validated) for signature consistency
+    with the other generators so the interface can later draw a variant
+    (e.g. the rare ``-آبادی`` form) without an API change.
+
+    Args:
+        city (str): A Persian city / place name. Must be non-empty.
+        rng (random.Random, optional): Seeded RNG (validated; not yet used).
+
+    Returns:
+        str: A region-based family name with whitespace normalised.
+
+    Raises:
+        TypeError: If *rng* is not a ``random.Random``.
+        ValueError: If *city* is empty after stripping.
+
+    Example:
+        >>> region_surname('تهران')
+        'تهرانی'
+        >>> region_surname('اصفهان')
+        'اصفهانی'
+        >>> region_surname('تبریز')
+        'تبریزی'
+    """
+    _require_random(rng)  # validate; the rule itself is deterministic
+    city = city.strip()
+    if not city:
+        raise ValueError('city must be a non-empty place name')
+
+    result = city if city.endswith(_TERMINATION) else city + _TERMINATION
     return normalize_name(result)

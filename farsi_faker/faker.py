@@ -376,6 +376,33 @@ class FarsiFaker:
             base = self.male_first_name()
         return compound_surname(base, rng=self._random)
 
+    def region_last_name(self, city: Optional[str] = None) -> str:
+        """Build a region-based family name from a city (e.g. ``تهران`` -> ``تهرانی``).
+
+        Args:
+            city (str, optional): A place name to derive from. When ``None``
+                (default) a random built-in Iranian city is chosen.
+
+        Returns:
+            str: A region-based family name.
+
+        Raises:
+            ValueError: If *city* is provided but blank.
+
+        Example::
+
+            >>> faker = FarsiFaker(seed=1)
+            >>> name = faker.region_last_name(city='اصفهان')
+            >>> name
+            'اصفهانی'
+        """
+        from .profile import iranian_cities
+        from .surnames import region_surname
+
+        if city is None:
+            city = self._random.choice(iranian_cities())
+        return region_surname(city, rng=self._random)
+
     def full_name(self, gender: GenderInput = None) -> Dict[str, str]:
         """Return a complete person record with full name and metadata.
 
