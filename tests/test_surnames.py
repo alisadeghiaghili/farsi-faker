@@ -10,9 +10,11 @@ import farsi_faker
 from farsi_faker import FarsiFaker
 from farsi_faker.profile import iranian_cities
 from farsi_faker.surnames import (
+    OCCUPATION_SURNAMES,
     SURNAME_PREFIXES,
     SURNAME_SUFFIXES,
     compound_surname,
+    occupation_surname,
     region_surname,
 )
 
@@ -134,6 +136,8 @@ class TestExports:
         assert "SURNAME_PREFIXES" in farsi_faker.__all__
         assert "SURNAME_SUFFIXES" in farsi_faker.__all__
         assert "region_surname" in farsi_faker.__all__
+        assert "occupation_surname" in farsi_faker.__all__
+        assert "OCCUPATION_SURNAMES" in farsi_faker.__all__
 
     def test_affix_lists_are_non_empty_and_unique(self) -> None:
         assert len(SURNAME_PREFIXES) > 10
@@ -189,3 +193,46 @@ class TestFarsiFakerRegionIntegration:
         a = FarsiFaker(seed=4).region_last_name()
         b = FarsiFaker(seed=4).region_last_name()
         assert a == b
+
+
+class TestOccupationSurname:
+    """Occupational (trade) surnames: a whole-name pool, not composed."""
+
+    def test_pool_is_non_empty_and_unique(self) -> None:
+        assert len(OCCUPATION_SURNAMES) > 10
+        assert len(set(OCCUPATION_SURNAMES)) == len(OCCUPATION_SURNAMES)
+
+    def test_contains_well_known_trades(self) -> None:
+        # The trades that motivated this feature must be present.
+        for trade in ("قناد", "خراط", "فلاح", "نانوایی", "نجار"):
+            assert trade in OCCUPATION_SURNAMES
+
+    def test_returns_a_pool_member(self) -> None:
+        for seed in range(40):
+            assert occupation_surname(rng=random.Random(seed)) in OCCUPATION_SURNAMES
+
+    def test_reproducible_with_seed(self) -> None:
+        a = [occupation_surname(rng=random.Random(2)) for _ in range(5)]
+        b = [occupation_surname(rng=random.Random(2)) for _ in range(5)]
+        assert a == b
+
+    def test_rejects_bad_rng(self) -> None:
+        with pytest.raises(TypeError):
+            occupation_surname(rng="nope")  # type: ignore[arg-type]
+
+    def test_zwnj_orthography_is_preserved(self) -> None:
+        # Compound trade names carry a ZWNJ (e.g. نقش‌باف) and must keep it.
+        zwnj = "‌"
+        assert any(zwnj in name for name in OCCUPATION_SURNAMES)
+
+
+class TestFarsiFakerOccupationIntegration:
+    """FarsiFaker.occupation_last_name draws from the instance RNG."""
+
+    def test_returns_a_pool_member(self) -> None:
+        assert FarsiFaker(seed=1).occupation_last_name() in OCCUPATION_SURNAMES
+
+    def test_reproducible(self) -> None:
+        assert FarsiFaker(seed=3).occupation_last_name() == FarsiFaker(
+            seed=3
+        ).occupation_last_name()

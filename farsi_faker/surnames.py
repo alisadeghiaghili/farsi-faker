@@ -27,8 +27,10 @@ from .cleaning import normalize_name
 __all__ = [
     'SURNAME_PREFIXES',
     'SURNAME_SUFFIXES',
+    'OCCUPATION_SURNAMES',
     'compound_surname',
     'region_surname',
+    'occupation_surname',
 ]
 
 # Common Persian title/name prefixes used at the head of a family name.
@@ -89,6 +91,43 @@ SURNAME_SUFFIXES = (
     'زادگان',
     'منش',
     'یار',
+)
+
+# Occupational / trade-based family names — Persian surnames that derive from
+# a person's trade or craft (e.g. قناد "confectioner", خراط "woodturner",
+# فلاح "farmer"). These are used as whole surnames, not composed.
+# Spelling uses the canonical ZWNJ for compound forms (نقش‌باف، شیشه‌گر).
+OCCUPATION_SURNAMES = (
+    'فلاح',
+    'کشاورز',
+    'باغبان',
+    'قناد',
+    'نانوایی',
+    'خراط',
+    'نجار',
+    'مسگر',
+    'زرگر',
+    'طلاگر',
+    'کفاش',
+    'بافند',
+    'نقش‌باف',
+    'شیشه‌گر',
+    'آهنگر',
+    'معلم',
+    'پزشک',
+    'داروساز',
+    'حسابدار',
+    'مهندس',
+    'دباغ',
+    'بازرگان',
+    'قصاب',
+    'کتابدار',
+    'چوپان',
+    'زنبوردار',
+    'ساعت‌ساز',
+    'قفل‌ساز',
+    'آینه‌ساز',
+    'بستنی‌ساز',
 )
 
 # The common Persian surname termination (the "-i"/"ی" ending, e.g. احمدی).
@@ -229,3 +268,29 @@ def region_surname(city: str, *, rng: Optional[random.Random] = None) -> str:
 
     result = city if city.endswith(_TERMINATION) else city + _TERMINATION
     return normalize_name(result)
+
+
+def occupation_surname(rng: Optional[random.Random] = None) -> str:
+    """Return a random Persian occupational (trade) family name.
+
+    Draws a whole surname from :data:`OCCUPATION_SURNAMES` (فلاح، قناد،
+    خراط، …). Unlike :func:`compound_surname`, these are used as-is, not
+    composed.
+
+    Args:
+        rng (random.Random, optional): Seeded RNG for reproducibility.
+
+    Returns:
+        str: An occupational family name from the pool.
+
+    Raises:
+        TypeError: If *rng* is not a ``random.Random``.
+
+    Example:
+        >>> import random
+        >>> name = occupation_surname(rng=random.Random(3))
+        >>> isinstance(name, str)
+        True
+    """
+    generator = _require_random(rng)
+    return generator.choice(OCCUPATION_SURNAMES)

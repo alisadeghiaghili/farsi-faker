@@ -403,6 +403,26 @@ class FarsiFaker:
             city = self._random.choice(iranian_cities())
         return region_surname(city, rng=self._random)
 
+    def occupation_last_name(self) -> str:
+        """Return a random Persian occupational (trade) family name.
+
+        Draws a whole surname from the built-in occupational pool (فلاح،
+        قناد، خراط، …) rather than composing one. See :mod:`farsi_faker.surnames`.
+
+        Returns:
+            str: An occupational family name.
+
+        Example::
+
+            >>> faker = FarsiFaker(seed=1)
+            >>> name = faker.occupation_last_name()
+            >>> isinstance(name, str)
+            True
+        """
+        from .surnames import occupation_surname
+
+        return occupation_surname(rng=self._random)
+
     def full_name(self, gender: GenderInput = None) -> Dict[str, str]:
         """Return a complete person record with full name and metadata.
 
