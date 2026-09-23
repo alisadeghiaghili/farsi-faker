@@ -343,6 +343,39 @@ class FarsiFaker:
         """
         return self._random.choice(self._last_names)
 
+    def generated_last_name(self, base: Optional[str] = None) -> str:
+        """Compose a Persian family name from a base plus a prefix/suffix.
+
+        Instead of sampling the fixed family-name pool, this builds a name in
+        the style of common Persian surnames: a title prefix (میر، سید، امیر,
+        …), a suffix (پور، زاده، نژاد, …), or the ``ی`` termination, applied
+        to a base name. See :mod:`farsi_faker.surnames`.
+
+        Args:
+            base (str, optional): Base name to compose from. When ``None``
+                (default) a random male first name is used.
+
+        Returns:
+            str: A composed family name.
+
+        Raises:
+            ValueError: If *base* is provided but blank.
+
+        Example::
+
+            >>> faker = FarsiFaker(seed=1)
+            >>> name = faker.generated_last_name()
+            >>> isinstance(name, str)
+            True
+            >>> len(name) > 0
+            True
+        """
+        from .surnames import compound_surname
+
+        if base is None:
+            base = self.male_first_name()
+        return compound_surname(base, rng=self._random)
+
     def full_name(self, gender: GenderInput = None) -> Dict[str, str]:
         """Return a complete person record with full name and metadata.
 

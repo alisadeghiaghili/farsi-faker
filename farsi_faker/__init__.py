@@ -50,6 +50,7 @@ from .profile import (
     profile_record,
     street_name,
 )
+from .surnames import SURNAME_PREFIXES, SURNAME_SUFFIXES, compound_surname
 
 __all__ = [
     'FarsiFaker',
@@ -60,6 +61,9 @@ __all__ = [
     'apply_zwnj_policy',
     'extend_name_pools',
     'apply_seed_expansion',
+    'compound_surname',
+    'SURNAME_PREFIXES',
+    'SURNAME_SUFFIXES',
     'national_id',
     'is_valid_national_id',
     'mobile_number',
