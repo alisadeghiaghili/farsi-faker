@@ -423,6 +423,85 @@ class FarsiFaker:
 
         return occupation_surname(rng=self._random)
 
+    # ------------------------------------------------------------------
+    # Public API — English (Latin) output
+    # ------------------------------------------------------------------
+
+    def first_name_en(self, gender: GenderInput = None) -> str:
+        """Return a first name transliterated to Latin.
+
+        The Latin form is derived from a freshly drawn :meth:`first_name`, so
+        the gender and reproducibility guarantees of that method carry over.
+
+        Args:
+            gender (str, optional): Same accepted tokens as :meth:`first_name`.
+
+        Returns:
+            str: Lowercase Latin transliteration of the first name.
+
+        Example::
+
+            >>> faker = FarsiFaker(seed=1)
+            >>> name = faker.first_name_en('male')
+            >>> isinstance(name, str)
+            True
+            >>> len(name) > 0
+            True
+        """
+        from .romanization import to_latin
+
+        name, _ = self.first_name(gender)
+        return to_latin(name)
+
+    def last_name_en(self) -> str:
+        """Return a family name transliterated to Latin.
+
+        Returns:
+            str: Lowercase Latin transliteration of a randomly drawn family
+            name.
+
+        Example::
+
+            >>> faker = FarsiFaker(seed=1)
+            >>> name = faker.last_name_en()
+            >>> isinstance(name, str)
+            True
+            >>> len(name) > 0
+            True
+        """
+        from .romanization import to_latin
+
+        return to_latin(self.last_name())
+
+    def full_name_en(self, gender: GenderInput = None) -> str:
+        """Return the full name (first + family) transliterated to Latin.
+
+        The parts are transliterated separately and joined with a space, so a
+        single drawn identity is rendered as e.g. ``"mohammad ahmadi"``
+        (character-level, without the short vowels the script omits).
+
+        Args:
+            gender (str, optional): Same accepted tokens as :meth:`full_name`.
+
+        Returns:
+            str: The Latin full name, ``"<first> <last>"``.
+
+        Example::
+
+            >>> faker = FarsiFaker(seed=1)
+            >>> name = faker.full_name_en('female')
+            >>> isinstance(name, str)
+            True
+            >>> len(name) > 0
+            True
+        """
+        from .romanization import to_latin
+
+        person = self.full_name(gender)
+        first = to_latin(person['first_name'])
+        last = to_latin(person['last_name'])
+        return f"{first} {last}".strip()
+
     def full_name(self, gender: GenderInput = None) -> Dict[str, str]:
         """Return a complete person record with full name and metadata.
 

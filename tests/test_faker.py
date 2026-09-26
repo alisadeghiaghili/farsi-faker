@@ -615,6 +615,56 @@ class TestFakerProfileFields:
         assert len(faker.postal_code()) == 10
 
 
+class TestLatinOutput:
+    """English/Latin output methods derived from the shared transliterator."""
+
+    _LATIN = re.compile(r"^[a-z0-9-]+$")
+
+    def test_first_name_en_is_latin(self):
+        for seed in range(30):
+            name = FarsiFaker(seed=seed).first_name_en("male")
+            assert self._LATIN.fullmatch(name), name
+
+    def test_first_name_en_respects_gender(self):
+        # A female token must draw from the female pool and still romanize.
+        name = FarsiFaker(seed=1).first_name_en("female")
+        assert self._LATIN.fullmatch(name), name
+
+    def test_last_name_en_is_latin(self):
+        for seed in range(30):
+            name = FarsiFaker(seed=seed).last_name_en()
+            assert self._LATIN.fullmatch(name), name
+
+    def test_full_name_en_is_first_space_last(self):
+        for seed in range(30):
+            full = FarsiFaker(seed=seed).full_name_en("male")
+            assert self._LATIN.fullmatch(full.replace(" ", "")), full
+            # Full name is two Latin parts (a single-name source collapses to
+            # one part, so allow >=1 token but never Persian).
+            assert "‌" not in full
+            assert any(c.isalpha() for c in full)
+
+    def test_en_methods_are_reproducible(self):
+        a = [FarsiFaker(seed=9).first_name_en("male") for _ in range(3)]
+        b = [FarsiFaker(seed=9).first_name_en("male") for _ in range(3)]
+        assert a == b
+        assert FarsiFaker(seed=3).last_name_en() == FarsiFaker(seed=3).last_name_en()
+        assert (
+            FarsiFaker(seed=3).full_name_en()
+            == FarsiFaker(seed=3).full_name_en()
+        )
+
+    def test_en_matches_to_latin_of_persian_parts(self):
+        # The Latin form must equal the shared transliterator applied to the
+        # same Persian parts, i.e. there is no second romanization path.
+        from farsi_faker.romanization import to_latin
+
+        for seed in range(20):
+            faker = FarsiFaker(seed=seed)
+            first, _ = faker.first_name("male")
+            assert FarsiFaker(seed=seed).first_name_en("male") == to_latin(first)
+
+
 class TestDataLoadingErrors:
     """The pickle load path must surface actionable, correctly-typed errors.
 

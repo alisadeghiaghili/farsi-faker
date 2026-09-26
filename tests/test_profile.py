@@ -119,10 +119,17 @@ class TestEmail:
         email = email_address()
         assert re.fullmatch(r"[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,}", email)
 
-    def test_names_that_romanize_to_empty_fall_back_to_handle(self) -> None:
-        # Arabic-Indic digits have no Latin mapping, so both slug parts are
-        # empty and the generator must fall back to a random handle.
+    def test_arabic_indic_digits_romanize_to_ascii(self) -> None:
+        # Arabic-Indic digits map to ASCII digits via the shared transliterator,
+        # so a digit-only name yields a numeric slug rather than a fallback.
         email = email_address(first_name="١", last_name="٢")
+        assert re.fullmatch(r"[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,}", email)
+        assert email.split("@", 1)[0] == "1.2"
+
+    def test_names_that_romanize_to_empty_fall_back_to_handle(self) -> None:
+        # A name made of letters with no Latin mapping (Arabic-Indic "ة")
+        # romanizes to nothing, so the generator falls back to a random handle.
+        email = email_address(first_name="ة", last_name="ة")
         assert re.fullmatch(r"[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,}", email)
         # The local part is the generated handle, not an empty string.
         local = email.split("@", 1)[0]
