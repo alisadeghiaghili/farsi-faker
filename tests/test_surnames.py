@@ -10,9 +10,12 @@ import farsi_faker
 from farsi_faker import FarsiFaker
 from farsi_faker.profile import iranian_cities
 from farsi_faker.surnames import (
+    _OPTIONAL_VOICED,
+    _VOICED_BASES,
     OCCUPATION_SURNAMES,
     SURNAME_PREFIXES,
     SURNAME_SUFFIXES,
+    apply_surname_phonetics,
     compound_surname,
     occupation_surname,
     region_surname,
@@ -100,6 +103,76 @@ class TestCompoundSurname:
             compound_surname("احمد", rng="nope")  # type: ignore[arg-type]
 
 
+class TestApplySurnamePhonetics:
+    """Base voicing applied before composition (the "روی پایه" rule)."""
+
+    def test_returns_a_string(self) -> None:
+        assert isinstance(apply_surname_phonetics("احمد", rng=random.Random(0)), str)
+
+    def test_voiced_bases_map_to_their_family_form(self) -> None:
+        # Every fixed-voicing base must return its voiced form, deterministically.
+        for base, voiced in _VOICED_BASES.items():
+            assert apply_surname_phonetics(base) == voiced
+
+    def test_known_voiced_examples(self) -> None:
+        assert apply_surname_phonetics("مصطفی") == "مصطفوی"
+        assert apply_surname_phonetics("کسری") == "کسروی"
+        assert apply_surname_phonetics("یحیی") == "یحیوی"
+
+    def test_unchanged_base_passes_through(self) -> None:
+        # A base with no voicing rule must come back exactly as given.
+        assert apply_surname_phonetics("احمد") == "احمد"
+        assert apply_surname_phonetics("حسین") == "حسین"
+
+    def test_optional_base_is_one_of_the_two_forms(self) -> None:
+        for base, voiced in _OPTIONAL_VOICED.items():
+            for seed in range(200):
+                result = apply_surname_phonetics(base, rng=random.Random(seed))
+                assert result in (base, voiced), result
+
+    def test_optional_base_produces_both_forms_over_seeds(self) -> None:
+        # Over enough draws both the plain and voiced forms must appear.
+        base, voiced = next(iter(_OPTIONAL_VOICED.items()))
+        results = {apply_surname_phonetics(base, rng=random.Random(i)) for i in range(200)}
+        assert results == {base, voiced}
+
+    def test_optional_base_requires_rng_choice(self) -> None:
+        # Same seed -> same choice; the decision is reproducible.
+        base = next(iter(_OPTIONAL_VOICED))
+        assert (
+            apply_surname_phonetics(base, rng=random.Random(5))
+            == apply_surname_phonetics(base, rng=random.Random(5))
+        )
+
+    def test_compound_preserves_voiced_base(self) -> None:
+        # A voiced base must survive into the composed surname, so the result
+        # reads as a family name (مصطفوی… not مصطفی…).
+        for seed in range(120):
+            result = compound_surname("مصطفی", rng=random.Random(seed))
+            assert "مصطفوی" in result, result
+
+    def test_compound_preserves_plain_base(self) -> None:
+        for seed in range(120):
+            result = compound_surname("احمد", rng=random.Random(seed))
+            assert "احمد" in result, result
+
+    def test_compound_does_not_leak_unvoiced_form(self) -> None:
+        # The original first-name form should not appear unvoiced in the
+        # composed result for a fixed-voicing base.
+        for seed in range(120):
+            result = compound_surname("کسری", rng=random.Random(seed))
+            assert "کسری" not in result, result
+            assert "کسروی" in result, result
+
+    def test_rejects_empty_base(self) -> None:
+        with pytest.raises(ValueError):
+            apply_surname_phonetics("   ")
+
+    def test_rejects_bad_rng(self) -> None:
+        with pytest.raises(TypeError):
+            apply_surname_phonetics("علی", rng="nope")  # type: ignore[arg-type]
+
+
 class TestFarsiFakerIntegration:
     """The method wires the composer to the instance RNG and pool."""
 
@@ -133,6 +206,7 @@ class TestExports:
     def test_public_exports(self) -> None:
         assert hasattr(farsi_faker, "compound_surname")
         assert "compound_surname" in farsi_faker.__all__
+        assert "apply_surname_phonetics" in farsi_faker.__all__
         assert "SURNAME_PREFIXES" in farsi_faker.__all__
         assert "SURNAME_SUFFIXES" in farsi_faker.__all__
         assert "region_surname" in farsi_faker.__all__
