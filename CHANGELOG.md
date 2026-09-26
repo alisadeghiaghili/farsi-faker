@@ -11,6 +11,40 @@ No unreleased changes yet.
 
 ---
 
+## [1.7.0] - 2026-09-26
+
+### Added
+
+- **Compound surnames** (M1): `FarsiFaker.generated_last_name(base=None)` composes a
+  Persian family name from a base plus a title prefix (میر، سید، امیر، …), a
+  suffix (پور، زاده، نژاد، …), or the ``ی`` termination. Backed by
+  `farsi_faker.surnames.compound_surname`.
+- **Region-based surnames** (M2): `FarsiFaker.region_last_name(city=None)` derives a
+  family name from a city (e.g. `اصفهان` → `اصفهانی`), or from a random built-in
+  Iranian city when no city is given. Backed by
+  `farsi_faker.surnames.region_surname`.
+- **Occupational surnames** (M2b): `FarsiFaker.occupation_last_name()` draws a whole
+  trade surname from the built-in pool (فلاح، قناد، خراط، …). Backed by
+  `farsi_faker.surnames.occupation_surname`.
+- **Base voicing (قواعد صوتی):** the composed surnames now apply base-voicing
+  rules to the base name before the prefix/suffix is attached
+  (`farsi_faker.surnames.apply_surname_phonetics`).
+- **Latin output / romanizer** (M3): a new character-level Persian→Latin
+  transliterator, `farsi_faker.romanization.to_latin`, is now exported from the
+  package. Deliberately lossy (Persian short vowels are absent from the input
+  text). New `FarsiFaker` methods: `first_name_en(gender=None)`,
+  `last_name_en()`, and `full_name_en(gender=None)`.
+- Persian/Arabic-Indic digits (۰-۹ / ٠-٩) now romanize to ASCII digits (e.g. `١` → `1`)
+  instead of being dropped.
+
+### Changed
+
+- **Email generation** now routes through the single shared romanizer. Output is
+  slightly different for names containing `و`/`ی`: these map to `o`/`i` (previously
+  `v`/`y`) and spaces are dropped. ASCII input (the documented email examples) is
+  unchanged; a name made up entirely of unmapped letters still falls back to a
+  random handle.
+
 ## [1.6.1] - 2026-09-22
 
 ### Fixed

@@ -28,7 +28,7 @@ Attributes:
 
 from typing import Optional
 
-__version__ = "1.6.1"
+__version__ = "1.7.0"
 __version_info__ = tuple(int(i) for i in __version__.split('.') if i.isdigit())
 
 # Version components for programmatic access
@@ -41,8 +41,8 @@ VERSION_PATCH = __version_info__[2] if len(__version_info__) > 2 else 0
 __status__ = "Production/Stable"
 
 # Release information
-__release_date__ = "2026-09-22"
-__release_name__ = "Correctness and data-quality fixes"
+__release_date__ = "2026-09-26"
+__release_name__ = "Extended surnames and Latin (romanized) output"
 
 # Package metadata
 __author__ = "Ali Sadeghi Aghili"
@@ -147,6 +147,19 @@ def check_version(required_version: str) -> bool:
 
 
 VERSION_HISTORY = {
+    "1.7.0": {
+        "date": "2026-09-26",
+        "status": "stable",
+        "changes": [
+            "Add compound surname generation: title prefix (میر، سید، امیر، …), suffix (پور، زاده، نژاد، …), or ی termination composed onto a base name (M1)",
+            "Add region-based surname generation from a city name, e.g. اصفهان → اصفهانی (M2)",
+            "Add occupational (trade) surname pool (فلاح، قناد، خراط، …) (M2b)",
+            "Apply base-voicing (قواعد صوتی) rules when composing surnames",
+            "Add character-level Persian→Latin romanizer (farsi_faker.romanization.to_latin); export to_latin from the package",
+            "Add FarsiFaker.first_name_en / last_name_en / full_name_en for Latin output (M3)",
+            "Unify email generation on the shared romanizer; Persian/Arabic-Indic digits now map to ASCII digits in Latin output",
+        ],
+    },
     "1.6.1": {
         "date": "2026-09-22",
         "status": "stable",
