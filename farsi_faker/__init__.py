@@ -50,6 +50,7 @@ from .profile import (
     profile_record,
     street_name,
 )
+from .romanization import to_latin
 from .surnames import (
     OCCUPATION_SURNAMES,
     SURNAME_PREFIXES,
@@ -87,6 +88,7 @@ __all__ = [
     'street_name',
     'address_record',
     'profile_record',
+    'to_latin',
     '__version__',
     '__version_info__',
     '__status__',
