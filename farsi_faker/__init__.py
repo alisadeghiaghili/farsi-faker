@@ -50,6 +50,15 @@ from .profile import (
     profile_record,
     street_name,
 )
+from .surnames import (
+    OCCUPATION_SURNAMES,
+    SURNAME_PREFIXES,
+    SURNAME_SUFFIXES,
+    apply_surname_phonetics,
+    compound_surname,
+    occupation_surname,
+    region_surname,
+)
 
 __all__ = [
     'FarsiFaker',
@@ -60,6 +69,13 @@ __all__ = [
     'apply_zwnj_policy',
     'extend_name_pools',
     'apply_seed_expansion',
+    'compound_surname',
+    'apply_surname_phonetics',
+    'region_surname',
+    'occupation_surname',
+    'SURNAME_PREFIXES',
+    'SURNAME_SUFFIXES',
+    'OCCUPATION_SURNAMES',
     'national_id',
     'is_valid_national_id',
     'mobile_number',
