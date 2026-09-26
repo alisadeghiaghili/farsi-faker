@@ -19,6 +19,8 @@ import random
 import re
 from typing import Any, Dict, Optional
 
+from .romanization import to_latin
+
 __all__ = [
     'national_id',
     'is_valid_national_id',
@@ -53,48 +55,6 @@ _EMAIL_DOMAINS = (
     'outlook.com',
     'mail.ir',
     'chmail.ir',
-)
-
-# Minimal romanization map for common Persian letters used in emails.
-_FA_TO_EN = str.maketrans(
-    {
-        'ا': 'a',
-        'ب': 'b',
-        'پ': 'p',
-        'ت': 't',
-        'ث': 's',
-        'ج': 'j',
-        'چ': 'ch',
-        'ح': 'h',
-        'خ': 'kh',
-        'د': 'd',
-        'ذ': 'z',
-        'ر': 'r',
-        'ز': 'z',
-        'ژ': 'zh',
-        'س': 's',
-        'ش': 'sh',
-        'ص': 's',
-        'ض': 'z',
-        'ط': 't',
-        'ظ': 'z',
-        'ع': 'a',
-        'غ': 'gh',
-        'ف': 'f',
-        'ق': 'gh',
-        'ک': 'k',
-        'گ': 'g',
-        'ل': 'l',
-        'م': 'm',
-        'ن': 'n',
-        'و': 'v',
-        'ه': 'h',
-        'ی': 'y',
-        'آ': 'a',
-        'ء': '',
-        ' ': '.',
-        '‌': '',  # ZWNJ
-    }
 )
 
 
@@ -241,15 +201,21 @@ def mobile_number(rng: Optional[random.Random] = None) -> str:
 def _slugify(text: str) -> str:
     """Romanize and slugify a name fragment for email local-parts.
 
+    Uses the package's single transliterator (:func:`to_latin`) so there is
+    one shared Persian->Latin mapping rather than a second, email-specific
+    one. ``to_latin`` collapses runs of unmapped characters (spaces, ZWNJ,
+    punctuation) to a single ``-``; for an email local-part those are
+    dropped so the two name parts join cleanly (``علی احمدی`` ->
+    ``ali.ahmdi``).
+
     Args:
         text (str): Persian or ASCII name fragment.
 
     Returns:
         str: Lowercase ``[a-z0-9._-]`` slug; may be empty.
     """
-    translated = text.translate(_FA_TO_EN).lower()
-    slug = re.sub(r'[^a-z0-9._-]+', '', translated)
-    slug = re.sub(r'[._-]{2,}', '.', slug).strip('.-_')
+    slug = to_latin(text)
+    slug = slug.replace('-', '').strip('.')
     return slug
 
 
