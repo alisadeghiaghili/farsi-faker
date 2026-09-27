@@ -48,6 +48,7 @@
 - **Dynamic extension** — `extend_name_pools()` to merge your own names at runtime
 - **Profile fields** — national ID (کد ملی with checksum), mobile, email, postal code, address
 - **Banking fields** — IBAN (ISO 13616, Luhn mod-97), Shetab/Shaparak bank card (Luhn-10), bank name
+- **Vehicle fields** — car plate number (پلاک خودرو) + registration province
 - **CLI** — `python -m farsi_faker` for JSON/CSV fixtures
 - **Fast cold start** — pickle-backed name cache, shared across instances
 - **Reproducible** — seed support for stable fixtures
@@ -148,6 +149,20 @@ bank = faker.bank_name()             # e.g. 'بانک ملت'
 
 assert is_valid_iban(iban)
 assert is_valid_bank_card(card)
+```
+
+### Vehicle Fields (v1.9.0+)
+
+```python
+from farsi_faker import FarsiFaker, is_valid_car_plate
+
+faker = FarsiFaker(seed=42)
+
+plate = faker.car_plate_number()   # 'بث ۱۲۳۴' — two letters + four digits
+prov  = faker.car_province()       # e.g. 'اصفهان'
+rec   = faker.vehicle_record()     # {'plate': 'بث ۱۲۳۴', 'province': 'تهران'}
+
+assert is_valid_car_plate(plate)
 ```
 
 ### CLI
