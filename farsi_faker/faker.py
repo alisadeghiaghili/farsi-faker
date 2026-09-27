@@ -861,6 +861,53 @@ class FarsiFaker:
 
         return _generate(rng=self._random)
 
+    def iban(self) -> str:
+        """Return a structurally valid Iranian (IR) IBAN.
+
+        Returns:
+            str: 28-character IBAN starting with ``IR`` (Luhn mod-97 valid).
+
+        Example::
+            >>> faker = FarsiFaker(seed=42)
+            >>> from farsi_faker.banking import is_valid_iban
+            >>> is_valid_iban(faker.iban())
+            True
+        """
+        from .banking import iran_iban as _generate
+
+        return _generate(rng=self._random)
+
+    def bank_card_number(self) -> str:
+        """Return a 16-digit Luhn-valid Iranian bank-card number.
+
+        Returns:
+            str: 16-digit card number with an Iranian prefix.
+
+        Example::
+            >>> faker = FarsiFaker(seed=42)
+            >>> len(faker.bank_card_number())
+            16
+        """
+        from .banking import bank_card_number as _generate
+
+        return _generate(rng=self._random)
+
+    def bank_name(self) -> str:
+        """Return a major Iranian bank name.
+
+        Returns:
+            str: A bank name from the built-in pool.
+
+        Example::
+            >>> faker = FarsiFaker(seed=42)
+            >>> from farsi_faker.banking import iranian_banks
+            >>> faker.bank_name() in iranian_banks()
+            True
+        """
+        from .banking import bank_name as _generate
+
+        return _generate(rng=self._random)
+
     def profile(self, gender: GenderInput = None) -> Dict[str, str]:
         """Return a full synthetic person record with contact and address fields.
 

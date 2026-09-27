@@ -387,6 +387,63 @@ assert person1 == person2  # True | درست
 
 ---
 
+## Banking Fields | فیلدهای بانکی (v1.8.0+)
+
+Synthetic Iranian banking data — IBAN, bank card, and bank name. All
+seedable via `FarsiFaker(seed=…)` or a module-level `rng=random.Random(…)`.
+داده‌های بانکی ایرانی فیک — IBAN، کارت بانکی و نام بانک. همه قابل تکرار با seed.
+
+### `FarsiFaker.iban()` | آدرس IBAN
+
+```python
+def iban(self) -> str
+```
+
+**English:** A 28-character Iranian (IR) IBAN, valid under ISO 13616 (Luhn mod-97).
+
+**فارسی:** یک IBAN ۲۸ کاراکتری ایرانی که از نظر ساختاری (Luhn mod-97) معتبر است.
+
+### `FarsiFaker.bank_card_number()` | شماره کارت بانکی
+
+```python
+def bank_card_number(self) -> str
+```
+
+**English:** A 16-digit Shetab/Shaparak card number (Iranian `6037`/`62xx` prefix) with a Luhn-10 checksum.
+
+**فارسی:** یک شماره کارت ۱۶ رقمی شتاب/شاپرک با پرهاف ایرانی و چک‌سوم Luhn.
+
+### `FarsiFaker.bank_name()` | نام بانک
+
+```python
+def bank_name(self) -> str
+```
+
+**English:** A major Iranian bank name from the built-in pool.
+
+**فارسی:** نام یک بانک اصلی ایرانی از فهرست داخلی.
+
+**Module functions | توابع ماژول:** `iran_iban(rng)`, `is_valid_iban(iban)`,
+`bank_card_number(rng)`, `is_valid_bank_card(number)`, `iranian_banks()`,
+`bank_name(rng)` — all in `farsi_faker.banking` and exported from the package.
+
+**Example | مثال:**
+
+```python
+from farsi_faker import FarsiFaker, is_valid_iban, is_valid_bank_card
+
+faker = FarsiFaker(seed=42)
+
+iban = faker.iban()                 # 'IR..' — 28 chars
+card = faker.bank_card_number()     # '6277..' — 16 digits
+bank = faker.bank_name()            # e.g. 'بانک ملت'
+
+assert is_valid_iban(iban)
+assert is_valid_bank_card(card)
+```
+
+---
+
 ## Type Definitions | تعریف انواع
 
 ### GenderType | نوع جنسیت
