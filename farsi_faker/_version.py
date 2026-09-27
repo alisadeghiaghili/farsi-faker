@@ -28,7 +28,7 @@ Attributes:
 
 from typing import Optional
 
-__version__ = "1.7.0"
+__version__ = "1.8.0"
 __version_info__ = tuple(int(i) for i in __version__.split('.') if i.isdigit())
 
 # Version components for programmatic access
@@ -42,7 +42,7 @@ __status__ = "Production/Stable"
 
 # Release information
 __release_date__ = "2026-09-26"
-__release_name__ = "Extended surnames and Latin (romanized) output"
+__release_name__ = "Synthetic Iranian banking fields (IBAN, card, bank name)"
 
 # Package metadata
 __author__ = "Ali Sadeghi Aghili"
@@ -147,6 +147,15 @@ def check_version(required_version: str) -> bool:
 
 
 VERSION_HISTORY = {
+    "1.8.0": {
+        "date": "2026-09-26",
+        "status": "stable",
+        "changes": [
+            "Add Iranian banking fields: IBAN (ISO 13616, Luhn mod-97), Shetab/Shaparak bank card number (Luhn-10), and bank name (M4)",
+            "Add farsi_faker.banking with iran_iban, is_valid_iban, bank_card_number, is_valid_bank_card, iranian_banks, bank_name; all exported from the package",
+            "Add FarsiFaker.iban() / bank_card_number() / bank_name() methods; generated IBANs pass is_valid_iban and cards pass is_valid_bank_card",
+        ],
+    },
     "1.7.0": {
         "date": "2026-09-26",
         "status": "stable",
