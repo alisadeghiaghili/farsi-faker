@@ -49,6 +49,7 @@ python scripts/rebuild_names_pkl.py
 | 1.6.1 | 7439 | 3317 | 5758 | honorific-contamination pass (drop title tokens in first names) |
 | 1.7.0 | 7439 | 3317 | 5758 | no database change — compound/region/occupation surname pools are code-defined in `farsi_faker.surnames`; Latin output is computed at runtime by `romanization.to_latin` |
 | 1.8.0 | 7439 | 3317 | 5758 | no database change — banking fields (IBAN, card, bank name) are code-defined in `farsi_faker.banking`; checksums computed at runtime |
+| 1.9.0 | 7439 | 3317 | 5758 | no database change — vehicle fields (plate number, registration province) are code-defined in `farsi_faker.vehicle`; the 31-province pool is a constant |
 
 Exact numbers after each rebuild are printed by `rebuild_names_pkl.py`.
 

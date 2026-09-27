@@ -908,6 +908,55 @@ class FarsiFaker:
 
         return _generate(rng=self._random)
 
+    def car_plate_number(self) -> str:
+        """Return a classic Iranian vehicle plate (two Persian letters + four digits).
+
+        Returns:
+            str: A 7-character plate string (e.g. ``بث ۱۲۳۴``).
+
+        Example::
+            >>> faker = FarsiFaker(seed=42)
+            >>> from farsi_faker.vehicle import is_valid_car_plate
+            >>> is_valid_car_plate(faker.car_plate_number())
+            True
+        """
+        from .vehicle import car_plate_number as _generate
+
+        return _generate(rng=self._random)
+
+    def car_province(self) -> str:
+        """Return a random Iranian province name (plate registration region).
+
+        Returns:
+            str: A province name from the built-in pool.
+
+        Example::
+            >>> faker = FarsiFaker(seed=42)
+            >>> from farsi_faker.vehicle import car_provinces
+            >>> faker.car_province() in car_provinces()
+            True
+        """
+        from .vehicle import car_province as _generate
+
+        return _generate(rng=self._random)
+
+    def vehicle_record(self) -> Dict[str, str]:
+        """Return a synthetic vehicle record (plate + province).
+
+        Returns:
+            Dict[str, str]: Keys ``plate`` and ``province``.
+
+        Example::
+            >>> faker = FarsiFaker(seed=42)
+            >>> from farsi_faker.vehicle import is_valid_car_plate
+            >>> rec = faker.vehicle_record()
+            >>> is_valid_car_plate(rec['plate'])
+            True
+        """
+        from .vehicle import vehicle_record as _generate
+
+        return _generate(rng=self._random)
+
     def profile(self, gender: GenderInput = None) -> Dict[str, str]:
         """Return a full synthetic person record with contact and address fields.
 

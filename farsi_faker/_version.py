@@ -28,7 +28,7 @@ Attributes:
 
 from typing import Optional
 
-__version__ = "1.8.0"
+__version__ = "1.9.0"
 __version_info__ = tuple(int(i) for i in __version__.split('.') if i.isdigit())
 
 # Version components for programmatic access
@@ -41,8 +41,8 @@ VERSION_PATCH = __version_info__[2] if len(__version_info__) > 2 else 0
 __status__ = "Production/Stable"
 
 # Release information
-__release_date__ = "2026-09-26"
-__release_name__ = "Synthetic Iranian banking fields (IBAN, card, bank name)"
+__release_date__ = "2026-09-27"
+__release_name__ = "Synthetic Iranian vehicle fields (plate number, registration province)"
 
 # Package metadata
 __author__ = "Ali Sadeghi Aghili"
@@ -147,6 +147,15 @@ def check_version(required_version: str) -> bool:
 
 
 VERSION_HISTORY = {
+    "1.9.0": {
+        "date": "2026-09-27",
+        "status": "stable",
+        "changes": [
+            "Add Iranian vehicle fields: car plate number (classic 2-letter + 4-digit format) and registration province (M5)",
+            "Add farsi_faker.vehicle with car_plate_number, is_valid_car_plate, car_provinces, car_province, vehicle_record; all exported from the package",
+            "Add FarsiFaker.car_plate_number() / car_province() / vehicle_record() methods; generated plates pass is_valid_car_plate and every field is reproducible under one seed",
+        ],
+    },
     "1.8.0": {
         "date": "2026-09-26",
         "status": "stable",
