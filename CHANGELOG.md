@@ -11,6 +11,28 @@ No unreleased changes yet.
 
 ---
 
+## [1.8.0] - 2026-09-26
+
+### Added
+
+- **Banking fields** (M4): a new `farsi_faker.banking` module, exported from the
+  package, providing synthetic Iranian banking data — all seedable via an
+  optional `random.Random`:
+  - `iran_iban(rng=None)` — a 28-character Iranian (IR) IBAN that is structurally
+    valid under ISO 13616 (Luhn mod-97). `is_valid_iban(iban)` validates it.
+  - `bank_card_number(rng=None)` — a 16-digit Shetab/Shaparak card number with a
+    known Iranian prefix (`6037`/`62xx`) and a Luhn-10 checksum.
+    `is_valid_bank_card(number)` validates it.
+  - `bank_name(rng=None)` — a major Iranian bank name from the built-in pool
+    (`بانک ملت`, `بانک ملی ایران`, `بانک سپه`, …). `iranian_banks()` exposes the pool.
+- **`FarsiFaker` methods:** `iban()`, `bank_card_number()`, and `bank_name()` —
+  delegating to the module functions using the instance's RNG stream, so they
+  are reproducible under `FarsiFaker(seed=…)`.
+
+Generated IBANs pass `is_valid_iban` and generated cards pass
+`is_valid_bank_card`; both the module functions and the class methods are
+covered by `tests/test_banking.py` (37 tests).
+
 ## [1.7.0] - 2026-09-26
 
 ### Added

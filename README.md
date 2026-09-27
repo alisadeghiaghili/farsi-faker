@@ -47,6 +47,7 @@
 - **Gender-specific generation** — separate male and female first-name pools
 - **Dynamic extension** — `extend_name_pools()` to merge your own names at runtime
 - **Profile fields** — national ID (کد ملی with checksum), mobile, email, postal code, address
+- **Banking fields** — IBAN (ISO 13616, Luhn mod-97), Shetab/Shaparak bank card (Luhn-10), bank name
 - **CLI** — `python -m farsi_faker` for JSON/CSV fixtures
 - **Fast cold start** — pickle-backed name cache, shared across instances
 - **Reproducible** — seed support for stable fixtures
@@ -132,6 +133,21 @@ person = faker.profile('male')
 # }
 assert is_valid_national_id(person['national_id'])
 assert person['mobile'].startswith('09')
+```
+
+### Banking Fields (v1.8.0+)
+
+```python
+from farsi_faker import FarsiFaker, is_valid_iban, is_valid_bank_card
+
+faker = FarsiFaker(seed=42)
+
+iban = faker.iban()                  # 'IR..' — 28 chars, Luhn mod-97 valid
+card = faker.bank_card_number()      # '6277..' — 16 digits, Luhn-10 valid
+bank = faker.bank_name()             # e.g. 'بانک ملت'
+
+assert is_valid_iban(iban)
+assert is_valid_bank_card(card)
 ```
 
 ### CLI
