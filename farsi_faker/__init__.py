@@ -13,6 +13,7 @@ Features:
     - Name-pool cleaning helpers (``farsi_faker.cleaning``)
     - Dynamic pool extension (``farsi_faker.extend``)
     - Synthetic profile fields: national ID, mobile, email, postal code, address
+    - Synthetic banking fields: IBAN, bank card number, bank name
     - CLI: ``python -m farsi_faker``
 
 Quick Start:
@@ -33,6 +34,14 @@ from ._version import (
     __version__,
     __version_info__,
     check_version,
+)
+from .banking import (
+    bank_card_number,
+    bank_name,
+    iran_iban,
+    iranian_banks,
+    is_valid_bank_card,
+    is_valid_iban,
 )
 from .cleaning import apply_zwnj_policy, clean_name_pools, join_ocr_splits, normalize_zwnj
 from .extend import apply_seed_expansion, extend_name_pools
@@ -88,6 +97,12 @@ __all__ = [
     'street_name',
     'address_record',
     'profile_record',
+    'iran_iban',
+    'is_valid_iban',
+    'bank_card_number',
+    'is_valid_bank_card',
+    'iranian_banks',
+    'bank_name',
     'to_latin',
     '__version__',
     '__version_info__',
