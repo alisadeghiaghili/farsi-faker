@@ -11,6 +11,29 @@ No unreleased changes yet.
 
 ---
 
+## [1.9.0] - 2026-09-27
+
+### Added
+
+- **Vehicle fields** (M5): a new `farsi_faker.vehicle` module, exported from the
+  package, providing synthetic Iranian vehicle data — all seedable via an
+  optional `random.Random`:
+  - `car_plate_number(rng=None)` — a classic Iranian plate: two Persian letters,
+    a space, four Persian digits (e.g. `بث ۱۲۳۴`). `is_valid_car_plate(plate)`
+    validates it.
+  - `car_province(rng=None)` — an Iranian province name from the built-in pool
+    of all 31 provinces. `car_provinces()` exposes the pool.
+  - `vehicle_record(rng=None)` — a `{'plate', 'province'}` record; both fields
+    share the same RNG so the whole record is reproducible under one seed.
+- **`FarsiFaker` methods:** `car_plate_number()`, `car_province()`, and
+  `vehicle_record()` — delegating to the module functions using the instance's
+  RNG stream, so they are reproducible under `FarsiFaker(seed=…)`.
+
+The plate *format* is a documented, validated model suitable for synthetic data
+—not an assertion about the exact current official arrangement of Iranian
+plates. Generated plates pass `is_valid_car_plate`; the module functions and the
+class methods are covered by `tests/test_vehicle.py` (32 tests).
+
 ## [1.8.0] - 2026-09-26
 
 ### Added

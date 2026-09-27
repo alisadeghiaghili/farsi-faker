@@ -444,6 +444,75 @@ assert is_valid_bank_card(card)
 
 ---
 
+## Vehicle Fields | فیلدهای خودرو (v1.9.0+)
+
+Synthetic Iranian vehicle data — plate number and registration province. All
+seedable via `FarsiFaker(seed=…)` or a module-level `rng=random.Random(…)`.
+داده‌های خودروی ایرانی فیک — پلاک خودرو و استان ثبت. همه قابل تکرار با seed.
+
+> The plate *format* is a documented, validated model — a stable, reproducible
+> shape for synthetic data — not an assertion about the exact current official
+> arrangement of Iranian plates.
+>
+> شکل پلاک یک مدل مستند و معتبر است — ساختاری پایدار و قابل تکرار برای داده
+> فیک — نه ادعایی درباره‌ی چیدمان رسمی دقیق و فعلی پلاک‌های ایران.
+
+### `FarsiFaker.car_plate_number()` | پلاک خودرو
+
+```python
+def car_plate_number(self) -> str
+```
+
+**English:** A classic Iranian plate — two Persian letters, a space, four
+Persian digits (e.g. `بث ۱۲۳۴`), 7 characters total.
+
+**فارسی:** یک پلاک خودروی کلاسیک ایرانی — دو حرف فارسی، یک فاصله، چهار رقم
+فارسی (مثلاً `بث ۱۲۳۴`)، در مجموع ۷ کاراکتر.
+
+### `FarsiFaker.car_province()` | استان ثبت خودرو
+
+```python
+def car_province(self) -> str
+```
+
+**English:** An Iranian province name from the built-in pool of all 31 provinces.
+
+**فارسی:** نام یکی از ۳۱ استان ایران از فهرست داخلی.
+
+### `FarsiFaker.vehicle_record()` | رکورد خودرو
+
+```python
+def vehicle_record(self) -> dict
+```
+
+**English:** A `{'plate', 'province'}` record. Both fields share the same RNG so
+the whole record is reproducible under one seed.
+
+**فارسی:** یک رکورد `{'plate', 'province'}`. هر دو فیلد از یک generator مشترک
+فهرست تصادفی استفاده می‌کنند تا کل رکورد با یک seed قابل تکرار باشد.
+
+**Module functions | توابع ماژول:** `car_plate_number(rng)`,
+`is_valid_car_plate(plate)`, `car_provinces()`, `car_province(rng)`,
+`vehicle_record(rng)` — all in `farsi_faker.vehicle` and exported from the
+package.
+
+**Example | مثال:**
+
+```python
+from farsi_faker import FarsiFaker, is_valid_car_plate
+
+faker = FarsiFaker(seed=42)
+
+plate = faker.car_plate_number()    # 'بث ۱۲۳۴' — two letters + four digits
+prov  = faker.car_province()        # e.g. 'اصفهان'
+rec   = faker.vehicle_record()      # {'plate': 'بث ۱۲۳۴', 'province': 'تهران'}
+
+assert is_valid_car_plate(plate)
+assert rec['province'] in car_provinces()
+```
+
+---
+
 ## Type Definitions | تعریف انواع
 
 ### GenderType | نوع جنسیت

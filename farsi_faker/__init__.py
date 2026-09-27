@@ -14,6 +14,7 @@ Features:
     - Dynamic pool extension (``farsi_faker.extend``)
     - Synthetic profile fields: national ID, mobile, email, postal code, address
     - Synthetic banking fields: IBAN, bank card number, bank name
+    - Synthetic vehicle fields: car plate number, registration province
     - CLI: ``python -m farsi_faker``
 
 Quick Start:
@@ -69,6 +70,13 @@ from .surnames import (
     occupation_surname,
     region_surname,
 )
+from .vehicle import (
+    car_plate_number,
+    car_province,
+    car_provinces,
+    is_valid_car_plate,
+    vehicle_record,
+)
 
 __all__ = [
     'FarsiFaker',
@@ -103,6 +111,11 @@ __all__ = [
     'is_valid_bank_card',
     'iranian_banks',
     'bank_name',
+    'car_plate_number',
+    'is_valid_car_plate',
+    'car_provinces',
+    'car_province',
+    'vehicle_record',
     'to_latin',
     '__version__',
     '__version_info__',
